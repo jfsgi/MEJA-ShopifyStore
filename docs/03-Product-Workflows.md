@@ -439,7 +439,7 @@ flowchart TD
 
 - **Owner:** OPS + MK (highest-touch); CS owns customer approval milestones; QA accountable for final sign-off vs render.
 - **Lead time / SLA:** longest; quoted per piece (often via CRM deposit path before build).
-- **Exceptions:** post-order feasibility fail (rare) → CS + redesign or refund; specialty material delay → ETA comms; milestone rejection → revise before continuing.
+- **Exceptions:** post-order feasibility fail (rare) → CS + redesign/remake (refund **only** if MEJA cannot fulfill — there are no customer-initiated returns, see §12.6); specialty material delay → ETA comms; milestone rejection → revise before continuing.
 
 ### 12.6 Cross-cutting operational flows
 
@@ -447,7 +447,7 @@ flowchart TD
 |------|--------------|
 | **Materials & inventory** | BOM → stock check → reorder; maintain safety stock for common woods/tiles/finishes; flag long-lead specialty items at intake. |
 | **QA — render vs build** | The approved **4K render is the spec of record**; QA verifies the built piece matches it (dimensions, wood, finish, layout) before pack. |
-| **Returns / rework / warranty** | Made-to-order & custom are limited/no-return by policy (set in CS comms); defects → rework or remake; warranty claims logged to CRM. |
+| **No returns — all items custom-made · rework / remake** | **Every product is made to order, so there are no returns or exchanges.** This is stated clearly on the PDP, in the cart, at checkout, and in CS comms. If an item arrives **defective or not matching the approved 4K render**, MEJA repairs, reworks, or remakes it; such cases are logged to CRM. Refunds occur **only** where MEJA cannot fulfill an order it accepted. |
 | **Capacity & scheduling** | OPS queues by product type; WIP limits per maker; lead-time SLAs published to CS so quotes/PDP show realistic ship dates. |
 
 ### 12.7 Operational RACI (by stage)

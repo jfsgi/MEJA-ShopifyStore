@@ -84,6 +84,7 @@ Line-height: tight 1.1 · normal 1.5 · relaxed 1.7
 | **Option controls** | Swatches (wood/finish), segmented (style), steppers (dimensions), toggles, asset pickers (back art). Locked = read-only chip. |
 | **4K render viewer** | Zoom, pan, AR/fullscreen, "rendering…" → "4K ready" state. |
 | **Price block** | Live total, `--font-mono`, expandable breakdown. |
+| **Made-to-order policy microcopy** | "Made to order · no returns or exchanges" shown near add-to-cart, in the cart, and at checkout — every product is custom-made. |
 | **Quote/Private banner** | "Prepared for {name} · expires {date}" on private/hybrid PDPs. |
 | **Cart line** | Thumbnail (render), config summary, edit link. |
 | **Buttons** | primary / secondary / ghost / destructive; loading & disabled states. |

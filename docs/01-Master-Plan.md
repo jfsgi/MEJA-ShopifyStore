@@ -315,7 +315,7 @@ erDiagram
 | `/cart` | Cart | Shows config snapshot + render thumbnail per line. |
 | `/account` | Account | Orders, saved configurations, private quotes. |
 | `/account/quotes` | My quotes | Active private/hybrid listings pushed from CRM. |
-| `/pages/*` | Content | About, FAQ, care, shipping, warranty. |
+| `/pages/*` | Content | About, FAQ, care, shipping, **made-to-order policy (no returns/exchanges — all items custom-made)**. |
 | Checkout | Shopify-hosted | Native, PCI-scoped. |
 
 Full layouts, components, and the **10 design iterations** are in [`02-UI-Design-Standard.md`](02-UI-Design-Standard.md).
