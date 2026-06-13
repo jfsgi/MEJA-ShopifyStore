@@ -11,5 +11,8 @@ photography should be commissioned or licensed per page.
 | `shelf-dark.jpg` | 519983037 | Wooden wall shelves with plants on dark grey |
 | `walnut-texture.jpg` | 562810969 | Dark brown walnut wood texture |
 | `workshop.jpg` | 398518278 | Carpenter planing wood in a workshop |
+| `drawerbox.jpg` | 126511314 | Carpenter building a wood drawer box |
+| `drawerunit.jpg` | 482768426 | Open walnut drawers in a contemporary kitchen |
+| `cabinetdoor.jpg` | 352031776 | Wooden kitchen cabinet door (isolated) |
 
 Images are downscaled (web-optimized) copies of the licensed originals.
