@@ -372,8 +372,13 @@ gantt
     section Phase 3 — Atelier3d + 4K
     Atelier3d embed + config capture      :p3a, after p2b, 28d
     4K render orchestration + viewer     :p3b, after p3a, 21d
-    section Phase 4 — Hardening & launch
-    Perf/a11y/SEO + cutover              :p4a, after p3b, 21d
+    section Phase 4 — Sandbox live testing & demo
+    Stand up production-parity sandbox   :p4a, after p3b, 10d
+    Perf / a11y / SEO hardening          :p4b, after p3b, 21d
+    Live end-to-end demo + UAT sign-off  :p4c, after p4a, 14d
+    Parallel run (sandbox ∥ live store)  :p4d, after p4c, 14d
+    section Phase 5 — Cutover & launch
+    Go/no-go · DNS swap · post-launch watch :p5a, after p4d, 7d
 ```
 
 | Phase | Outcome | "Done" means |
@@ -382,7 +387,46 @@ gantt
 | **1 — Commerce + CRM push** | Sell ready-made; CRM can push private/hybrid listings. | A real quote pushes to a working private PDP and checks out. |
 | **2 — Configurable shelves** | Self-serve Tile/Art Back with live price. | Customer configures a shelf and buys; price matches rules. |
 | **3 — Atelier3d + 4K** | Bespoke design with live 4K. | Custom piece designed in 3D, 4K render attached to order. |
-| **4 — Hardening & launch** | Production cutover. | NFRs met; SEO preserved; rollback plan tested. |
+| **4 — Sandbox live testing & demo** | A production-parity sandbox where the whole store is exercised **live** and demoed for sign-off **before any swap**. The existing store keeps serving customers untouched. | All product types + all 4 integrations pass live end-to-end in sandbox; stakeholder demo signed off; NFRs (perf/a11y/SEO) met; parallel run clean; **go/no-go = GO**. |
+| **5 — Cutover & launch** | Production swap from the existing store. | 301 map live; DNS swapped; rollback tested & on standby; post-launch monitoring green. |
+
+### 11.1 Sandbox live testing & demo — the pre-swap gate
+
+**Before the existing mejadesigns.com is swapped for the new store, everything runs first in a production-parity sandbox that is exercised *live* and demoed for sign-off.** The current store keeps serving real customers, untouched, until the go/no-go gate passes — so there is zero customer risk during testing.
+
+**Sandbox environment (mirrors production, fully isolated data):**
+
+| Component | Sandbox form |
+|-----------|--------------|
+| Shopify | Development/preview store (or password-protected staging theme) using a **test payment gateway** (Shopify Bogus Gateway) — no real charges. |
+| MEJA‑CRM | CRM sandbox/test tenant pushing **demo** quotes only (no real customer PII). |
+| Atelier3d | Sandbox project + keys; same option models as production. |
+| 4K render engine | Test render queue writing to a **non-production** CDN bucket. |
+| Integration Layer | Staging deployment with its own DB, secrets, and webhook endpoints. |
+
+**Live demo scope — every workflow exercised end-to-end, for real, in the sandbox:**
+- Ready-made purchase → test checkout → order created.
+- CRM pushes a **private/unlisted** quote → signed link opens → buy.
+- **Configurable shelf** (Tile, Art Back, **and** at least one additional style) → live price + 4K render → buy.
+- **Hybrid** listing → edit unlocked options → price/render update → buy.
+- **Atelier3d custom build** → 3D design → 4K render → buy and/or route to a CRM quote.
+- Order → fulfillment packet (config + BOM + 4K render) reaches ops.
+- **Failure drills:** render engine down (WebGL fallback), expired private link, invalid configuration, CRM-vs-rules price reconciliation.
+
+**Demo & UAT:** a scheduled walkthrough for stakeholders on the live sandbox URL; UAT scripts per product type; defects logged, triaged, and re-tested; accessibility (WCAG 2.2 AA) and performance audits run against the sandbox.
+
+**Parallel run (soft launch):** for ~1–2 weeks the new store runs **alongside** the existing live store — behind a password, limited audience, or feature flag — so pricing, behavior, and integrations can be compared against today's store with **no customer impact**.
+
+**Go / no-go checklist — all must be GREEN to authorize the swap:**
+- [ ] All five product types pass **live** end-to-end in the sandbox.
+- [ ] All four integrations (Shopify, MEJA‑CRM, Atelier3d, 4K render) verified live.
+- [ ] Stakeholder demo signed off.
+- [ ] Performance, accessibility (AA), and SEO-parity audits pass.
+- [ ] 301 redirect map verified; private listings excluded from indexing.
+- [ ] Rollback plan tested and on standby.
+- [ ] Parallel run shows no blocking discrepancies vs. the existing store.
+
+Only after a recorded **GO** decision does **Phase 5** perform the cutover. The existing store remains the **rollback target** throughout launch.
 
 ---
 
@@ -413,7 +457,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 | R3 | Private-listing leakage | Low | High | Signed expiring URLs + customer scoping + exclusion from index; security review. |
 | R4 | Pricing drift between CRM and rules engine | Med | High | Single pricing authority per option; reconciliation job; CRM price locked for locked options. |
 | R5 | Headless complexity/cost overruns | Med | Med | Hybrid path: start native+apps, graduate pages; staged budget gates. |
-| R6 | SEO/traffic loss at cutover | Med | High | 301 map, parity audit, staged rollout, monitoring. |
+| R6 | SEO/traffic loss at cutover | Med | High | 301 map, parity audit, **sandbox parallel run + go/no-go gate (§11.1)**, staged rollout, monitoring; existing store kept as rollback target. |
 | R7 | Catalog can't model "styles as data" | Low | Med | Metafield-driven option models; no code change to add a style. |
 
 ---
@@ -451,6 +495,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 | **D6** | Phase 1 scope | Commerce only vs Commerce + CRM push | **Commerce + CRM push** (highest business value early). |
 | **D7** | Render fallback policy | Block on 4K vs **WebGL-first** | **WebGL-first**, 4K async, never block. |
 | **D8** | New shelf styles beyond Tile/Art Back at launch? | which, if any | Confirm launch styles; system supports unlimited via data. |
+| **D9** | Pre-swap parallel-run length & demo sign-off group (§11.1) | 1 wk / 2 wks / longer · who signs off | **~2 weeks** parallel run; named stakeholders sign the recorded go/no-go before swap. |
 
 ---
 
