@@ -315,12 +315,12 @@ A UI **cannot be marked build-ready without an approved mockup.** This is a gate
 | UI | Mockup file | Status |
 |----|-------------|:------:|
 | Iteration selection (10 directions) | `mockups/index.html` | ✓ produced |
-| Home | `mockups/home.html` | ◐ in review |
-| Collection / catalog | `mockups/collection.html` | ☐ |
-| Product (ready-made) PDP — incl. reviews section | `mockups/product.html` | ☐ |
-| Configurator (Tile / Art Back) + 4K viewer | `mockups/configurator.html` | ◐ in review |
-| Private / hybrid listing | `mockups/private-listing.html` | ☐ |
-| Cart | `mockups/cart.html` | ☐ |
+| Home | `mockups/home.html` | ✓ approved |
+| Collection / catalog | `mockups/collection.html` | ◐ in review |
+| Product (ready-made) PDP — incl. reviews section | `mockups/product.html` | ◐ in review |
+| Configurator (product-type tabs) + 4K viewer | `mockups/configurator.html` | ✓ approved |
+| Private / hybrid listing | `mockups/private-listing.html` | ◐ in review |
+| Cart | `mockups/cart.html` | ◐ in review |
 | Account + saved configs | `mockups/account.html` | ☐ |
 | My quotes | `mockups/account-quotes.html` | ☐ |
 | Content (FAQ / made-to-order policy) | `mockups/content.html` | ☐ |
