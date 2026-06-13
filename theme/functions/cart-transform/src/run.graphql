@@ -1,0 +1,11 @@
+query RunInput {
+  cart {
+    lines {
+      id
+      quantity
+      cost { amountPerQuantity { amount currencyCode } }
+      mejaPrice: attribute(key: "_meja_unit_price") { value }
+      configId: attribute(key: "_configId") { value }
+    }
+  }
+}

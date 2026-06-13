@@ -1,0 +1,24 @@
+<div class="wrap"><div class="acct">
+  <nav class="anav" aria-label="Account">
+    <a href="{{ routes.account_url }}">Orders</a>
+    <a href="{{ routes.account_url }}">Saved designs</a>
+    <a class="on" href="{{ pages['quotes'].url | default: '#' }}">My quotes</a>
+    <a href="{{ routes.account_addresses_url }}">Addresses</a>
+    <a href="{{ routes.account_logout_url }}">Sign out</a>
+  </nav>
+  <div>
+    <h1 style="font-size:30px">My quotes</h1>
+    <div class="info">Private listings our team prepared for you. Open one to review, adjust editable options, and order.</div>
+    {%- comment -%} Quotes come from CRM via customer metafields / metaobjects. {%- endcomment -%}
+    {%- for q in customer.metafields.crm.quotes.value -%}
+      <div class="quote">
+        <div class="th"></div>
+        <div><b>{{ q.quote_no }} &middot; {{ q.title }}</b><div class="m">Prepared {{ q.prepared_at }}</div><span class="badge active">{{ q.status }}</span></div>
+        <div class="right"><div class="pr">{{ q.price }}</div><a href="{{ q.url }}">Review &amp; order &rsaquo;</a></div>
+      </div>
+    {%- else -%}
+      <p class="muted">No active quotes. <a href="{{ '/pages/contact' }}" style="color:var(--brand)">Request a quote &rarr;</a></p>
+    {%- endfor -%}
+  </div>
+</div></div>
+{% schema %}{ "name": "My quotes", "settings": [] }{% endschema %}

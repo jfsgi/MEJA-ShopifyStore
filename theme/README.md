@@ -26,3 +26,15 @@ See `../docs/06-API-Contracts.md` and `../api/openapi.yaml`.
 - Reviews app blocks; metafield definitions; Shopify Markets.
 
 > Run locally with the Shopify CLI (`shopify theme dev`) once connected to a dev store.
+
+## Added in this pass
+- **Configurator** (`sections/configurator.liquid` + `assets/configurator.js`): renders an
+  option model per product type, computes a price preview, and adds to cart with
+  `_configId` + `_meja_unit_price` line-item properties.
+- **Cart Transform Function** (`functions/cart-transform/`): applies the CRM-computed price
+  to configured lines (deploy as a Shopify app extension). CRM is authoritative (D4/D10).
+- **Private/Hybrid listing** (`sections/main-private-listing.liquid` +
+  `templates/product.private-listing.json`): quote banner, locked + editable options from
+  `crm.*` metafields.
+- **Account** (`sections/main-account.liquid` + `templates/customers/account.json`) and
+  **My quotes** (`sections/main-quotes.liquid` + `templates/page.quotes.json`).

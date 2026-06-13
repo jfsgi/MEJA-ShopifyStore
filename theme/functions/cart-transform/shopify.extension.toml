@@ -1,0 +1,15 @@
+api_version = "2025-01"
+
+[[extensions]]
+name = "MEJA Cart Transform Price"
+handle = "meja-cart-transform"
+type = "function"
+
+  [extensions.build]
+  command = "npm run build"
+  path = "dist/function.wasm"
+
+  [[extensions.targeting]]
+  target = "cart.transform.run"
+  input_query = "src/run.graphql"
+  export = "run"
