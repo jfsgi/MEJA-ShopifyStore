@@ -546,7 +546,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraph
 | ID | Decision | Options | Recommendation |
 |----|----------|---------|----------------|
 | **D1** | Storefront architecture | (a) **Shopify OS 2.0 theme + embedded 4kGraphics engine** · (b) Hybrid-headless · (c) Full headless | **(a)** — matches the CRM's Phase 8 plan; the engine embeds in Liquid; lowest cost. Headless optional for flagship pages. _(Revised after reviewing the sibling apps.)_ |
-| **D2** | Primary UI iteration | One of the 10 in [`02-UI-Design-Standard.md`](02-UI-Design-Standard.md) | Shortlist **#1 Atelier Gallery**, **#3 Modern Luxe**, **#10 Showroom 3D Immersive**; pick one + accents. |
+| **D2** | Primary UI iteration | One of the 10 variants (`../mockups/index.html`) | ✅ **CHOSEN: Variant 5 — Scandi Light** (light, sage/slate accent, geometric sans, rounded). Note: this differs from the CRM's indigo "Indigo Atelier" (D12) — confirm whether to keep Scandi's accent or adopt the indigo for suite consistency. |
 | **D3** | Shopify tier | Standard/Advanced vs **Plus** | **Plus** if checkout extensibility / scripting / volume warrant. |
 | **D4** | Pricing authority model | **CRM-only** / Rules-only / Hybrid | **CRM pricing engine is the sole authority** (golden-tested to the cent); the store never computes price. _(Revised — there is one real pricing engine.)_ |
 | **D5** | Private-listing access | Signed expiring URL / account-gated / both | **Both** (signed URL *and* customer scope). |

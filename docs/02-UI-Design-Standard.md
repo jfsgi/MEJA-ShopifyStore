@@ -4,7 +4,7 @@
 **Version:** 0.2 (Draft — aligned to the suite's Indigo Atelier `--mj-*` tokens)
 **Date:** 2026-06-13
 **Companion:** Open [`../mockups/index.html`](../mockups/index.html) in a browser to *see* the 10 iterations.
-**Status:** 🟡 Draft — awaiting approval of **one primary iteration** (Decision D2).
+**Status:** 🟢 Primary iteration **chosen: Variant 5 — Scandi Light** (Decision D2). Per-UI mockups now build in this direction (§9 register).
 
 ---
 
