@@ -99,7 +99,7 @@ flowchart TD
 | **Custom Build-Out** | Atelier3d session designs a bespoke piece; 4K render; quote → cart. | Public entry, private result | Atelier3d BOM → pricing rules |
 | **Shelf Style** | A configurable product family. **Tile** and **Art Back** are the two primary styles; the system is **not limited to two** (e.g., Floating, Ledge, Grid, Modular are future styles). | — | — |
 
-> **Design principle:** *Style* is data, not code. Adding a new shelf style (or an entirely new configurable family) is a catalog/configuration change, never a redeploy.
+> **Design principle:** *Styles **and options** are **data**, not code — and not Shopify variants.* Adding a new shelf style, option dimension, or value is a configuration change, never a redeploy. The combinatorial option space (often 10⁵+ combinations — e.g., one Tile-Back shelf = **139,968**) lives in the **Variant & Options Engine** (§5.4), never in Shopify's native variant model (3-option / 2,048-variant limits).
 
 ---
 
@@ -176,6 +176,54 @@ flowchart LR
 - **Shopify checkout stays native** → PCI scope, fraud, taxes, and payments remain Shopify's problem, not ours.
 - We can **start native + apps** for speed and **graduate pages to headless** (see Decision D1 and the phased roadmap).
 
+### 5.4 Variant & Options Engine — *why Shopify-native variants do not fit*
+
+MEJA's configurable products explode combinatorially. A single **Tile-Back shelf** already produces **139,968** combinations:
+
+| Option dimension | Values |
+|------------------|:------:|
+| Stain | 18 |
+| Tile pattern | 18 |
+| Length | 8 |
+| Tile color | 9 |
+| Hook style | 6 |
+| **Total combinations** | **18 × 18 × 8 × 9 × 6 = 139,968** |
+
+Shopify cannot model this natively, on **two** independent limits — and a third issue makes it impossible regardless:
+
+1. **Option ceiling:** Shopify allows **3 options per product**; this product needs **5** (Art-Back, custom tile, and custom art add even more). _(Shopify, current as of 2025-10-15.)_
+2. **Variant ceiling:** Shopify allows **2,048 variants per product** (raised from 100 on 2025-10-15); 139,968 is **~68× over**.
+3. **Un-enumerable inputs:** **custom tile** and **custom art** are free-form (uploaded artwork, bespoke layouts) — an *infinite* space that can never be pre-listed as variants.
+
+**Conclusion: we never model option combinations as Shopify variants.** A dedicated **Variant & Options Engine** owns the option space; Shopify carries only the *result* of a configuration as a custom-priced line item.
+
+```mermaid
+flowchart LR
+    subgraph Engine["Variant & Options Engine (Integration Layer)"]
+      OM[Option Model<br/>dimensions · values · constraints · custom inputs]
+      PR[Pricing Rules Engine<br/>base + modifiers + formulas]
+      CFG[Configuration<br/>configId · selections · BOM · price · render]
+    end
+    OM --> CFG
+    PR --> CFG
+    CFG -->|custom-priced line + configId + option props| SH[Shopify base product<br/>+ native checkout]
+    CFG -->|component draw| INV[Component / BOM inventory]
+```
+
+**How it works**
+
+| Concern | Approach |
+|---------|----------|
+| **What's selectable** | The **Option Model** (per family/style) defines *unlimited* dimensions, values, dependencies, constraints, and free-form input types (upload/text). Source of truth in the Integration Layer; mirrored to Atelier3d for the 3D scene. Adding a stain — or a whole new dimension — is **data**, not code or variants. |
+| **Price** | The **Pricing Rules Engine** computes price deterministically: `base + Σ option modifiers + formulas` (e.g., length → material cost, tile count → labor). Versioned. **Server-side authority** — the client never sets price. |
+| **Catalog footprint in Shopify** | **One base "configurable" product per family/style** (a handful of products) — *not* 139,968 variants. The chosen configuration rides on the cart line as **line-item properties + a `configId`**. |
+| **Getting the price into checkout** (Decision **D10**) | **A. Cart Transform Function (Shopify Plus):** a base variant sits in the native cart; a server-side Shopify Function rewrites its price to the engine-computed amount from the attached `configId`. Keeps native cart/checkout UX. · **B. Draft Orders API:** the Integration Layer creates a draft order with a custom-priced line, then converts it to a checkout. Works without Plus; ideal for **CRM-pushed private/hybrid quotes**. |
+| **Inventory** | Tracked at the **component / BOM level** (blanks, tiles, hooks, stain), never per combination. Feasibility = component availability, not 139,968 phantom SKUs. |
+| **Merchandising & filtering** | Collection filters (e.g., "available in walnut") are driven by **option metadata**, not variants. |
+| **Anti-tampering** | Final price is always (re)computed and set **server-side** (Function or Draft Order) and re-validated against `configId` at the `orders/create` webhook. |
+
+**Recommendation:** **Cart Transform Functions on Shopify Plus** for self-serve configurators (native UX), **plus Draft Orders** for CRM-pushed quotes and as a non-Plus fallback. This makes **Shopify Plus (Decision D3) effectively required**, and reinforces **hybrid-headless (D1)** — native variant pickers cannot express this, so the **configurator UI is mandatory** for these products.
+
 ---
 
 ## 6. API integration specification
@@ -187,7 +235,8 @@ All cross-system calls go through the **Integration Layer**. No system calls ano
 | From → To | Direction | Transport | Key operations |
 |-----------|-----------|-----------|----------------|
 | Storefront → Shopify | sync | Storefront API (GraphQL) | read products/collections, create cart, go to checkout |
-| Integration Layer → Shopify | sync | Admin API (GraphQL/REST) | create/update products & variants, set metafields, manage publications/visibility |
+| Integration Layer → Shopify | sync | Admin API (GraphQL/REST) | create/update base products, set metafields, manage publications/visibility |
+| Integration Layer → Shopify | sync | Draft Orders / Cart Transform Function | set the **configured line price** (server-side) + attach `configId` & option properties — see §5.4 |
 | Shopify → Integration Layer | async | Webhooks | `orders/create`, `orders/paid`, `orders/fulfilled`, `customers/*` |
 | MEJA‑CRM → Integration Layer | async + sync | Webhook + REST | push quote → create private/hybrid listing; price updates; expirations |
 | Integration Layer → MEJA‑CRM | sync | REST | acknowledge listing creation; send order status; reconcile |
@@ -297,9 +346,10 @@ erDiagram
     PRICING_RULESET { string id; json baseRates; json modifiers }
 ```
 
-- **Shopify holds** products, variants, inventory, orders, customers (system of record).
-- **Integration Layer DB holds** the *mapping & state* Shopify can't model well: option models, configurations, render-job state, quote↔product links, pricing rulesets, signed-access tokens.
-- **Metafields** carry per-product config schema, visibility flags, and per-line-item config snapshots into Shopify so back-office/fulfillment can see them.
+- **Shopify holds** base products (a handful per family/style — **not** the option combinations), **component-level inventory**, orders, customers (system of record). See §5.4 for why combinations are never stored as variants.
+- **Integration Layer DB holds** the *mapping & state* Shopify can't model well: **option models**, configurations, **pricing rulesets**, render-job state, quote↔product links, signed-access tokens.
+- **Inventory is tracked at the component/BOM level** (blanks, tiles, hooks, stain), not per option-combination — there is no per-combination SKU.
+- **Metafields** carry per-product config schema, visibility flags, and per-line-item config snapshots (incl. `configId`) into Shopify so back-office/fulfillment can see exactly what was bought.
 
 ---
 
@@ -458,7 +508,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 | R4 | Pricing drift between CRM and rules engine | Med | High | Single pricing authority per option; reconciliation job; CRM price locked for locked options. |
 | R5 | Headless complexity/cost overruns | Med | Med | Hybrid path: start native+apps, graduate pages; staged budget gates. |
 | R6 | SEO/traffic loss at cutover | Med | High | 301 map, parity audit, **sandbox parallel run + go/no-go gate (§11.1)**, staged rollout, monitoring; existing store kept as rollback target. |
-| R7 | Catalog can't model "styles as data" | Low | Med | Metafield-driven option models; no code change to add a style. |
+| R7 | Variant explosion exceeds Shopify limits (3 options / 2,048 variants); custom tile/art are un-enumerable | **High** | High | **Variant & Options Engine (§5.4)**: options as data + server-side pricing + custom-priced line items (Cart Transform / Draft Orders); inventory at BOM level; never model combinations as native variants. |
 
 ---
 
@@ -496,6 +546,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 | **D7** | Render fallback policy | Block on 4K vs **WebGL-first** | **WebGL-first**, 4K async, never block. |
 | **D8** | New shelf styles beyond Tile/Art Back at launch? | which, if any | Confirm launch styles; system supports unlimited via data. |
 | **D9** | Pre-swap parallel-run length & demo sign-off group (§11.1) | 1 wk / 2 wks / longer · who signs off | **~2 weeks** parallel run; named stakeholders sign the recorded go/no-go before swap. |
+| **D10** | How configured purchases reach Shopify checkout (§5.4) | Cart Transform Functions (Plus) / Draft Orders API / both | **Both** — Cart Transform on Plus for self-serve native UX; Draft Orders for CRM-pushed quotes & non-Plus fallback. Makes **D3 = Plus** effectively required. |
 
 ---
 

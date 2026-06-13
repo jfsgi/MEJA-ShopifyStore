@@ -128,7 +128,7 @@ sequenceDiagram
     end
     C->>ST: Add to cart
     ST->>IL: Freeze configuration → BOM + price + render URLs
-    IL->>SH: Ensure variant/line maps to config (line-item properties/metafields)
+    IL->>SH: Custom-priced line via Cart Transform/Draft Order + configId + option properties
     C->>SH: Native checkout → pay
     SH-->>IL: orders/paid (config snapshot on line)
 ```

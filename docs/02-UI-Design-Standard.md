@@ -124,6 +124,8 @@ Gallery left / details right; variant picker; add-to-cart; specs; care; related.
 ```
 ≥lg split; <lg stacks viewer on top with a **sticky price+CTA bar**.
 
+> **Note:** configurable products **never** use Shopify's native variant picker (3-option / 2,048-variant limits). All options come from the **Variant & Options Engine** (Master Plan §5.4); the configurator UI is mandatory for these products.
+
 ### 4.5 Private / hybrid listing (`/q/:token`)
 Same as configurator/PDP **plus** a "Prepared for you" banner, expiry, locked options shown read-only, editable options interactive (hybrid).
 
