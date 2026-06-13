@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — Home (Warm Workshop) · mockup for approval</title>
+<style>
+  /* ============================================================
+     MEJA WebStore · HOME · Iteration #2 "Warm Workshop"
+     Mockup for approval (UI Standard §9). Self-contained HTML/CSS.
+     Tokens alias the CRM "Indigo Atelier" --mj-* set (D12).
+     ============================================================ */
+
+  :root{
+    /* --mj-* = the shared suite tokens (CRM Indigo Atelier source) */
+    --mj-bg:#EFE7D8; --mj-surface:#E7DCC6; --mj-surface-2:#F5EFE2;
+    --mj-ink:#2B2117; --mj-ink-muted:#7a6c55; --mj-line:#D8CBB3;
+    --mj-brand:#B8742A; --mj-brand-ink:#FFFFFF; --mj-accent:#7C8466;
+    --mj-success:#4F6B3A; --mj-warning:#B8742A; --mj-danger:#9b3b2f;
+    --mj-focus:#2B6CB0;
+    --mj-display:"Iowan Old Style",Georgia,"Times New Roman",serif;
+    --mj-text:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mj-mono:"SFMono-Regular",Menlo,Consolas,monospace;
+    --mj-radius:8px; --mj-radius-lg:16px;
+    --mj-shadow:0 12px 32px rgba(43,33,23,.14);
+    --mj-shadow-sm:0 4px 14px rgba(43,33,23,.10);
+    /* store roles alias --mj-* */
+    --bg:var(--mj-bg); --surface:var(--mj-surface); --ink:var(--mj-ink);
+    --muted:var(--mj-ink-muted); --line:var(--mj-line); --brand:var(--mj-brand);
+    --brandink:var(--mj-brand-ink); --accent:var(--mj-accent);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--mj-text);line-height:1.55;
+    background-image:repeating-linear-gradient(45deg,rgba(43,33,23,.012) 0 8px,transparent 8px 16px);}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--mj-display);font-weight:600;line-height:1.08;margin:0}
+  .eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--brand);font-weight:600}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-size:14px;
+    letter-spacing:.4px;padding:13px 22px;border-radius:var(--mj-radius);background:var(--brand);color:var(--brandink);font-weight:600}
+  .btn.ghost{background:transparent;border:1.5px solid var(--ink);color:var(--ink)}
+  .btn:focus-visible{outline:3px solid var(--mj-focus);outline-offset:2px}
+
+  /* annotation banner (mockup chrome only) */
+  .anno{background:#241b12;color:#e9dcc6;font-size:12.5px;padding:9px 24px;text-align:center;font-family:var(--mj-mono)}
+  .anno b{color:#f4cd8f}
+
+  /* announcement */
+  .topbar{background:var(--ink);color:var(--mj-surface-2);text-align:center;font-size:12.5px;padding:8px;letter-spacing:.4px}
+
+  /* header */
+  header.site{position:sticky;top:0;z-index:30;background:rgba(239,231,216,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:28px;height:72px}
+  .logo{font-family:var(--mj-display);font-size:24px;font-weight:700;letter-spacing:3px}
+  .logo small{display:block;font-family:var(--mj-text);font-size:9px;letter-spacing:3px;color:var(--muted);font-weight:600;margin-top:-2px}
+  nav.main{display:flex;gap:22px;font-size:13.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink)}
+  nav.main a{padding:6px 0;border-bottom:2px solid transparent}
+  nav.main a:hover{border-color:var(--brand);color:var(--brand)}
+  .icons{margin-left:auto;display:flex;gap:18px;align-items:center}
+  .icons button{background:none;border:none;cursor:pointer;color:var(--ink);display:flex;gap:6px;align-items:center;font-size:13px;font-family:var(--mj-text)}
+  .cartdot{background:var(--brand);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-family:var(--mj-mono)}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:64px 0 56px}
+  .hero .copy{display:flex;flex-direction:column;gap:20px}
+  .hero h1{font-size:clamp(36px,5vw,58px)}
+  .hero p.lead{font-size:18px;color:var(--muted);max-width:46ch;margin:0}
+  .hero .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+  .hero .reassure{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:6px}
+  .hero .reassure span{display:flex;gap:7px;align-items:center}
+  .hero-art{position:relative;aspect-ratio:4/3;border-radius:var(--mj-radius-lg);overflow:hidden;
+    background:radial-gradient(120% 120% at 70% 20%,#cdb38a,#9c7b4f 70%);box-shadow:var(--mj-shadow);display:flex;align-items:center;justify-content:center}
+  .shelf{width:74%;height:30%;border-radius:6px;position:relative;
+    background:repeating-linear-gradient(90deg,#7a4f29 0 12px,#6b4a2b 12px 13px);box-shadow:0 18px 30px rgba(0,0,0,.3);}
+  .shelf::after{content:"";position:absolute;inset:-14% 6% auto 6%;height:8%;border-radius:4px;background:rgba(0,0,0,.12)}
+  .hero-art .chip{position:absolute;bottom:16px;right:16px;background:rgba(33,27,18,.78);color:#fff;font-size:11px;font-family:var(--mj-mono);padding:6px 11px;border-radius:999px;display:flex;gap:7px;align-items:center}
+  .pulse{width:7px;height:7px;border-radius:999px;background:#7CCB8A;box-shadow:0 0 0 0 rgba(124,203,138,.6);animation:p 1.8s infinite}
+  @keyframes p{0%{box-shadow:0 0 0 0 rgba(124,203,138,.55)}70%{box-shadow:0 0 0 8px rgba(124,203,138,0)}100%{box-shadow:0 0 0 0 rgba(124,203,138,0)}}
+
+  /* trust strip */
+  .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--mj-surface-2)}
+  .trust .row{display:flex;justify-content:space-between;gap:18px;padding:18px 0;flex-wrap:wrap}
+  .trust .t{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--ink)}
+  .trust svg{flex:none}
+
+  /* section */
+  section.block{padding:64px 0}
+  .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+  .head h2{font-size:clamp(26px,3.4vw,38px)}
+  .head a.more{font-size:13px;color:var(--brand);border-bottom:1px solid var(--brand);padding-bottom:2px}
+
+  /* style cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{background:var(--mj-surface-2);border:1px solid var(--line);border-radius:var(--mj-radius-lg);overflow:hidden;box-shadow:var(--mj-shadow-sm);transition:transform .2s}
+  .card:hover{transform:translateY(-4px)}
+  .card .img{aspect-ratio:4/3;position:relative;background:radial-gradient(120% 120% at 60% 25%,#c8ad84,#94744a)}
+  .card .img .mini{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:64%;height:20%;border-radius:5px;background:repeating-linear-gradient(90deg,#7a4f29 0 10px,#6b4a2b 10px 11px);box-shadow:0 10px 20px rgba(0,0,0,.28)}
+  .card .img.artback .mini{height:42%;top:48%;background:linear-gradient(135deg,#8a9a6f,#6b7a52);box-shadow:0 10px 20px rgba(0,0,0,.28)}
+  .card .img.floating .mini{height:12%}
+  .tag{position:absolute;top:12px;left:12px;background:var(--brand);color:#fff;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+  .card .body{padding:18px 18px 20px}
+  .card h3{font-size:20px;margin-bottom:4px}
+  .card .price{font-family:var(--mj-mono);font-size:14px;color:var(--ink)}
+  .card .desc{font-size:13px;color:var(--muted);margin:8px 0 14px}
+  .card .cfg{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--brand);font-weight:600;display:flex;gap:6px;align-items:center}
+
+  /* how it works */
+  .how{background:var(--ink);color:var(--mj-surface-2)}
+  .how .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  .how .eyebrow{color:#e6a866}
+  .how h2{color:var(--mj-surface-2);font-size:clamp(26px,3.4vw,38px)}
+  .step{display:flex;flex-direction:column;gap:10px}
+  .step .n{font-family:var(--mj-mono);font-size:13px;color:#e6a866;border:1px solid #5a4a35;border-radius:999px;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:20px;color:var(--mj-surface-2)}
+  .step p{font-size:14px;color:#c9bba2;margin:0}
+
+  /* rooms */
+  .rooms{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:repeat(2,150px);gap:16px}
+  .room{border-radius:var(--mj-radius);overflow:hidden;position:relative;display:flex;align-items:flex-end;padding:16px;color:#fff;font-family:var(--mj-display);font-size:18px}
+  .room::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.55))}
+  .room span{position:relative;z-index:1}
+  .room.big{grid-row:span 2;background:radial-gradient(120% 120% at 40% 20%,#b89a6e,#7c5e3c)}
+  .room.r2{background:radial-gradient(120% 120% at 60% 30%,#9aa37e,#69734f)}
+  .room.r3{background:radial-gradient(120% 120% at 60% 30%,#c19a6b,#8a6440)}
+  .room.r4{background:radial-gradient(120% 120% at 60% 30%,#a98b66,#6f5436)}
+  .room.r5{background:radial-gradient(120% 120% at 60% 30%,#8f9a72,#5f6a47)}
+
+  /* reviews */
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .review{background:var(--mj-surface-2);border:1px solid var(--line);border-radius:var(--mj-radius);padding:22px}
+  .stars{color:var(--brand);letter-spacing:2px;font-size:14px}
+  .review p{font-size:14.5px;margin:10px 0}
+  .review .who{font-size:12.5px;color:var(--muted)}
+
+  /* made-to-order + newsletter */
+  .mto{background:var(--mj-surface);border:1px dashed var(--line);border-radius:var(--mj-radius-lg);padding:26px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .mto .ico{width:42px;height:42px;flex:none;border-radius:999px;background:var(--brand);display:flex;align-items:center;justify-content:center}
+  .mto h3{font-size:20px;margin-bottom:4px}
+  .mto p{font-size:13.5px;color:var(--muted);margin:0;max-width:60ch}
+  .news{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+  .news input{flex:1;min-width:220px;padding:13px 14px;border:1px solid var(--line);border-radius:var(--mj-radius);background:#fff;font-size:14px;font-family:var(--mj-text)}
+  .news input:focus-visible{outline:3px solid var(--mj-focus);outline-offset:1px}
+
+  /* footer */
+  footer.site{background:var(--ink);color:#c9bba2;margin-top:0;padding:48px 0 28px}
+  .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+  footer .logo{color:var(--mj-surface-2)}
+  footer h4{font-family:var(--mj-text);font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:#e6a866;margin:0 0 12px}
+  footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+  footer .legal{border-top:1px solid #463826;margin-top:32px;padding-top:18px;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* mobile preview frame (mockup §9.1 responsive requirement) */
+  .mobile-demo{padding:48px 0 80px;background:var(--mj-surface-2);border-top:1px solid var(--line)}
+  .phone{width:330px;margin:24px auto 0;border:10px solid #241b12;border-radius:32px;overflow:hidden;box-shadow:var(--mj-shadow)}
+  .phone .p-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--bg)}
+  .phone .p-head .logo{font-size:18px;letter-spacing:2px}
+  .phone .burger{margin-left:auto;width:22px;height:14px;display:flex;flex-direction:column;justify-content:space-between}
+  .phone .burger i{height:2px;background:var(--ink);display:block}
+  .phone .p-hero{padding:20px 16px 16px;background:radial-gradient(120% 120% at 70% 10%,#cdb38a,#9c7b4f)}
+  .phone .p-hero .eyebrow{color:#3a2c1c}
+  .phone .p-hero h3{font-family:var(--mj-display);font-size:24px;color:#241b12;margin:6px 0 10px}
+  .phone .p-shelf{height:60px;border-radius:5px;background:repeating-linear-gradient(90deg,#7a4f29 0 10px,#6b4a2b 10px 11px);box-shadow:0 10px 20px rgba(0,0,0,.3);margin-top:8px}
+  .phone .p-sticky{position:sticky;bottom:0;display:flex;gap:10px;align-items:center;padding:12px 14px;background:var(--bg);border-top:1px solid var(--line)}
+  .phone .p-sticky .pr{font-family:var(--mj-mono);font-weight:700}
+  .phone .p-sticky .btn{flex:1;justify-content:center;padding:11px}
+
+  @media(max-width:880px){
+    nav.main,.icons button span{display:none}
+    .hero{grid-template-columns:1fr;gap:28px}
+    .cards,.how .steps,.reviews{grid-template-columns:1fr}
+    .rooms{grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,130px)}
+    .room.big{grid-row:span 2}
+    .fcols{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="anno">MOCKUP FOR APPROVAL · Home · Iteration <b>#2 Warm Workshop</b> · tokens alias CRM <b>--mj-*</b> · production embeds the live 4kGraphics engine in the OS 2.0 theme</div>
+
+<div class="topbar">Handmade to order in our workshop · Free design help · Live 4K preview before we build</div>
+
+<header class="site">
+  <div class="wrap nav">
+    <div class="logo">MEJA<small>DESIGNS</small></div>
+    <nav class="main" aria-label="Primary">
+      <a href="#">Shelves</a><a href="#">Wall Art</a><a href="#">Custom</a><a href="#">Our Craft</a>
+    </nav>
+    <div class="icons">
+      <button aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><span>Search</span></button>
+      <button aria-label="Account"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Account</span></button>
+      <button aria-label="Cart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg><span class="cartdot">0</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="hero">
+    <div class="copy">
+      <span class="eyebrow">Made by hand · One at a time</span>
+      <h1>Real wood, made for your space.</h1>
+      <p class="lead">Configure a shelf in 3D, preview it in true 4K, and we craft it by hand in our workshop — exactly as you designed it.</p>
+      <div class="ctas">
+        <a class="btn" href="configurator.html">Design your shelf →</a>
+        <a class="btn ghost" href="#styles">Browse ready-made</a>
+      </div>
+      <div class="reassure">
+        <span>✦ Solid hardwood</span><span>✦ Made to order</span><span>✦ 4K preview before we build</span>
+      </div>
+    </div>
+    <div class="hero-art" role="img" aria-label="Render of a handcrafted tile-back shelf">
+      <div class="shelf"></div>
+      <div class="chip"><span class="pulse"></span> 4K render · live</div>
+    </div>
+  </section>
+</div>
+
+<!-- TRUST -->
+<div class="trust"><div class="wrap row">
+  <div class="t"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B8742A" stroke-width="2"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 21l-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg> Handmade craftsmanship</div>
+  <div class="t"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C8466" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg> Made to order, just for you</div>
+  <div class="t"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B8742A" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Ships in 1–3 weeks</div>
+  <div class="t"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C8466" stroke-width="2"><path d="M4 16l5-5 4 4 7-8"/></svg> See it in 4K first</div>
+</div></div>
+
+<!-- FEATURED STYLES -->
+<div class="wrap"><section class="block" id="styles">
+  <div class="head">
+    <div><span class="eyebrow">From the bench</span><h2>Shelves, your way</h2></div>
+    <a class="more" href="#">All shelves →</a>
+  </div>
+  <div class="cards">
+    <article class="card">
+      <div class="img"><span class="tag">Tile</span><div class="mini"></div></div>
+      <div class="body"><h3>Tile Shelf</h3><div class="price">from $189</div>
+        <p class="desc">A solid-wood ledge with a hand-set tile face. Choose pattern, color, length & hooks.</p>
+        <a class="cfg" href="configurator.html">Configure →</a></div>
+    </article>
+    <article class="card">
+      <div class="img artback"><span class="tag">Art Back</span><div class="mini"></div></div>
+      <div class="body"><h3>Art Back Shelf</h3><div class="price">from $229</div>
+        <p class="desc">A framed backboard with your chosen artwork behind a solid shelf. Make it custom.</p>
+        <a class="cfg" href="configurator.html">Configure →</a></div>
+    </article>
+    <article class="card">
+      <div class="img floating"><span class="tag">Floating</span><div class="mini"></div></div>
+      <div class="body"><h3>Floating Ledge</h3><div class="price">from $149</div>
+        <p class="desc">Clean, hidden-bracket ledge in the wood and finish of your choice.</p>
+        <a class="cfg" href="configurator.html">Configure →</a></div>
+    </article>
+  </div>
+</section></div>
+
+<!-- HOW IT WORKS -->
+<div class="how"><div class="wrap"><section class="block">
+  <span class="eyebrow">How custom works</span>
+  <h2 style="margin:6px 0 30px">Three steps to a piece that fits.</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>Configure</h3><p>Pick the style, size, wood, finish, tile or art, and hooks. Everything updates live.</p></div>
+    <div class="step"><div class="n">2</div><h3>Preview in 4K</h3><p>See a photoreal 4K render of your exact piece, lit and true to scale, before you buy.</p></div>
+    <div class="step"><div class="n">3</div><h3>We craft it</h3><p>Your design goes straight to our workshop as a build plan and is hand-made to order.</p></div>
+  </div>
+</section></div></div>
+
+<!-- ROOMS -->
+<div class="wrap"><section class="block">
+  <div class="head"><div><span class="eyebrow">Shop by room</span><h2>Find your spot</h2></div></div>
+  <div class="rooms">
+    <div class="room big"><span>Living room</span></div>
+    <div class="room r2"><span>Kitchen</span></div>
+    <div class="room r3"><span>Entryway</span></div>
+    <div class="room r4"><span>Office</span></div>
+    <div class="room r5"><span>Bath</span></div>
+  </div>
+</section></div>
+
+<!-- REVIEWS -->
+<div class="wrap"><section class="block">
+  <div class="head"><div><span class="eyebrow">Loved by customers</span><h2>Built to be lived with</h2></div></div>
+  <div class="reviews">
+    <div class="review"><div class="stars">★★★★★</div><p>"The 4K preview matched the real shelf exactly. The walnut tile-back is the best piece in our kitchen."</p><div class="who">— Dana R., verified buyer</div></div>
+    <div class="review"><div class="stars">★★★★★</div><p>"Designed my own size in minutes and it arrived flawless. You can feel it's handmade."</p><div class="who">— Marcus T., verified buyer</div></div>
+    <div class="review"><div class="stars">★★★★★</div><p>"The art-back option let me put our wedding print behind the shelf. Genuinely special."</p><div class="who">— Priya & Sam, verified buyers</div></div>
+  </div>
+</section></div>
+
+<!-- MADE TO ORDER + NEWSLETTER -->
+<div class="wrap"><section class="block" style="padding-top:0">
+  <div class="mto">
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 12l4-7h10l4 7-9 9z"/></svg></div>
+    <div>
+      <h3>Every piece is made to order</h3>
+      <p>Because each shelf is custom-built by hand for you, all sales are final — <strong>no returns or exchanges</strong>. If anything arrives not as your approved 4K render, we’ll repair, rework, or remake it. <a href="#" style="color:var(--brand);border-bottom:1px solid var(--brand)">Read our made-to-order policy →</a></p>
+    </div>
+  </div>
+  <div style="margin-top:36px;text-align:center">
+    <span class="eyebrow">Stay in touch</span>
+    <h2 style="font-size:30px;margin:6px 0 4px">Design tips & new styles</h2>
+    <p style="color:var(--muted);margin:0">No spam — just craft.</p>
+    <form class="news" style="max-width:460px;margin:18px auto 0" onsubmit="return false">
+      <input type="email" placeholder="you@example.com" aria-label="Email address" />
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section></div>
+
+<!-- FOOTER -->
+<footer class="site"><div class="wrap">
+  <div class="fcols">
+    <div>
+      <div class="logo" style="font-family:var(--mj-display);font-size:22px;letter-spacing:3px">MEJA</div>
+      <p style="font-size:13.5px;max-width:30ch;margin-top:10px">Handcrafted wood shelving and wall art, designed with you and made to order.</p>
+    </div>
+    <div><h4>Shop</h4><ul><li><a href="#">Tile Shelves</a></li><li><a href="#">Art Back Shelves</a></li><li><a href="#">Floating Ledges</a></li><li><a href="configurator.html">Design custom</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="#">FAQ</a></li><li><a href="#">Made-to-order policy</a></li><li><a href="#">Shipping</a></li><li><a href="#">Care</a></li></ul></div>
+    <div><h4>Studio</h4><ul><li><a href="#">Our craft</a></li><li><a href="#">Trade / wholesale</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 MEJA Designs — made to order, no returns.</span><span>Privacy · Terms</span></div>
+</div></footer>
+
+<!-- MOBILE PREVIEW (responsive evidence per UI Standard §9.1) -->
+<div class="mobile-demo"><div class="wrap" style="text-align:center">
+  <span class="eyebrow">Responsive</span>
+  <h2 style="font-size:26px;margin:6px 0 0">Mobile view</h2>
+  <div class="phone">
+    <div class="p-head"><div class="logo" style="font-family:var(--mj-display)">MEJA</div><div class="burger"><i></i><i></i><i></i></div></div>
+    <div class="p-hero">
+      <span class="eyebrow">Made by hand</span>
+      <h3>Real wood, made for your space.</h3>
+      <div class="p-shelf"></div>
+    </div>
+    <div style="padding:14px 16px;font-size:13px;color:var(--muted)">Configure a shelf in 3D, preview in 4K, hand-made to order.</div>
+    <div class="p-sticky"><span class="pr">from $189</span><a class="btn" href="configurator.html">Design yours</a></div>
+  </div>
+</div></div>
+
+</body>
+</html>

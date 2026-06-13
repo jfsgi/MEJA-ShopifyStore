@@ -311,10 +311,10 @@ A UI **cannot be marked build-ready without an approved mockup.** This is a gate
 | UI | Mockup file | Status |
 |----|-------------|:------:|
 | Iteration selection (10 directions) | `mockups/index.html` | ✓ produced |
-| Home | `mockups/home.html` | ☐ |
+| Home | `mockups/home.html` | ◐ in review |
 | Collection / catalog | `mockups/collection.html` | ☐ |
 | Product (ready-made) PDP | `mockups/product.html` | ☐ |
-| Configurator (Tile / Art Back) + 4K viewer | `mockups/configurator.html` | ☐ |
+| Configurator (Tile / Art Back) + 4K viewer | `mockups/configurator.html` | ◐ in review |
 | Private / hybrid listing | `mockups/private-listing.html` | ☐ |
 | Cart | `mockups/cart.html` | ☐ |
 | Account + saved configs | `mockups/account.html` | ☐ |
