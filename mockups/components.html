@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — Components &amp; States (Scandi Light) · mockup</title>
+<link rel="stylesheet" href="scandi.css" />
+<style>
+  body{background:#fbfcfc}
+  .sheet{padding:30px 0 70px}
+  .grp{margin-bottom:38px}
+  .grp > h2{font-size:14px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:18px}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  /* tokens */
+  .tok{display:flex;gap:14px;flex-wrap:wrap}
+  .tok .sw{width:96px}
+  .tok .sw .c{height:54px;border-radius:10px;border:1px solid rgba(0,0,0,.06)}
+  .tok .sw small{font-size:11px;color:var(--muted);display:block;margin-top:6px;font-family:var(--mono)}
+  /* forms */
+  .field{margin-bottom:14px;max-width:320px}
+  .field label{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--text);background:#fff}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--brand)}
+  .field.err input{border-color:var(--danger)}
+  .field .msg{font-size:12px;color:var(--danger);margin-top:5px}
+  .check{display:flex;align-items:center;gap:9px;font-size:14px;margin:8px 0}
+  .check .box{width:18px;height:18px;border:1.5px solid var(--line);border-radius:5px}
+  .check.on .box{background:var(--brand);border-color:var(--brand);position:relative}
+  .check.on .box::after{content:"✓";color:#fff;font-size:12px;position:absolute;top:-2px;left:2px}
+  /* mega menu */
+  .mega{border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:22px;display:grid;grid-template-columns:repeat(4,1fr) 1.2fr;gap:22px;max-width:920px}
+  .mega h4{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  .mega ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+  .mega .promo{background:url(stock/drawerunit.jpg) center/cover;border-radius:12px;min-height:150px;position:relative;color:#fff}
+  .mega .promo span{position:absolute;left:14px;bottom:12px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  /* price block */
+  .priceblk{max-width:320px}
+  .priceblk .pl{display:flex;justify-content:space-between;align-items:center}
+  .priceblk .amt{font-family:var(--mono);font-size:28px;font-weight:700}
+  .priceblk .lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  /* quote banner */
+  .qb{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:var(--radius-sm);padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;max-width:680px}
+  .qb .exp{margin-left:auto;font-size:12.5px;color:var(--muted)}.qb .exp b{color:var(--danger)}
+  /* cart line */
+  .cl{display:grid;grid-template-columns:84px 1fr auto;gap:16px;align-items:center;max-width:560px}
+  .cl .th{width:84px;height:64px;border-radius:10px;background:url(stock/cabinetdoor.jpg) center/cover}
+  .cl .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+  .cl .chips span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:11px}
+  .cl .pr{font-family:var(--mono)}
+  /* review + modal */
+  .modal{max-width:420px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:22px}
+  .modal h3{font-size:18px;margin-bottom:4px}
+  .modal .star-input{font-size:26px;color:var(--brand);letter-spacing:4px;margin:10px 0}
+  .modal .drop{border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;color:var(--muted);font-size:13px;margin:12px 0}
+  /* states */
+  .skel{background:linear-gradient(90deg,#eef1f0,#f6f8f7,#eef1f0);background-size:200% 100%;animation:sh 1.3s infinite;border-radius:8px}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .skcard{width:220px}
+  .skcard .img{height:120px;border-radius:12px}
+  .skcard .l{height:12px;margin-top:10px}
+  .empty,.error{max-width:340px;text-align:center;padding:26px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}
+  .empty .ic,.error .ic{font-size:30px}
+  .error{border-color:#e7cdc7;background:#fdf6f4}
+  /* toasts + dialog */
+  .toast{display:flex;align-items:center;gap:10px;background:#1f2624;color:#eaf0ed;border-radius:12px;padding:12px 16px;font-size:13.5px;max-width:360px;box-shadow:var(--shadow)}
+  .toast.ok .d{color:#8fd0a6}.toast .d{font-size:16px}
+  .dialog{max-width:380px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);padding:22px}
+  .dialog h3{font-size:18px;margin-bottom:6px}
+  .dialog p{font-size:14px;color:var(--muted);margin:0 0 16px}
+  .dialog .acts{display:flex;gap:10px;justify-content:flex-end}
+  .btn.sm{padding:10px 16px;font-size:13px}
+  .btn.danger{background:var(--danger)}
+</style>
+</head>
+<body>
+<div class="anno">MOCKUP FOR APPROVAL · Components &amp; States · Direction <b>#5 Scandi Light</b> · style-guide reference</div>
+<header class="site"><div class="wrap nav"><div class="logo">MEJA</div><nav class="main"><a href="home.html">Drawer Boxes</a><a href="home.html">Drawer Units</a><a href="home.html">Cabinet Doors</a><a href="home.html">Shelves</a><a href="configurator.html">Custom</a></nav><div class="icons"><span>Search</span><span>Account</span><span>Cart</span><span class="cartdot">3</span></div></div></header>
+
+<div class="wrap sheet">
+  <h1 style="font-size:30px;margin-bottom:6px">Components &amp; states</h1>
+  <p class="muted" style="margin-bottom:28px">The shared building blocks behind every page, in the approved Scandi Light direction.</p>
+
+  <div class="grp"><h2>Color tokens (--mj-* roles)</h2><div class="tok">
+    <div class="sw"><div class="c" style="background:#fff;border:1px solid #ddd"></div><small>bg #fff</small></div>
+    <div class="sw"><div class="c" style="background:#f3f5f4"></div><small>surface</small></div>
+    <div class="sw"><div class="c" style="background:#232826"></div><small>ink</small></div>
+    <div class="sw"><div class="c" style="background:#71807c"></div><small>muted</small></div>
+    <div class="sw"><div class="c" style="background:#5b6b73"></div><small>brand</small></div>
+    <div class="sw"><div class="c" style="background:#9bb0a3"></div><small>accent</small></div>
+    <div class="sw"><div class="c" style="background:#9b4a3f"></div><small>danger</small></div>
+  </div></div>
+
+  <div class="grp"><h2>Buttons</h2><div class="row">
+    <button class="btn">Primary</button>
+    <button class="btn ghost">Secondary</button>
+    <button class="btn" style="opacity:.5;cursor:not-allowed">Disabled</button>
+    <button class="btn"><span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:999px;animation:sh 0s"></span> Loading…</button>
+    <button class="btn danger sm">Destructive</button>
+  </div></div>
+
+  <div class="grp"><h2>Forms &amp; inputs</h2><div class="row">
+    <div class="card">
+      <div class="field"><label>Full name</label><input value="Jordan Avery" /></div>
+      <div class="field"><label>Wood</label><select><option>Walnut</option><option>White Oak</option><option>Cherry</option></select></div>
+      <div class="field err"><label>Email</label><input value="jordan@" /><div class="msg">Please enter a valid email address.</div></div>
+      <div class="check on"><span class="box"></span> Add undermount soft-close notches</div>
+      <div class="check"><span class="box"></span> Email me when it ships</div>
+    </div>
+    <div class="card" style="max-width:360px"><div class="field" style="max-width:none"><label>Notes for the shop</label><textarea rows="4" placeholder="Anything we should know about the fit…"></textarea></div></div>
+  </div></div>
+
+  <div class="grp"><h2>Mega-menu (product nav)</h2>
+    <div class="mega">
+      <div><h4>Drawer Boxes</h4><ul><li>Standard</li><li>Deep / pots</li><li>Cutlery + insert</li><li>Spice</li><li>Design your own ›</li></ul></div>
+      <div><h4>Drawer Units</h4><ul><li>3–6 drawers</li><li>Vanity</li><li>Base cabinet</li><li>Design your own ›</li></ul></div>
+      <div><h4>Cabinet Doors</h4><ul><li>Slab</li><li>Shaker</li><li>Raised panel</li><li>Glass</li><li>Design your own ›</li></ul></div>
+      <div><h4>Shelves</h4><ul><li>Tile</li><li>Art Back</li><li>Floating</li><li>Live edge</li></ul></div>
+      <div class="promo"><span>Custom in 3D → 4K</span></div>
+    </div>
+  </div>
+
+  <div class="grp"><h2>Product card · Price block · Made-to-order</h2><div class="row">
+    <a class="pcard" style="width:240px" href="#"><div class="img" style="background-image:url(stock/drawerunit.jpg)"><span class="tag">Dovetail</span></div><div class="b"><h3>Standard Drawer Box</h3><div class="price">from $39</div><div class="rate"><span class="stars">★</span> 4.9 · made to size</div><span class="cfg">Configure ›</span></div></a>
+    <div class="card priceblk"><div class="pl"><div><div class="lbl">Made to order</div><div class="amt">$74</div></div><a href="#" style="color:var(--brand);font-weight:600;font-size:12px">See breakdown ▾</a></div><div class="row" style="margin-top:12px"><button class="addbtn" style="flex:1">Add to cart</button><button class="save">♡</button></div><div class="mto">🛈 Made to order · no returns or exchanges · 4K render attached.</div></div>
+  </div></div>
+
+  <div class="grp"><h2>Quote / Private banner · Cart line</h2>
+    <div class="qb" style="margin-bottom:16px"><div>🔒 <b>Prepared for Jordan Avery</b> · Quote #Q-10428 · private listing</div><div class="exp">Expires <b>Jul 13, 2026</b></div></div>
+    <div class="cl"><div class="th"></div><div><b>Cabinet Door</b><div class="chips"><span>Shaker</span><span>White Oak</span><span>Roundover</span><span>Hinge-bored</span></div></div><div class="pr">$44</div></div>
+  </div>
+
+  <div class="grp"><h2>Reviews · Write-a-review modal</h2><div class="row">
+    <div class="rev-card" style="width:300px"><div class="top"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.</div><div class="vb">✓ Verified buyer</div></div></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, 4K preview matched exactly."</p></div>
+    <div class="modal"><h3>Write a review</h3><div class="muted" style="font-size:12.5px">Standard Dovetail Drawer Box · ✓ verified purchase</div><div class="star-input">★★★★★</div><div class="field" style="max-width:none"><label>Title</label><input placeholder="Sum it up" /></div><div class="field" style="max-width:none"><label>Your review</label><textarea rows="3" placeholder="How did it fit? How’s the craftsmanship?"></textarea></div><div class="drop">📷 Add photos of your piece</div><button class="btn block">Submit review</button><div class="muted" style="font-size:11.5px;margin-top:8px;text-align:center">Reviews are checked before they’re published.</div></div>
+  </div></div>
+
+  <div class="grp"><h2>Empty · Loading · Error states</h2><div class="row">
+    <div class="empty"><div class="ic">🪵</div><h3 style="font-size:17px;margin:8px 0 4px">No saved designs yet</h3><p class="muted" style="font-size:13px;margin:0 0 14px">Start one in the configurator and it’ll show up here.</p><button class="btn sm">Open configurator</button></div>
+    <div class="skcard"><div class="skel img"></div><div class="skel l" style="width:80%"></div><div class="skel l" style="width:50%"></div></div>
+    <div class="error"><div class="ic">⚠️</div><h3 style="font-size:17px;margin:8px 0 4px">Couldn’t load the 4K render</h3><p class="muted" style="font-size:13px;margin:0 0 14px">Your live preview is still here — we’ll attach the 4K to your order.</p><button class="btn ghost sm">Retry</button></div>
+  </div></div>
+
+  <div class="grp"><h2>Toasts · Dialog</h2><div class="row" style="align-items:flex-start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="toast ok"><span class="d">✓</span> Added to cart — Custom Drawer Box</div>
+      <div class="toast"><span class="d">♡</span> Design saved to your account</div>
+    </div>
+    <div class="dialog"><h3>Remove this item?</h3><p>“Custom Drawer Box” will be removed from your cart. This can’t be undone.</p><div class="acts"><button class="btn ghost sm">Keep</button><button class="btn danger sm">Remove</button></div></div>
+  </div></div>
+</div>
+
+<footer class="site"><div class="wrap"><div class="legal"><span>© 2026 MEJA Designs — components &amp; states reference (Scandi Light).</span><span>Privacy · Terms</span></div></div></footer>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — My Quotes (Scandi Light) · mockup</title>
+<link rel="stylesheet" href="scandi.css" />
+<style>
+  .acct{display:grid;grid-template-columns:230px 1fr;gap:34px;padding:18px 0 56px;align-items:start}
+  .anav{position:sticky;top:84px;display:flex;flex-direction:column;gap:2px;font-size:14px}
+  .anav a{padding:11px 14px;border-radius:10px;color:var(--ink)}
+  .anav a.on{background:var(--brand);color:#fff;font-weight:600}
+  .anav a:hover:not(.on){background:var(--surface)}
+  .anav .sep{height:1px;background:var(--line);margin:8px 0}
+  h1{font-size:30px;margin:2px 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .quote{display:grid;grid-template-columns:84px 1fr auto;gap:16px;align-items:center;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+  .quote .th{width:84px;height:64px;border-radius:10px;background-size:cover;background-position:center}
+  .quote b{font-size:14.5px}
+  .quote .m{color:var(--muted);font-size:12.5px}
+  .badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.4px;display:inline-block;margin-top:5px}
+  .badge.active{background:#e9f1ec;color:var(--accent-deep)}
+  .badge.exp{background:#f4ece9;color:var(--danger)}
+  .badge.won{background:#eef1f0;color:var(--brand)}
+  .quote .right{text-align:right}
+  .quote .right .pr{font-family:var(--mono);font-size:15px}
+  .quote .right a{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:600;color:#fff;background:var(--brand);padding:8px 14px;border-radius:999px}
+  .info{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:var(--ink);margin-bottom:18px}
+  @media(max-width:880px){.acct{grid-template-columns:1fr}.anav{position:static;flex-direction:row;flex-wrap:wrap}.quote{grid-template-columns:64px 1fr}.quote .th{width:64px;height:52px}}
+</style>
+</head>
+<body>
+<div class="anno">MOCKUP FOR APPROVAL · My Quotes · Direction <b>#5 Scandi Light</b> · private/hybrid listings pushed from MEJA-CRM</div>
+<header class="site"><div class="wrap nav"><div class="logo">MEJA</div><nav class="main"><a href="home.html">Drawer Boxes</a><a href="home.html">Drawer Units</a><a href="home.html">Cabinet Doors</a><a href="home.html">Shelves</a><a href="configurator.html">Custom</a></nav><div class="icons"><span>Search</span><span>Account</span><span>Cart</span><span class="cartdot">3</span></div></div></header>
+
+<div class="wrap">
+  <div class="crumbs"><a href="home.html">Home</a> › <a href="account.html">Account</a> › <span>My quotes</span></div>
+  <div class="acct">
+    <nav class="anav" aria-label="Account">
+      <a href="account.html">Orders</a>
+      <a href="account.html">Saved designs</a>
+      <a class="on" href="account-quotes.html">My quotes</a>
+      <a href="#">Addresses</a>
+      <a href="#">Account details</a>
+      <div class="sep"></div>
+      <a href="#">Sign out</a>
+    </nav>
+
+    <div>
+      <h1>My quotes</h1>
+      <div class="sub">Private listings our team prepared for you. Open one to review, adjust the editable options, and order.</div>
+      <div class="info">🛈 Quotes are prepared by MEJA from your measurements or a conversation. They’re private to your account and expire on the date shown.</div>
+
+      <div class="quote">
+        <div class="th" style="background-image:url(stock/drawerunit.jpg)"></div>
+        <div><b>#Q-10428 · Kitchen Drawer Unit — 4 drawer</b><div class="m">Prepared Jun 12, 2026 · hybrid (some options editable)</div><span class="badge active">Active · expires Jul 13</span></div>
+        <div class="right"><div class="pr">$486</div><a href="private-listing.html">Review &amp; order ›</a></div>
+      </div>
+      <div class="quote">
+        <div class="th" style="background-image:url(stock/cabinetdoor.jpg)"></div>
+        <div><b>#Q-10391 · Raised-panel doors ×8</b><div class="m">Prepared Jun 2, 2026 · locked</div><span class="badge active">Active · expires Jul 2</span></div>
+        <div class="right"><div class="pr">$612</div><a href="private-listing.html">Review &amp; order ›</a></div>
+      </div>
+      <div class="quote">
+        <div class="th" style="background-image:url(stock/shelf-dark.jpg)"></div>
+        <div><b>#Q-10210 · Custom tile shelf run</b><div class="m">Prepared May 6, 2026</div><span class="badge exp">Expired · request refresh</span></div>
+        <div class="right"><div class="pr">$330</div><a href="#" style="background:none;color:var(--brand);border:1.5px solid var(--line)">Request refresh ›</a></div>
+      </div>
+      <div class="quote">
+        <div class="th" style="background-image:url(stock/drawerbox.jpg)"></div>
+        <div><b>#Q-10090 · Dovetail drawer boxes ×5</b><div class="m">Ordered Apr 20, 2026</div><span class="badge won">Won · order #MJ-1864</span></div>
+        <div class="right"><div class="pr">$284</div><a href="#" style="background:none;color:var(--brand);border:1.5px solid var(--line)">View order ›</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div class="fcols">
+    <div><div class="logo">MEJA</div><p style="font-size:13.5px;max-width:32ch;margin-top:10px">Custom drawer boxes, doors, units &amp; shelves — made to order.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="#">Drawer Boxes</a></li><li><a href="#">Drawer Units</a></li><li><a href="#">Cabinet Doors</a></li><li><a href="#">Shelves</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="#">Measuring guide</a></li><li><a href="#">Made-to-order policy</a></li><li><a href="#">Shipping</a></li><li><a href="#">FAQ</a></li></ul></div>
+    <div><h4>Studio</h4><ul><li><a href="#">Our craft</a></li><li><a href="#">Trade</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 MEJA Designs — made to order, no returns.</span><span>Privacy · Terms</span></div>
+</div></footer>
+</body>
+</html>
