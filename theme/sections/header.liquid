@@ -1,0 +1,18 @@
+<header class="site"><div class="wrap nav">
+  <a class="logo" href="{{ routes.root_url }}">{{ shop.name | default: 'MEJA' }}</a>
+  <nav class="main" aria-label="Primary">
+    {%- for link in section.settings.menu.links -%}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {%- else -%}
+      <a href="#">Drawer Boxes</a><a href="#">Drawer Units</a><a href="#">Cabinet Doors</a><a href="#">Shelves</a><a href="#">Custom</a>
+    {%- endfor -%}
+  </nav>
+  <div class="icons">
+    <a href="{{ routes.search_url }}">Search</a>
+    <a href="{{ routes.account_url }}">Account</a>
+    <a href="{{ routes.cart_url }}">Cart <span class="cartdot">{{ cart.item_count }}</span></a>
+  </div>
+</div></header>
+{% schema %}
+{ "name": "Header", "settings": [ { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" } ] }
+{% endschema %}

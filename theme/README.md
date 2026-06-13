@@ -1,0 +1,28 @@
+# MEJA \u2014 Shopify Online Store 2.0 theme (scaffold)
+
+Scaffolded from the approved **Scandi Light** mockups (`../mockups/`) and shared design
+system (`assets/scandi.css`). This is a **starting structure**, not a finished theme.
+
+## Structure
+- `layout/theme.liquid` \u2014 base layout; loads `scandi.css` + `theme.css`; maps theme
+  settings to `--brand`/`--accent`/`--ink`.
+- `sections/` \u2014 header, footer, hero, product-categories, reviews, **configurator**
+  (embeds the 4kGraphics engine), main-product, main-collection, main-cart.
+- `snippets/` \u2014 product-card, price-block, made-to-order microcopy.
+- `templates/` \u2014 index/product/collection/cart JSON templates + `page.configurator.json`.
+- `assets/` \u2014 `scandi.css` (design system), `theme.css` (page layouts), `configurator.js`.
+- `config/` \u2014 settings schema + data. `locales/` \u2014 en.default.
+
+## Configurator + 4kGraphics
+`sections/configurator.liquid` renders the option tabs + viewer and loads
+`assets/configurator.js`, which dynamically imports the **4kGraphics `browser.js`**
+(upload it to `assets/4kgraphics-engine.browser.js`). Options + **live price** come from the
+**MEJA-CRM engine**; the configured line price is applied via Cart Transform / Draft Orders.
+See `../docs/06-API-Contracts.md` and `../api/openapi.yaml`.
+
+## Not yet wired (next steps)
+- Upload the 4kGraphics engine asset; wire the option model from `shelf_templates`/product.
+- Cart Transform Function (Plus) for custom line price; private/hybrid listing template.
+- Reviews app blocks; metafield definitions; Shopify Markets.
+
+> Run locally with the Shopify CLI (`shopify theme dev`) once connected to a dev store.

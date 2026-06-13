@@ -1,0 +1,30 @@
+{%- comment -%}
+  Configurator template. Embeds the 4kGraphics engine (browser.js asset) for live WebGL
+  preview + 4K snapshot. Options + live price come from the CRM engine (see docs/06).
+{%- endcomment -%}
+<div class="wrap">
+  <div class="crumbs"><a href="{{ routes.root_url }}">Home</a> › <span>Configure</span></div>
+  <div class="ptabs" id="ptabs">
+    <button data-prod="drawerbox" aria-pressed="true">Drawer Box</button>
+    <button data-prod="drawerunit" aria-pressed="false">Drawer Unit</button>
+    <button data-prod="cabinetdoor" aria-pressed="false">Cabinet Door</button>
+    <button data-prod="shelf" aria-pressed="false">Shelf</button>
+  </div>
+  <div class="cfg">
+    <div class="viewer" id="meja-viewer" data-engine="{{ '4kgraphics-engine.browser.js' | asset_url }}" data-render-service="{{ settings.render_service_url }}">
+      <div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div>
+      <div class="rstate"><span class="dot"></span><span>4K render ready</span></div>
+    </div>
+    <div class="panel" id="meja-panel">
+      <span class="eyebrow">Configure · made to order</span>
+      <h1 id="meja-title">Drawer Box</h1>
+      <p class="sub">Options &amp; live price are served by the MEJA-CRM engine.</p>
+      <div id="meja-options"><!-- option groups injected from the option model (shelf_templates / product) --></div>
+      {% render 'price-block' %}
+    </div>
+  </div>
+</div>
+<script type="module" src="{{ 'configurator.js' | asset_url }}"></script>
+{% schema %}
+{ "name": "Configurator", "settings": [], "presets": [ { "name": "Configurator" } ] }
+{% endschema %}

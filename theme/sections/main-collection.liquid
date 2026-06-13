@@ -1,0 +1,11 @@
+<div class="wrap">
+  <div class="titlebar"><div><span class="eyebrow">Made to your size</span><h1>{{ collection.title }}</h1><div class="meta">{{ collection.products_count }} products</div></div></div>
+  <div class="grid">
+    {%- for product in collection.products -%}
+      {% render 'product-card', card_product: product %}
+    {%- else -%}
+      <p class="muted">No products yet.</p>
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}{ "name": "Collection", "settings": [] }{% endschema %}

@@ -1,0 +1,15 @@
+<footer class="site"><div class="wrap">
+  <div class="fcols">
+    <div><div class="logo">{{ shop.name | default: 'MEJA' }}</div><p style="font-size:13.5px;max-width:32ch;margin-top:10px">{{ section.settings.blurb }}</p></div>
+    {%- for block in section.blocks -%}
+      <div><h4>{{ block.settings.title }}</h4><ul>{{ block.settings.links }}</ul></div>
+    {%- endfor -%}
+  </div>
+  <div class="legal"><span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }} — made to order, no returns.</span><span>Privacy · Terms</span></div>
+</div></footer>
+{% schema %}
+{ "name": "Footer",
+  "settings": [ { "type": "textarea", "id": "blurb", "label": "Blurb", "default": "Custom drawer boxes, doors, units & shelves — made to order." } ],
+  "blocks": [ { "type": "column", "name": "Column", "settings": [ { "type": "text", "id": "title", "label": "Title" }, { "type": "richtext", "id": "links", "label": "Links" } ] } ]
+}
+{% endschema %}

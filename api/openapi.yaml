@@ -1,0 +1,314 @@
+openapi: 3.1.0
+info:
+  title: MEJA WebStore Integration API
+  version: "1.0.0"
+  description: >
+    Integration contracts for the MEJA storefront program. These endpoints connect
+    **Shopify** (storefront + checkout), **MEJA‑CRM** (system of record + integration hub),
+    **Atelier3D** (design), and **4kGraphics** (render engine). Integration is coordinated
+    by the CRM's typed **job queue** (`integration_jobs`) plus Shopify order webhooks.
+    See docs/06-API-Contracts.md and docs/05-Integration-Context.md.
+servers:
+  - url: https://crm.mejadesigns.com
+    description: MEJA‑CRM hub (Next.js/Vercel) — job queue + webhook receiver
+  - url: https://render.mejadesigns.com
+    description: 4kGraphics render service (persistent host — Railway/Fly/VPS)
+
+tags:
+  - name: Job Queue
+    description: CRM-hosted typed job queue (`integration_jobs`). Worker + producer API.
+  - name: Webhooks
+    description: Shopify → CRM order ingestion.
+  - name: Render
+    description: 4kGraphics headless render service.
+
+paths:
+  /api/jobs/claim:
+    post:
+      tags: [Job Queue]
+      summary: Atomically claim the next pending job (SKIP LOCKED)
+      security: [{ workerToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kinds, worker_id]
+              properties:
+                kinds:
+                  type: array
+                  items: { $ref: '#/components/schemas/JobKind' }
+                  example: [render_4k, atelier_import, shopify_push]
+                worker_id: { type: string, example: "render-worker-1" }
+      responses:
+        '200':
+          description: A claimed job (lease held until complete/fail or reap).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IntegrationJob' }
+        '204': { description: No pending jobs of the requested kinds. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /api/jobs/{id}:
+    post:
+      tags: [Job Queue]
+      summary: Report job completion or failure (idempotent on id)
+      security: [{ workerToken: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: { type: string, enum: [complete, failed] }
+                result:
+                  description: Kind-specific result payload (e.g. render asset URL, draft productId).
+                  type: object
+                  additionalProperties: true
+                error: { type: string, description: Present when status=failed; requeues up to 3x. }
+      responses:
+        '200': { description: Recorded. Result materialized on completion (fail → never half-built). }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: Unknown job id. }
+
+  /api/jobs:
+    get:
+      tags: [Job Queue]
+      summary: List jobs (admin)
+      security: [{ adminAuth: [] }]
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, claimed, complete, failed] } }
+        - { name: kind, in: query, schema: { $ref: '#/components/schemas/JobKind' } }
+      responses:
+        '200':
+          description: Jobs
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/IntegrationJob' } }
+    post:
+      tags: [Job Queue]
+      summary: Enqueue a job (producer)
+      description: >
+        Producers: "Request render" → `render_4k`; "Import from Atelier3D" → `atelier_import`;
+        "List on Shopify" (accepted quote) → `shopify_push`.
+      security: [{ adminAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, payload]
+              properties:
+                kind: { $ref: '#/components/schemas/JobKind' }
+                idempotency_key:
+                  type: string
+                  description: Dedupe key (e.g. quoteId for shopify_push, config hash for render_4k).
+                payload:
+                  oneOf:
+                    - { $ref: '#/components/schemas/ShopifyPushPayload' }
+                    - { $ref: '#/components/schemas/RenderRequest' }
+                    - { $ref: '#/components/schemas/AtelierImportPayload' }
+      responses:
+        '201':
+          description: Enqueued (or returns existing job for a repeated idempotency_key).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IntegrationJob' }
+
+  /webhooks/shopify/orders:
+    post:
+      tags: [Webhooks]
+      summary: Receive Shopify order events → store_orders
+      description: >
+        Handles `orders/create`, `orders/paid`, `orders/fulfilled`. HMAC-verified.
+        Idempotent on Shopify order id. Quote-linked orders mark the quote won and
+        generate a work order; buyers without a quote auto-create a CRM customer.
+      security: [{ shopifyHmac: [] }]
+      parameters:
+        - name: X-Shopify-Topic
+          in: header
+          required: true
+          schema: { type: string, enum: [orders/create, orders/paid, orders/fulfilled] }
+        - { name: X-Shopify-Hmac-Sha256, in: header, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ShopifyOrder' }
+      responses:
+        '200': { description: Ingested into store_orders / order_lines. }
+        '401': { description: HMAC verification failed. }
+
+  /v1/render:
+    post:
+      tags: [Render]
+      summary: Render a 4K still (3840×2160) from a furniture spec
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RenderRequest' }
+      responses:
+        '200':
+          description: PNG image (binary).
+          content:
+            image/png:
+              schema: { type: string, format: binary }
+
+  /v1/buildplan:
+    post:
+      tags: [Render]
+      summary: Generate the build plan (cut list, hardware, steps) for a spec
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [spec]
+              properties:
+                spec: { $ref: '#/components/schemas/FurnitureSpec' }
+      responses:
+        '200':
+          description: Build plan JSON (render & cut list derive from one part layout).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BuildPlan' }
+
+components:
+  securitySchemes:
+    workerToken:
+      type: http
+      scheme: bearer
+      description: Bearer JOBS_WORKER_TOKEN (worker services).
+    adminAuth:
+      type: http
+      scheme: bearer
+      description: CRM admin/server session.
+    shopifyHmac:
+      type: apiKey
+      in: header
+      name: X-Shopify-Hmac-Sha256
+      description: HMAC-SHA256 of the raw body with the Shopify webhook secret.
+  responses:
+    Unauthorized:
+      description: Missing/invalid bearer token.
+  schemas:
+    JobKind:
+      type: string
+      enum: [render_4k, atelier_import, shopify_push]
+    IntegrationJob:
+      type: object
+      properties:
+        id: { type: string }
+        kind: { $ref: '#/components/schemas/JobKind' }
+        status: { type: string, enum: [pending, claimed, complete, failed] }
+        attempts: { type: integer, description: Requeued on failure up to 3x, then reaped. }
+        idempotency_key: { type: string }
+        payload: { type: object, additionalProperties: true }
+        result: { type: object, additionalProperties: true }
+        created_at: { type: string, format: date-time }
+    ShopifyPushPayload:
+      description: "List on Shopify" producer — publish a CRM listing as a base product.
+      type: object
+      required: [quoteId, listingKind, productType, price, options, customerScope]
+      properties:
+        quoteId: { type: string, description: Idempotency key — re-push updates, never duplicates. }
+        listingKind: { type: string, enum: [catalog, private, shelf_template] }
+        productType: { type: string, example: drawerbox }
+        price: { $ref: '#/components/schemas/Money' }
+        options: { $ref: '#/components/schemas/OptionSet' }
+        render4kUrl: { type: string, format: uri }
+        customerScope:
+          type: object
+          properties:
+            type: { type: string, enum: [public, private] }
+            customerId: { type: string }
+            signedUrl: { type: string, format: uri }
+            expiresAt: { type: string, format: date-time }
+    AtelierImportPayload:
+      type: object
+      required: [atelierModelRef]
+      properties:
+        atelierModelRef: { type: string, description: Atelier3D document/version id. }
+        note: { type: string }
+    RenderRequest:
+      type: object
+      required: [spec]
+      properties:
+        spec: { $ref: '#/components/schemas/FurnitureSpec' }
+        material: { type: string, example: walnut }
+        lighting: { type: string, enum: [studio, showroom, daylight], default: studio }
+        textureSize: { type: integer, enum: [2048, 4096], default: 4096 }
+    FurnitureSpec:
+      description: Plain JSON in millimeters (4kGraphics). kind drives the schema.
+      type: object
+      required: [kind]
+      properties:
+        kind: { type: string, enum: [drawerbox, drawerunit, door, drawerfront, cabinet, bookshelf, table, endtable] }
+        widthMm: { type: number }
+        depthMm: { type: number }
+        heightMm: { type: number }
+        stockThicknessMm: { type: number }
+        joinery: { type: string, enum: [dovetail, halfblind, boxjoint, dado], description: drawerbox/drawerunit }
+        style: { type: string, enum: [slab, shaker, raised], description: door/drawerfront }
+        drawerCount: { type: integer, description: drawerunit }
+      additionalProperties: true
+    BuildPlan:
+      type: object
+      properties:
+        cutList:
+          type: array
+          items:
+            type: object
+            properties:
+              part: { type: string, example: "Drawer Side" }
+              qty: { type: integer }
+              lengthIn: { type: string, example: "20-15/16\"" }
+              widthIn: { type: string }
+              thicknessIn: { type: string }
+              material: { type: string }
+        hardware: { type: array, items: { type: string } }
+        tools: { type: array, items: { type: string } }
+        steps: { type: array, items: { type: string } }
+        boardFeet: { type: number }
+        shopHours: { type: number }
+    OptionSet:
+      type: object
+      additionalProperties: true
+      example: { joinery: dovetail, wood: walnut, widthMm: 533, bottom: ply_quarter, undermountNotches: true }
+    Money:
+      type: object
+      properties:
+        currency: { type: string, example: USD }
+        amount: { type: integer, description: Minor units (cents), numeric(12,2) in CRM. example: 7400 }
+    ShopifyOrder:
+      type: object
+      description: Subset of the Shopify order payload consumed by the CRM.
+      properties:
+        id: { type: string }
+        name: { type: string, example: "#1042" }
+        financial_status: { type: string }
+        customer: { type: object, additionalProperties: true }
+        line_items:
+          type: array
+          items:
+            type: object
+            properties:
+              title: { type: string }
+              quantity: { type: integer }
+              price: { type: string }
+              properties:
+                type: array
+                description: Line-item properties carry configId + config snapshot + render4kUrl.
+                items:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    value: { type: string }

@@ -1,0 +1,5 @@
+{
+  "general": { "search": { "search": "Search" } },
+  "products": { "product": { "add_to_cart": "Add to cart", "made_to_order": "Made to order \u00b7 no returns or exchanges" } },
+  "cart": { "general": { "title": "Your cart", "checkout": "Proceed to checkout" } }
+}

@@ -321,26 +321,26 @@ A UI **cannot be marked build-ready without an approved mockup.** This is a gate
 | Configurator (product-type tabs) + 4K viewer | `mockups/configurator.html` | ✓ approved |
 | Private / hybrid listing | `mockups/private-listing.html` | ✓ approved |
 | Cart | `mockups/cart.html` | ✓ approved |
-| Account + saved configs | `mockups/account.html` | ◐ in review |
-| My quotes | `mockups/account-quotes.html` | ◐ in review |
-| Content (FAQ / made-to-order policy) | `mockups/content.html` | ◐ in review |
+| Account + saved configs | `mockups/account.html` | ✓ approved |
+| My quotes | `mockups/account-quotes.html` | ✓ approved |
+| Content (FAQ / made-to-order policy) | `mockups/content.html` | ✓ approved |
 
 **Components & states (§3)**
 
 | UI | Mockup file | Status |
 |----|-------------|:------:|
-| Header / nav + mega-menu | `mockups/components.html` | ◐ in review |
-| Product card | `mockups/components.html` | ◐ in review |
-| Configurator panel + option controls (swatch / segmented / stepper / asset / locked) | `mockups/components.html` | ◐ in review |
-| 4K render viewer (rendering / ready / AR / fullscreen) | `mockups/components.html` | ◐ in review |
-| Price block + made-to-order microcopy | `mockups/components.html` | ◐ in review |
-| Quote / Private banner | `mockups/components.html` | ◐ in review |
-| Cart line | `mockups/components.html` | ◐ in review |
-| Buttons / forms / inputs | `mockups/components.html` | ◐ in review |
-| Empty / loading / error states | `mockups/components.html` | ◐ in review |
-| Toasts / dialogs | `mockups/components.html` | ◐ in review |
-| Reviews section (summary + histogram + photo gallery + cards) | `mockups/components.html` | ◐ in review |
-| Write-a-review (verified-buyer modal/page + states) | `mockups/components.html` | ◐ in review |
+| Header / nav + mega-menu | `mockups/components.html` | ✓ approved |
+| Product card | `mockups/components.html` | ✓ approved |
+| Configurator panel + option controls (swatch / segmented / stepper / asset / locked) | `mockups/components.html` | ✓ approved |
+| 4K render viewer (rendering / ready / AR / fullscreen) | `mockups/components.html` | ✓ approved |
+| Price block + made-to-order microcopy | `mockups/components.html` | ✓ approved |
+| Quote / Private banner | `mockups/components.html` | ✓ approved |
+| Cart line | `mockups/components.html` | ✓ approved |
+| Buttons / forms / inputs | `mockups/components.html` | ✓ approved |
+| Empty / loading / error states | `mockups/components.html` | ✓ approved |
+| Toasts / dialogs | `mockups/components.html` | ✓ approved |
+| Reviews section (summary + histogram + photo gallery + cards) | `mockups/components.html` | ✓ approved |
+| Write-a-review (verified-buyer modal/page + states) | `mockups/components.html` | ✓ approved |
 
 **Responsive:** each page mockup includes a **mobile** view (≤ md) where the layout differs (especially the configurator's stacked viewer + sticky price/CTA bar).
 

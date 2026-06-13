@@ -1,0 +1,12 @@
+{%- comment -%} Live price comes from the CRM engine via Cart Transform / Draft Orders (see docs/06) {%- endcomment -%}
+<div class="pricecard">
+  <div class="priceline">
+    <div><div class="lbl">Made to order</div><div class="amt" id="meja-price" data-config-price>{{ product.price | money }}</div></div>
+    <button class="toggle" type="button" aria-expanded="false">See breakdown ▾</button>
+  </div>
+  <div class="addrow">
+    <button class="addbtn" type="submit" name="add">{{ 'products.product.add_to_cart' | t }}</button>
+    <button class="save" type="button" aria-label="Save configuration">♡</button>
+  </div>
+  {% render 'made-to-order' %}
+</div>
