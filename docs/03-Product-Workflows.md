@@ -20,6 +20,8 @@ This document specifies, for **every product type**, the journey from entry → 
 
 Plus three cross-cutting flows: **CRM quote push**, **live 4K rendering**, and **order → fulfillment**.
 
+Workflows A–H below cover the **customer & system** path. **§12 adds the operational (back-of-house) workflow** the production/ops team follows to fulfill each product type — intake, spec verification, sourcing, build, QA, pack, ship, and close-out.
+
 ---
 
 ## 1. Legend & shared states
@@ -320,4 +322,154 @@ sequenceDiagram
 
 ---
 
-_End of Product Workflows (Draft v0.1). Please approve the flows and the open question in §10._
+## 12. Operational workflows (back-of-house) — per product type
+
+Workflows A–H describe the **customer & system** journey. This part describes what the **operations / production team** does once an order is placed, for each product type. The shared starting point is the **production packet** from Workflow H (configuration + BOM + the approved 4K render + customer details). **The approved 4K render is the visual spec of record** — QA builds and checks against it.
+
+**Operational role codes:**
+
+| Code | Role |
+|------|------|
+| **CS** | Sales / Customer Service |
+| **OPS** | Production scheduler / Ops lead |
+| **MK** | Maker / craftsperson (incl. finishing) |
+| **QA** | Quality control |
+| **SHIP** | Fulfillment / shipping |
+| **SYS** | Integration Layer / CRM (automated) |
+
+---
+
+### 12.1 Ready-Made — operations
+
+```mermaid
+flowchart LR
+    O[Order paid] --> S{In stock?}
+    S -->|Yes| P[Pick from inventory]
+    S -->|No| B[Build to standard spec / backorder comms]
+    P --> Q[QA spot-check]
+    B --> Q
+    Q --> PK[Pack]
+    PK --> SH[Ship + tracking]
+    SH --> CL[Close order · restock if reorder point hit]
+```
+
+- **Owner:** SHIP (stocked) or MK→SHIP (made-to-order); OPS accountable.
+- **Lead time / SLA:** in-stock ship in 1–2 business days; made-to-order standard 1–2 weeks.
+- **Exceptions:** out of stock → backorder comms + ETA (CS); failed spot-check → pull + replace.
+
+### 12.2 Private / Unlisted (locked) — operations
+
+```mermaid
+flowchart LR
+    O[Order paid · locked spec] --> V[Verify spec vs CRM quote]
+    V --> SRC[Source materials per BOM]
+    SRC --> MK[Build to locked spec]
+    MK --> QA[QA vs approved 4K render]
+    QA -->|pass| PK[Pack with approval proof]
+    QA -->|fail| RW[Rework]
+    RW --> QA
+    PK --> SH[Ship]
+    SH --> CL[CRM close-out · quote won]
+```
+
+- **Owner:** OPS (verify) → MK (build) → QA → SHIP; CS consulted on any ambiguity.
+- **Lead time / SLA:** per quote (set in CRM); confirm at intake.
+- **Exceptions:** spec ambiguity → **CS confirms with customer before build** (locked spec is authoritative, never silently changed); material substitution requires CS sign-off.
+
+### 12.3 Configurable shelves (Tile / Art Back / others) — operations
+
+```mermaid
+flowchart TD
+    O[Order paid · config + BOM] --> J{Style}
+    J -->|Tile| T[Cut blank · layout tiles per count/pattern · set · seal]
+    J -->|Art Back| A[Prep back panel · mount art asset · assemble]
+    J -->|Other| X[Style-specific build routine]
+    T --> F[Finish]
+    A --> F
+    X --> F
+    F --> QA[QA vs render]
+    QA --> PK[Pack]
+    PK --> SH[Ship]
+    SH --> CL[Close]
+```
+
+- **Owner:** MK (build per style jig/template) → QA → SHIP; OPS schedules by style queue.
+- **Style notes:** *Tile* uses a layout jig keyed to tile count/pattern; *Art Back* keys to the selected back-art asset; new styles add a build routine, **no process rewrite**.
+- **Lead time / SLA:** typically 1–3 weeks depending on size/finish.
+- **Exceptions:** component shortage → substitute (within rules) or CS comms; render mismatch at QA → rework before pack.
+
+### 12.4 Hybrid (CRM-seeded, customer-edited) — operations
+
+```mermaid
+flowchart LR
+    O[Order paid] --> R["Reconcile FINAL config:<br/>locked baseline + customer edits vs CRM"]
+    R --> D{Edits change BOM or lead time?}
+    D -->|Yes| C[CS confirm with customer + reschedule]
+    D -->|No| MK[Build FINAL config]
+    C --> MK
+    MK --> QA[QA vs render]
+    QA --> PK[Pack]
+    PK --> SH[Ship]
+    SH --> CL[CRM reconcile + close]
+```
+
+- **Owner:** OPS (reconcile) → MK → QA → SHIP; SYS reconciles final config back to the CRM quote.
+- **Critical rule:** ops builds the **final purchased configuration** (locked baseline **plus** customer edits) — *not* the original quote. Always confirm which BOM is authoritative at intake.
+- **Lead time / SLA:** as configurable; recompute if edits change the BOM.
+- **Exceptions:** customer edits push past capacity/lead time → CS reschedule + confirm.
+
+### 12.5 Custom build-out (Atelier3d) — operations
+
+```mermaid
+flowchart TD
+    O[Order or deposit · config + BOM + 4K] --> FR[Feasibility confirm + shop drawing / cut list]
+    FR --> SRC[Source materials incl. specialty]
+    SRC --> MK[Build with in-process QA checkpoints]
+    MK --> AP{Customer approval milestone?}
+    AP -->|needed| CSF[CS shares progress photos to approve]
+    AP -->|no| FIN[Finish]
+    CSF --> FIN
+    FIN --> QA[Final QA vs 4K render]
+    QA -->|pass| PK[White-glove pack]
+    QA -->|fail| RW[Rework]
+    RW --> QA
+    PK --> SH[Ship / delivery]
+    SH --> CL[CRM close + post-sale]
+```
+
+- **Owner:** OPS + MK (highest-touch); CS owns customer approval milestones; QA accountable for final sign-off vs render.
+- **Lead time / SLA:** longest; quoted per piece (often via CRM deposit path before build).
+- **Exceptions:** post-order feasibility fail (rare) → CS + redesign or refund; specialty material delay → ETA comms; milestone rejection → revise before continuing.
+
+### 12.6 Cross-cutting operational flows
+
+| Flow | What it does |
+|------|--------------|
+| **Materials & inventory** | BOM → stock check → reorder; maintain safety stock for common woods/tiles/finishes; flag long-lead specialty items at intake. |
+| **QA — render vs build** | The approved **4K render is the spec of record**; QA verifies the built piece matches it (dimensions, wood, finish, layout) before pack. |
+| **Returns / rework / warranty** | Made-to-order & custom are limited/no-return by policy (set in CS comms); defects → rework or remake; warranty claims logged to CRM. |
+| **Capacity & scheduling** | OPS queues by product type; WIP limits per maker; lead-time SLAs published to CS so quotes/PDP show realistic ship dates. |
+
+### 12.7 Operational RACI (by stage)
+
+| Operational stage | R (does it) | A (owns outcome) | C / I |
+|-------------------|-------------|------------------|-------|
+| Intake / packet receipt | SYS → OPS | OPS | CS |
+| Spec verify & feasibility | OPS | OPS | CS, MK (custom) |
+| Source materials (BOM) | OPS | OPS | MK |
+| Build | MK | OPS | QA |
+| QA vs approved render | QA | OPS | MK |
+| Pack & ship | SHIP | OPS | CS |
+| Close-out / CRM reconcile | SYS | OPS | CS |
+
+### 12.8 Operational metrics (feed the KPIs in Master Plan §14)
+
+- **On-time-ship rate** vs. promised lead time, per product type.
+- **First-pass QA yield** (built right the first time; render-match rate).
+- **Rework rate** and average rework time.
+- **Production cycle time** per type (intake → ship).
+- **Material stockout incidents** affecting promised dates.
+
+---
+
+_End of Product Workflows (Draft v0.1). Please approve the flows — customer/system (§2–9) and operational (§12) — and the open question in §10._
