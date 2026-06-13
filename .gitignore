@@ -16,3 +16,6 @@ Thumbs.db
 
 # Temp render artifacts (regenerate with tools/render_mockups.mjs)
 assets/_verify_*.png
+
+# Large regenerable render PNGs (PDFs are kept; regen via tools/render_mockups.mjs)
+assets/*.png

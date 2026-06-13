@@ -3,396 +3,369 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MEJA Designs — 10 UI Iterations (for approval)</title>
+<title>MEJA Designs — 10 UI Variants (for approval)</title>
 <style>
-  /* ============ GALLERY CHROME ============ */
+  /* ===================== GALLERY CHROME ===================== */
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#0d0e10;color:#e9eaec;line-height:1.5}
-  a{color:inherit}
-  .gallery-head{position:sticky;top:0;z-index:50;background:#131417;border-bottom:1px solid #26282d;padding:14px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  body{margin:0;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#0d0e10;color:#e9eaec;line-height:1.5}
+  .gallery-head{position:sticky;top:0;z-index:50;background:#131417;border-bottom:1px solid #26282d;padding:13px 22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
   .gallery-head h1{font-size:15px;margin:0;letter-spacing:.3px;font-weight:700;white-space:nowrap}
   .gallery-head .sub{color:#8b8f96;font-size:12px}
   .jump{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
-  .jump a{font-size:11px;text-decoration:none;background:#1e2024;border:1px solid #2c2f35;color:#c7cace;padding:4px 8px;border-radius:6px}
+  .jump a{font-size:11px;text-decoration:none;background:#1e2024;border:1px solid #2c2f35;color:#c7cace;padding:4px 9px;border-radius:6px}
   .jump a:hover{background:#2a2d33;color:#fff}
   .intro{max-width:1180px;margin:26px auto 0;padding:0 22px;color:#aeb2b8;font-size:13px}
   .intro b{color:#fff}
 
-  .iter{max-width:1180px;margin:34px auto;padding:0 22px;scroll-margin-top:70px}
-  .iter-head{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
-  .iter-head .num{font-size:34px;font-weight:800;color:#3a3d44;line-height:1}
-  .iter-head h2{margin:0;font-size:20px}
-  .iter-head .concept{color:#9aa0a8;font-size:13px;flex:1;min-width:220px}
-  .swatches{display:flex;gap:6px;margin:10px 0 14px}
-  .swatches span{width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,.15)}
-  .meta{display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:#8b8f96;margin-bottom:14px}
-  .meta b{color:#c7cace;font-weight:600}
+  .variant{max-width:1180px;margin:34px auto;padding:0 22px;scroll-margin-top:66px}
+  .v-head{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+  .v-head .num{font-size:30px;font-weight:800;color:#3a3d44;line-height:1}
+  .v-head h2{margin:0;font-size:20px;color:#fff}
+  .v-head .concept{color:#9aa0a8;font-size:13px;flex:1;min-width:220px}
+  .v-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+  .v-meta .sw{width:22px;height:22px;border-radius:5px;border:1px solid rgba(255,255,255,.16)}
+  .v-meta .tag{font-size:11px;color:#8b8f96;border:1px solid #2c2f35;border-radius:999px;padding:3px 9px}
+  .v-meta .tag b{color:#c7cace;font-weight:600}
 
-  /* ============ PREVIEW FRAME ============ */
   .frame{border-radius:14px;overflow:hidden;border:1px solid #2c2f35;box-shadow:0 18px 50px rgba(0,0,0,.45)}
 
-  /* The mini-store uses theme vars; defaults below are overridden per iteration */
+  /* ===================== MINI STORE (themed) ===================== */
   .store{
-    --bg:#fff; --surface:#f6f5f2; --ink:#1a1a1a; --muted:#6b6b6b; --line:#e6e2db;
-    --brand:#6b4a2b; --brandink:#fff; --accent:#9a7b53; --radius:8px;
-    --display:Georgia,'Times New Roman',serif; --text:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; --mono:'SFMono-Regular',Menlo,Consolas,monospace;
-    --texture:none;
+    --bg:#fff;--surface:#f6f5f2;--ink:#1a1a1a;--muted:#6b6b6b;--line:#e6e2db;
+    --brand:#4f46e5;--brandink:#fff;--accent:#4f46e5;--radius:10px;
+    --display:"Inter",system-ui,sans-serif;--text:"Inter",system-ui,sans-serif;--mono:ui-monospace,Menlo,monospace;
+    --hero:url(stock/room-bright.jpg);--view:url(stock/shelf-dark.jpg);--filter:none;
     background:var(--bg);color:var(--ink);font-family:var(--text);
   }
   .store *{box-sizing:border-box}
 
-  /* header */
-  .s-head{display:flex;align-items:center;gap:18px;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--bg)}
-  .s-logo{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:1.5px}
-  .s-nav{display:flex;gap:16px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
-  .s-icons{margin-left:auto;display:flex;gap:12px;font-size:12px;color:var(--muted)}
+  .s-head{display:flex;align-items:center;gap:18px;padding:15px 22px;border-bottom:1px solid var(--line);background:var(--bg)}
+  .s-logo{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:2px}
+  .s-nav{display:flex;gap:16px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+  .s-icons{margin-left:auto;display:flex;gap:13px;font-size:12px;color:var(--muted);align-items:center}
+  .s-icons .bag{background:var(--brand);color:var(--brandink);padding:3px 9px;border-radius:999px;font-size:11px}
 
-  /* hero */
-  .s-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:0;background:var(--texture),var(--bg)}
-  .s-hero .copy{padding:42px 30px;display:flex;flex-direction:column;justify-content:center;gap:14px}
-  .s-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
-  .s-hero h3{font-family:var(--display);font-size:34px;line-height:1.05;margin:0;max-width:14ch}
-  .s-hero p{color:var(--muted);font-size:13px;margin:0;max-width:34ch}
-  .s-cta{align-self:flex-start;background:var(--brand);color:var(--brandink);border:none;padding:11px 20px;border-radius:var(--radius);font-size:12px;letter-spacing:.6px;text-transform:uppercase;cursor:pointer}
-  .s-cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
-  .s-hero .art{background:linear-gradient(135deg,var(--surface),var(--line));position:relative;min-height:240px;display:flex;align-items:center;justify-content:center}
-  .s-hero .art .chip{position:absolute;bottom:14px;right:14px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:4px 8px;border-radius:999px;font-family:var(--mono)}
-  .s-hero .art .piece{width:62%;height:55%;border-radius:8px;background:repeating-linear-gradient(90deg,var(--brand) 0 8%,var(--accent) 8% 11%);opacity:.9;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .s-hero{position:relative;min-height:300px;display:flex;align-items:center;overflow:hidden}
+  .s-hero-bg{position:absolute;inset:0;background:var(--hero) center/cover no-repeat;filter:var(--filter)}
+  .s-hero-scrim{position:absolute;inset:0}
+  .s-hero-in{position:relative;padding:40px 42px;max-width:60%}
+  .eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700}
+  .s-hero h2{font-family:var(--display);font-size:38px;line-height:1.05;margin:10px 0 12px;max-width:15ch}
+  .s-hero p{font-size:14px;margin:0 0 18px;max-width:38ch}
+  .hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .btn{background:var(--brand);color:var(--brandink);border:none;padding:12px 22px;border-radius:var(--radius);font-size:13px;font-weight:600;letter-spacing:.4px;cursor:pointer;font-family:var(--text)}
+  .rate{font-size:12.5px;font-weight:600;display:inline-flex;gap:5px;align-items:center}
+  .hero-chip{position:absolute;bottom:14px;right:14px;background:rgba(0,0,0,.6);color:#fff;font-size:10.5px;font-family:var(--mono);padding:5px 10px;border-radius:999px;display:flex;gap:6px;align-items:center}
+  .hero-chip .d{width:6px;height:6px;border-radius:999px;background:#7CCB8A}
 
-  /* steps */
-  .s-steps{display:flex;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .s-steps div{flex:1;padding:16px 18px;font-size:12px;color:var(--muted);border-right:1px solid var(--line)}
-  .s-steps div:last-child{border-right:none}
-  .s-steps b{display:block;color:var(--ink);font-family:var(--display);font-size:14px;margin-bottom:3px}
+  .s-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:22px;background:var(--bg)}
+  .pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .pimg{height:120px;background-size:cover;background-position:center;position:relative;filter:var(--filter)}
+  .pcard:nth-child(1) .pimg{background-image:url(stock/shelf-styled.jpg)}
+  .pcard:nth-child(2) .pimg{background-image:url(stock/shelf-dark.jpg);background-position:center 30%}
+  .pcard:nth-child(3) .pimg{background-image:url(stock/room-bright.jpg);background-position:right center}
+  .ptag{position:absolute;top:9px;left:9px;background:var(--brand);color:var(--brandink);font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+  .pmeta{padding:11px 12px;display:flex;flex-direction:column;gap:3px}
+  .pmeta b{font-family:var(--display);font-size:14px}
+  .pmeta .from{font-family:var(--mono);font-size:12px}
+  .pmeta .rate.sm{font-size:11px;color:var(--muted)}
+  .pmeta .cfg{font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--brand);font-weight:600;margin-top:2px}
 
-  /* cards */
-  .s-cards{padding:24px 22px;background:var(--bg)}
-  .s-cards .label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-  .s-cards .row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .card .img{height:118px;background:linear-gradient(135deg,var(--line),var(--surface));position:relative}
-  .card .img .style-tag{position:absolute;top:8px;left:8px;background:var(--brand);color:var(--brandink);font-size:9px;padding:3px 7px;border-radius:999px;letter-spacing:.5px}
-  .card .b{padding:12px}
-  .card .t{font-family:var(--display);font-size:14px;margin:0 0 4px}
-  .card .p{font-family:var(--mono);font-size:12px;color:var(--ink)}
-  .card .cfg{margin-top:8px;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--accent)}
-
-  /* configurator */
-  .s-config{display:grid;grid-template-columns:1.3fr 1fr;border-top:1px solid var(--line);background:var(--bg)}
-  .s-config .viewer{background:linear-gradient(160deg,var(--surface),var(--line));min-height:260px;position:relative;display:flex;align-items:center;justify-content:center}
-  .s-config .viewer .piece{width:60%;height:50%;border-radius:8px;background:repeating-linear-gradient(0deg,var(--brand) 0 18%,var(--accent) 18% 22%);box-shadow:0 14px 36px rgba(0,0,0,.3)}
-  .s-config .viewer .hud{position:absolute;top:12px;left:12px;display:flex;gap:6px}
-  .s-config .viewer .hud span{background:rgba(0,0,0,.5);color:#fff;font-size:9px;padding:3px 7px;border-radius:6px;font-family:var(--mono)}
-  .s-config .viewer .render{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:5px 9px;border-radius:6px;font-family:var(--mono)}
-  .s-config .panel{padding:22px;display:flex;flex-direction:column;gap:14px}
-  .s-config .panel h4{font-family:var(--display);margin:0;font-size:16px}
-  .opt label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
-  .seg{display:flex;gap:6px}
-  .seg button{flex:1;font-size:11px;padding:7px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;cursor:pointer}
+  .s-config{display:grid;grid-template-columns:1.25fr 1fr;border-top:1px solid var(--line);background:var(--bg)}
+  .cfg-view{position:relative;min-height:250px;background:var(--view) center/cover no-repeat;filter:var(--filter)}
+  .cfg-view .hud{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-family:var(--mono);padding:5px 9px;border-radius:7px}
+  .cfg-view .rstate{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.62);color:#fff;font-size:10px;font-family:var(--mono);padding:5px 9px;border-radius:999px;display:flex;gap:6px;align-items:center}
+  .cfg-view .rstate .d{width:6px;height:6px;border-radius:999px;background:#7CCB8A}
+  .cfg-panel{padding:20px;display:flex;flex-direction:column;gap:14px}
+  .cfg-panel h3{font-family:var(--display);margin:0;font-size:17px}
+  .copt label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px}
+  .seg{display:flex;gap:6px;flex-wrap:wrap}
+  .seg button{font-size:11.5px;padding:7px 11px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:7px;cursor:pointer;font-family:var(--text)}
   .seg button.on{background:var(--brand);color:var(--brandink);border-color:var(--brand)}
-  .dots{display:flex;gap:8px}
-  .dots i{width:22px;height:22px;border-radius:999px;display:inline-block;border:2px solid var(--line)}
+  .dots{display:flex;gap:9px;align-items:center}
+  .dots i{width:24px;height:24px;border-radius:999px;display:inline-block;border:2px solid var(--line)}
   .dots i.on{outline:2px solid var(--accent);outline-offset:2px}
-  .priceblk{margin-top:auto;border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:center;justify-content:space-between}
-  .priceblk .amt{font-family:var(--mono);font-size:22px}
-  .priceblk .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-  .addbtn{background:var(--brand);color:var(--brandink);border:none;padding:11px 18px;border-radius:var(--radius);font-size:12px;letter-spacing:.6px;text-transform:uppercase;cursor:pointer}
+  .wname{font-size:11px;color:var(--muted);margin-left:2px}
+  .cprice{margin-top:auto;border-top:1px solid var(--line);padding-top:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .cprice .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block}
+  .cprice b{font-family:var(--mono);font-size:22px}
+  .addbtn{background:var(--brand);color:var(--brandink);border:none;padding:11px 16px;border-radius:var(--radius);font-size:12px;font-weight:600;letter-spacing:.4px;cursor:pointer;font-family:var(--text)}
+  .mto{font-size:10.5px;color:var(--muted)}
 
-  .note{font-size:11px;color:#8b8f96;margin-top:10px}
-  .note b{color:#c7cace}
-
-  /* ===================== PER-ITERATION THEMES ===================== */
-
-  /* 1 Atelier Gallery */
-  .t1{--bg:#FAF9F6;--surface:#F2F0EA;--ink:#1A1A1A;--muted:#6B6B6B;--line:#E7E3DC;--brand:#6B4A2B;--brandink:#fff;--accent:#8a6a45;--radius:2px;--display:'Iowan Old Style',Georgia,serif;}
-  /* 2 Warm Workshop */
-  .t2{--bg:#EFE7D8;--surface:#E5DAC4;--ink:#2B2117;--muted:#7a6c55;--line:#D8CBB3;--brand:#B8742A;--brandink:#fff;--accent:#7C8466;--radius:6px;--display:Georgia,serif;--texture:repeating-linear-gradient(45deg,rgba(0,0,0,.015) 0 6px,transparent 6px 12px);}
-  /* 3 Modern Luxe */
-  .t3{--bg:#171411;--surface:#211C17;--ink:#F3EEE6;--muted:#a99e8d;--line:#3A332B;--brand:#C9A227;--brandink:#171411;--accent:#C9A227;--radius:3px;--display:'Didot','Bodoni MT',Georgia,serif;}
-  /* 4 Scandi Light */
-  .t4{--bg:#FFFFFF;--surface:#F2F4F3;--ink:#222826;--muted:#71807c;--line:#E4E8E6;--brand:#5B6B73;--brandink:#fff;--accent:#C9B79C;--radius:14px;--display:'Avenir Next','Segoe UI',sans-serif;--text:'Avenir Next','Segoe UI',Roboto,sans-serif;}
-  /* 5 Bold Editorial */
-  .t5{--bg:#F5F2EC;--surface:#EBE6DB;--ink:#111111;--muted:#5b574e;--line:#E3DDD2;--brand:#D7492B;--brandink:#fff;--accent:#1F2A44;--radius:0px;--display:'Archivo Black','Arial Black',sans-serif;}
-  /* 6 Tech Configurator-First */
-  .t6{--bg:#15171A;--surface:#1E2125;--ink:#EAECEE;--muted:#8a929b;--line:#2C3036;--brand:#2FB6C9;--brandink:#06171a;--accent:#2FB6C9;--radius:8px;--display:'Inter','Segoe UI',sans-serif;--text:'Inter','Segoe UI',Roboto,sans-serif;}
-  /* 7 Organic Botanical */
-  .t7{--bg:#F3EFE6;--surface:#E8E1D2;--ink:#23291F;--muted:#6f7860;--line:#DAD3C2;--brand:#4F6B3A;--brandink:#fff;--accent:#B5673E;--radius:18px;--display:Georgia,serif;}
+  /* ===================== THEMES ===================== */
+  /* 1 Indigo Atelier (brand system) */
+  .t1{--bg:#f8f8fa;--surface:#fff;--ink:#1c1c24;--muted:#5a5a68;--line:#e6e6ec;--brand:#4f46e5;--brandink:#fff;--accent:#4f46e5;--radius:10px;--hero:url(stock/room-bright.jpg);--view:url(stock/shelf-dark.jpg)}
+  .t1 .s-hero-in,.t1 .eyebrow{color:#1c1c24}.t1 .eyebrow{color:#4f46e5}.t1 .s-hero-scrim{background:linear-gradient(90deg,rgba(255,255,255,.94),rgba(255,255,255,.55) 55%,transparent)}
+  /* 2 Gallery White */
+  .t2{--bg:#fff;--surface:#faf9f7;--ink:#161616;--muted:#6b6b6b;--line:#ededed;--brand:#161616;--brandink:#fff;--accent:#9a7b53;--radius:2px;--display:"Iowan Old Style",Georgia,serif;--hero:url(stock/shelf-styled.jpg);--view:url(stock/shelf-styled.jpg)}
+  .t2 .eyebrow{color:#9a7b53}.t2 .s-hero-scrim{background:linear-gradient(90deg,rgba(255,255,255,.96),rgba(255,255,255,.5) 60%,transparent)}
+  /* 3 Warm Oak */
+  .t3{--bg:#f4efe7;--surface:#fbf8f2;--ink:#2c2620;--muted:#7a6f5f;--line:#e6ddcf;--brand:#a9743f;--brandink:#fff;--accent:#6f7d63;--radius:10px;--display:"Iowan Old Style",Georgia,serif;--hero:url(stock/room-bright.jpg);--view:url(stock/walnut-texture.jpg)}
+  .t3 .eyebrow{color:#a9743f}.t3 .s-hero-scrim{background:linear-gradient(90deg,rgba(244,239,231,.95),rgba(244,239,231,.55) 58%,transparent)}
+  /* 4 Modern Luxe (dark) */
+  .t4{--bg:#15120f;--surface:#1f1a15;--ink:#f1ebe0;--muted:#a99e8d;--line:#352e26;--brand:#c9a227;--brandink:#15120f;--accent:#c9a227;--radius:4px;--display:"Iowan Old Style",Didot,Georgia,serif;--hero:url(stock/shelf-dark.jpg);--view:url(stock/walnut-texture.jpg)}
+  .t4 .eyebrow{color:#c9a227}.t4 .s-hero-scrim{background:linear-gradient(90deg,rgba(21,18,15,.9),rgba(21,18,15,.5) 60%,rgba(21,18,15,.25))}.t4 .s-hero-in{color:#f1ebe0}
+  /* 5 Scandi Light */
+  .t5{--bg:#fff;--surface:#f3f5f4;--ink:#232826;--muted:#71807c;--line:#e4e8e6;--brand:#5b6b73;--brandink:#fff;--accent:#9bb0a3;--radius:16px;--hero:url(stock/room-bright.jpg);--view:url(stock/room-bright.jpg)}
+  .t5 .eyebrow{color:#5b6b73}.t5 .s-hero-scrim{background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.45) 60%,transparent)}
+  /* 6 Bold Editorial */
+  .t6{--bg:#f6f3ee;--surface:#fff;--ink:#121212;--muted:#5b574e;--line:#e4ded3;--brand:#d7492b;--brandink:#fff;--accent:#1f2a44;--radius:0;--display:"Archivo Black","Arial Black",sans-serif;--hero:url(stock/shelf-styled.jpg);--view:url(stock/shelf-dark.jpg)}
+  .t6 .eyebrow{color:#d7492b}.t6 .s-hero h2{letter-spacing:-.5px}.t6 .s-hero-scrim{background:linear-gradient(90deg,rgba(246,243,238,.96),rgba(246,243,238,.5) 58%,transparent)}
+  /* 7 Botanical */
+  .t7{--bg:#f3efe6;--surface:#fbf9f3;--ink:#23291f;--muted:#6f7860;--line:#ddd6c7;--brand:#4f6b3a;--brandink:#fff;--accent:#b5673e;--radius:18px;--display:"Iowan Old Style",Georgia,serif;--hero:url(stock/room-bright.jpg);--view:url(stock/room-bright.jpg)}
+  .t7 .eyebrow{color:#4f6b3a}.t7 .s-hero-scrim{background:linear-gradient(90deg,rgba(243,239,230,.95),rgba(243,239,230,.5) 58%,transparent)}
   /* 8 Heritage Craft */
-  .t8{--bg:#EFE9DC;--surface:#E4DCC9;--ink:#2A2620;--muted:#766c58;--line:#D5CBB6;--brand:#7B3B34;--brandink:#fff;--accent:#A8852C;--radius:2px;--display:'Baskerville','Hoefler Text',Georgia,serif;}
+  .t8{--bg:#efe9dc;--surface:#f7f2e7;--ink:#2a2620;--muted:#766c58;--line:#d9cfba;--brand:#7b3b34;--brandink:#fff;--accent:#a8852c;--radius:3px;--display:"Baskerville","Iowan Old Style",Georgia,serif;--hero:url(stock/workshop.jpg);--view:url(stock/walnut-texture.jpg)}
+  .t8 .eyebrow{color:#a8852c}.t8 .s-hero-scrim{background:linear-gradient(90deg,rgba(239,233,220,.92),rgba(239,233,220,.4) 62%,transparent)}
   /* 9 Minimal Mono */
-  .t9{--bg:#FFFFFF;--surface:#F4F4F4;--ink:#0A0A0A;--muted:#777;--line:#E5E5E5;--brand:#0A0A0A;--brandink:#fff;--accent:#0A0A0A;--radius:0px;--display:'Helvetica Neue',Arial,sans-serif;--text:'Helvetica Neue',Arial,sans-serif;}
-  /* 10 Showroom 3D Immersive */
-  .t10{--bg:#0E0F12;--surface:#181A1F;--ink:#F4F5F7;--muted:#9aa1aa;--line:#23262B;--brand:#E0A458;--brandink:#1a1206;--accent:#E0A458;--radius:10px;--display:'Futura','Trebuchet MS',sans-serif;}
-  .t10 .s-hero .art,.t10 .s-config .viewer{background:radial-gradient(circle at 50% 40%,#2a2d34,#0e0f12)}
+  .t9{--bg:#fff;--surface:#f4f4f4;--ink:#0a0a0a;--muted:#777;--line:#e5e5e5;--brand:#0a0a0a;--brandink:#fff;--accent:#0a0a0a;--radius:0;--display:"Helvetica Neue",Arial,sans-serif;--text:"Helvetica Neue",Arial,sans-serif;--hero:url(stock/shelf-styled.jpg);--view:url(stock/shelf-dark.jpg);--filter:grayscale(1) contrast(1.02)}
+  .t9 .eyebrow{color:#0a0a0a}.t9 .s-hero-scrim{background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.5) 60%,transparent)}
+  /* 10 Showroom Immersive (dark) */
+  .t10{--bg:#0e0f12;--surface:#16181c;--ink:#f4f5f7;--muted:#9aa1aa;--line:#23262b;--brand:#e0a458;--brandink:#1a1206;--accent:#e0a458;--radius:10px;--display:"Iowan Old Style",Georgia,serif;--hero:url(stock/shelf-dark.jpg);--view:url(stock/walnut-texture.jpg)}
+  .t10 .eyebrow{color:#e0a458}.t10 .s-hero{min-height:340px}.t10 .s-hero-scrim{background:linear-gradient(90deg,rgba(14,15,18,.85),rgba(14,15,18,.45) 55%,rgba(14,15,18,.15))}.t10 .s-hero-in{color:#f4f5f7;max-width:62%}
 
-  @media(max-width:760px){
-    .s-hero,.s-config{grid-template-columns:1fr}
-    .s-cards .row{grid-template-columns:1fr}
-    .s-nav{display:none}
-  }
+  @media(max-width:760px){.s-hero-in{max-width:88%}.s-strip,.s-config{grid-template-columns:1fr}.s-nav{display:none}}
 </style>
 </head>
 <body>
 
 <div class="gallery-head">
-  <h1>MEJA DESIGNS — UI ITERATIONS</h1>
-  <span class="sub">10 directions · for approval (Decision D2)</span>
+  <h1>MEJA DESIGNS — 10 UI VARIANTS</h1>
+  <span class="sub">real photography · real options · for approval (D2)</span>
   <nav class="jump">
-    <a href="#i1">1</a><a href="#i2">2</a><a href="#i3">3</a><a href="#i4">4</a><a href="#i5">5</a>
-    <a href="#i6">6</a><a href="#i7">7</a><a href="#i8">8</a><a href="#i9">9</a><a href="#i10">10</a>
+    <a href="#v1">1</a><a href="#v2">2</a><a href="#v3">3</a><a href="#v4">4</a><a href="#v5">5</a>
+    <a href="#v6">6</a><a href="#v7">7</a><a href="#v8">8</a><a href="#v9">9</a><a href="#v10">10</a>
   </nav>
 </div>
 
 <p class="intro">
-  Each panel below is the <b>same store structure</b> (header · hero · "how custom works" · product cards · live configurator with price)
-  rendered in a different <b>visual direction</b>. The shelf styles <b>Tile</b> and <b>Art&nbsp;Back</b> appear as selectable options — the system is not limited to them.
-  Pick one primary direction (accents can be borrowed across directions). Full specs: <b>docs/02-UI-Design-Standard.md</b>.
+  Ten <b>high-fidelity</b> store variants to choose from — each the <b>same structure</b> (header · photographic hero · product strip · live configurator) in a different visual direction.
+  Backgrounds are <b>real licensed Adobe Stock photography</b> (a shared 5-image set, reused per variant). Options are the <b>real brand set</b> — styles <b>Tile / Art&nbsp;Back / Floating</b>, woods <b>Walnut · White Oak · Cherry · Maple · Ash</b>, finishes <b>Matte · Satin · Hand-oiled</b> — and ratings reflect the reviews feature. Variant&nbsp;1 is the brand's approved <b>"Indigo Atelier"</b> palette (<b>--mj-*</b>).
 </p>
 
-<!-- TEMPLATE REPEATED PER ITERATION -->
-<!-- ============ 1 ============ -->
-<section class="iter" id="i1">
-  <div class="iter-head"><span class="num">01</span><h2>Atelier Gallery</h2><span class="concept">Museum-grade minimalism. The product is the artwork; the UI disappears.</span></div>
-  <div class="swatches"><span style="background:#FAF9F6"></span><span style="background:#1A1A1A"></span><span style="background:#6B4A2B"></span><span style="background:#8a6a45"></span><span style="background:#E7E3DC"></span></div>
-  <div class="meta"><span><b>Type:</b> serif display + grotesque body</span><span><b>Best for:</b> premium positioning, hero renders</span><span><b>Trade-off:</b> needs superb imagery</span></div>
+<!-- 1 -->
+<section class="variant" id="v1">
+  <div class="v-head"><span class="num">01</span><h2>Indigo Atelier</h2><span class="concept">The brand's approved system — clean neutrals, indigo accent, Inter. One brand with the CRM &amp; Atelier3D.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#f8f8fa"></span><span class="sw" style="background:#1c1c24"></span><span class="sw" style="background:#4f46e5"></span><span class="sw" style="background:#e6e6ec"></span><span class="tag"><b>Type:</b> Inter</span><span class="tag"><b>Best:</b> suite consistency</span></div>
   <div class="frame"><div class="store t1">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Rooms</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Handcrafted · Made for your space</span><h3>Shelving, designed with you.</h3><p>Configure a piece in 3D, preview it in 4K, and we craft it by hand.</p><button class="s-cta">Design yours</button></div><div class="art"><div class="piece"></div><span class="chip">4K render</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Choose style, size, wood & finish</div><div><b>Preview in 4K</b>See it before we build it</div><div><b>We craft it</b>Made to order, shipped to you</div></div>
-    <div class="s-cards"><div class="label">Featured styles</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Floating</span></div><div class="b"><p class="t">Floating Ledge</p><div class="p">from $149</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Tile Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Floating</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i class="on" style="background:#6B4A2B"></i><i style="background:#caa472"></i><i style="background:#3b2f25"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="opt"><label>Finish</label><div class="seg"><button class="on">Matte</button><button>Satin</button><button>Oiled</button></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$248</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Rooms</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Designed with you</span><h2>Shelving, made for your space.</h2><p>Configure in 3D, preview in 4K, hand-made to order.</p><div class="hero-cta"><button class="btn">Design yours</button><span class="rate">★ 4.9 · 126 reviews</span></div></div><span class="hero-chip"><span class="d"></span>4K render</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Floating</span></div><div class="pmeta"><b>Floating Ledge</b><span class="from">from $149</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Tile Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Floating</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Finish</label><div class="seg"><button class="on">Matte</button><button>Satin</button><button>Hand-oiled</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$248</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 2 ============ -->
-<section class="iter" id="i2">
-  <div class="iter-head"><span class="num">02</span><h2>Warm Workshop</h2><span class="concept">The maker's bench — tactile, honest, handcrafted.</span></div>
-  <div class="swatches"><span style="background:#EFE7D8"></span><span style="background:#2B2117"></span><span style="background:#B8742A"></span><span style="background:#7C8466"></span><span style="background:#D8CBB3"></span></div>
-  <div class="meta"><span><b>Type:</b> humanist serif + sans</span><span><b>Best for:</b> storytelling, artisan trust</span><span><b>Trade-off:</b> restrain texture for legibility</span></div>
+<!-- 2 -->
+<section class="variant" id="v2">
+  <div class="v-head"><span class="num">02</span><h2>Gallery White</h2><span class="concept">Museum-minimal — near-white, black ink, serif display. The product is the artwork.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#fff;border-color:#ccc"></span><span class="sw" style="background:#161616"></span><span class="sw" style="background:#9a7b53"></span><span class="tag"><b>Type:</b> serif + sans</span><span class="tag"><b>Best:</b> premium, hero photography</span></div>
   <div class="frame"><div class="store t2">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Our Craft</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Made by hand · One at a time</span><h3>Real wood, real makers.</h3><p>Tell us your space — we'll build a shelf that belongs in it.</p><button class="s-cta">Start a custom piece</button></div><div class="art"><div class="piece"></div><span class="chip">workshop</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Pick style, size, wood & finish</div><div><b>Preview in 4K</b>Approve the exact look</div><div><b>We craft it</b>Hand-built in our shop</div></div>
-    <div class="s-cards"><div class="label">From the bench</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Ledge</span></div><div class="b"><p class="t">Picture Ledge</p><div class="p">from $129</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Art Back Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button>Tile</button><button class="on">Art Back</button><button>Ledge</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i style="background:#6B4A2B"></i><i class="on" style="background:#B8742A"></i><i style="background:#3b2f25"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="opt"><label>Back art</label><div class="seg"><button class="on">Floral</button><button>Geometric</button><button>Custom</button></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$274</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Studio</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Handcrafted · Made to order</span><h2>Shelving as quiet art.</h2><p>Configure a piece in 3D and preview it in true 4K.</p><div class="hero-cta"><button class="btn">Design yours</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>4K render</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Floating</span></div><div class="pmeta"><b>Floating Ledge</b><span class="from">from $149</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Art Back Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button>Tile</button><button class="on">Art Back</button><button>Floating</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">White Oak</span></label><div class="dots"><i style="background:#5c3a21"></i><i class="on" style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Finish</label><div class="seg"><button class="on">Matte</button><button>Satin</button><button>Hand-oiled</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$274</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 3 ============ -->
-<section class="iter" id="i3">
-  <div class="iter-head"><span class="num">03</span><h2>Modern Luxe</h2><span class="concept">Editorial luxury — dark, quiet, expensive.</span></div>
-  <div class="swatches"><span style="background:#171411"></span><span style="background:#211C17"></span><span style="background:#C9A227"></span><span style="background:#F3EEE6"></span><span style="background:#3A332B"></span></div>
-  <div class="meta"><span><b>Type:</b> high-contrast serif + modern sans</span><span><b>Best for:</b> high-ticket custom, 4K heroes</span><span><b>Trade-off:</b> dark-UI contrast tuning</span></div>
+<!-- 3 -->
+<section class="variant" id="v3">
+  <div class="v-head"><span class="num">03</span><h2>Warm Oak</h2><span class="concept">Artisanal warmth done right — soft oak neutrals, serif headlines. No muddy textures.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#f4efe7"></span><span class="sw" style="background:#2c2620"></span><span class="sw" style="background:#a9743f"></span><span class="sw" style="background:#6f7d63"></span><span class="tag"><b>Type:</b> serif + sans</span><span class="tag"><b>Best:</b> craft story, warmth</span></div>
   <div class="frame"><div class="store t3">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Atelier</span><span>Rooms</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Bespoke woodwork</span><h3>Heirlooms for the modern home.</h3><p>Designed in 3D. Rendered in 4K. Crafted to last generations.</p><button class="s-cta">Enter the Atelier</button></div><div class="art"><div class="piece"></div><span class="chip">4K render</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Style, size, wood, finish</div><div><b>Preview in 4K</b>Cinematic visualization</div><div><b>We craft it</b>By hand, to order</div></div>
-    <div class="s-cards"><div class="label">Signature pieces</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Modular</span></div><div class="b"><p class="t">Modular System</p><div class="p">from $349</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Modular System</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Modular</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i style="background:#6B4A2B"></i><i style="background:#caa472"></i><i class="on" style="background:#3b2f25"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="opt"><label>Finish</label><div class="seg"><button>Matte</button><button class="on">Satin</button><button>Oiled</button></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$412</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Our Craft</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Made by hand · One at a time</span><h2>Real wood, made for your space.</h2><p>Tell us your space — we’ll craft a shelf that belongs in it.</p><div class="hero-cta"><button class="btn">Start a custom piece</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>4K render</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Ledge</span></div><div class="pmeta"><b>Picture Ledge</b><span class="from">from $129</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Tile Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Ledge</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Cherry</span></label><div class="dots"><i style="background:#5c3a21"></i><i style="background:#c7a877"></i><i class="on" style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Tile color</label><div class="seg"><button class="on">Sage</button><button>Terracotta</button><button>Cream</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$262</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 4 ============ -->
-<section class="iter" id="i4">
-  <div class="iter-head"><span class="num">04</span><h2>Scandi Light</h2><span class="concept">Functional, airy, calm — form follows function.</span></div>
-  <div class="swatches"><span style="background:#FFFFFF;border-color:#ccc"></span><span style="background:#F2F4F3"></span><span style="background:#222826"></span><span style="background:#5B6B73"></span><span style="background:#C9B79C"></span></div>
-  <div class="meta"><span><b>Type:</b> geometric sans, light weights</span><span><b>Best for:</b> broad appeal, option clarity</span><span><b>Trade-off:</b> can feel generic w/o strong photos</span></div>
+<!-- 4 -->
+<section class="variant" id="v4">
+  <div class="v-head"><span class="num">04</span><h2>Modern Luxe</h2><span class="concept">Editorial dark luxury — espresso + brass. High-ticket, cinematic photography.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#15120f"></span><span class="sw" style="background:#c9a227"></span><span class="sw" style="background:#f1ebe0"></span><span class="sw" style="background:#352e26"></span><span class="tag"><b>Type:</b> contrast serif</span><span class="tag"><b>Best:</b> premium custom</span></div>
   <div class="frame"><div class="store t4">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Rooms</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Simple · Functional · Warm</span><h3>Shelves that just fit.</h3><p>Choose your size and wood; see it instantly; we make it for you.</p><button class="s-cta">Configure a shelf</button></div><div class="art"><div class="piece"></div><span class="chip">live preview</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Size, wood, finish</div><div><b>Preview in 4K</b>Exactly what you'll get</div><div><b>We craft it</b>Delivered ready to hang</div></div>
-    <div class="s-cards"><div class="label">Popular shelves</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Floating</span></div><div class="b"><p class="t">Floating Shelf</p><div class="p">from $129</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Tile Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Floating</button></div></div>
-        <div class="opt"><label>Width</label><div class="seg"><button>24"</button><button class="on">36"</button><button>48"</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i class="on" style="background:#C9B79C"></i><i style="background:#6B4A2B"></i><i style="background:#d8c4a0"></i><i style="background:#3b2f25"></i></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$248</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Atelier</span><span>Rooms</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Bespoke woodwork</span><h2>Heirlooms for the modern home.</h2><p>Designed in 3D. Rendered in 4K. Crafted to last generations.</p><div class="hero-cta"><button class="btn">Enter the Atelier</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>4K render</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Modular</span></div><div class="pmeta"><b>Modular System</b><span class="from">from $349</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Modular System</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Modular</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Finish</label><div class="seg"><button>Matte</button><button class="on">Satin</button><button>Hand-oiled</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$412</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 5 ============ -->
-<section class="iter" id="i5">
-  <div class="iter-head"><span class="num">05</span><h2>Bold Editorial</h2><span class="concept">Magazine energy — big type, confident, asymmetric.</span></div>
-  <div class="swatches"><span style="background:#F5F2EC"></span><span style="background:#111111"></span><span style="background:#D7492B"></span><span style="background:#1F2A44"></span><span style="background:#E3DDD2"></span></div>
-  <div class="meta"><span><b>Type:</b> oversized display + sans</span><span><b>Best for:</b> drops/collections, brand voice</span><span><b>Trade-off:</b> personality vs configurator clarity</span></div>
+<!-- 5 -->
+<section class="variant" id="v5">
+  <div class="v-head"><span class="num">05</span><h2>Scandi Light</h2><span class="concept">Calm, airy, functional — soft sage accent, geometric sans, lots of light.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#fff;border-color:#ccc"></span><span class="sw" style="background:#232826"></span><span class="sw" style="background:#5b6b73"></span><span class="sw" style="background:#9bb0a3"></span><span class="tag"><b>Type:</b> geometric sans</span><span class="tag"><b>Best:</b> broad appeal, clarity</span></div>
   <div class="frame"><div class="store t5">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Stories</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Issue 01 · The Shelf Edit</span><h3>MAKE IT YOURS.</h3><p>Configurable woodwork with a point of view.</p><button class="s-cta">Shop the edit</button></div><div class="art"><div class="piece"></div><span class="chip">4K</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Make the calls</div><div><b>Preview in 4K</b>See the statement</div><div><b>We craft it</b>Built to stand out</div></div>
-    <div class="s-cards"><div class="label">The line-up</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Grid</span></div><div class="b"><p class="t">Grid Shelf</p><div class="p">from $279</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Grid Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Grid</button></div></div>
-        <div class="opt"><label>Accent</label><div class="dots"><i class="on" style="background:#D7492B"></i><i style="background:#1F2A44"></i><i style="background:#6B4A2B"></i><i style="background:#111"></i></div></div>
-        <div class="opt"><label>Finish</label><div class="seg"><button class="on">Matte</button><button>Satin</button><button>Oiled</button></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$318</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Rooms</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Simple · Functional · Warm</span><h2>Shelves that just fit.</h2><p>Choose your size and wood; see it instantly; we make it.</p><div class="hero-cta"><button class="btn">Configure a shelf</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>live preview</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Floating</span></div><div class="pmeta"><b>Floating Shelf</b><span class="from">from $129</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Tile Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Floating</button></div></div>
+        <div class="copt"><label>Width</label><div class="seg"><button>24″</button><button class="on">36″</button><button>48″</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Maple</span></label><div class="dots"><i style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i class="on" style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$238</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 6 ============ -->
-<section class="iter" id="i6">
-  <div class="iter-head"><span class="num">06</span><h2>Tech Configurator-First</h2><span class="concept">The configurator IS the homepage. Product-as-software.</span></div>
-  <div class="swatches"><span style="background:#15171A"></span><span style="background:#1E2125"></span><span style="background:#2FB6C9"></span><span style="background:#EAECEE"></span><span style="background:#2C3036"></span></div>
-  <div class="meta"><span><b>Type:</b> neo-grotesque + mono numerics</span><span><b>Best for:</b> showcasing Atelier3d + 4K</span><span><b>Trade-off:</b> "tool" feel; add human moments</span></div>
+<!-- 6 -->
+<section class="variant" id="v6">
+  <div class="v-head"><span class="num">06</span><h2>Bold Editorial</h2><span class="concept">Magazine energy — oversized type, vermilion accent, confident layout.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#f6f3ee"></span><span class="sw" style="background:#121212"></span><span class="sw" style="background:#d7492b"></span><span class="sw" style="background:#1f2a44"></span><span class="tag"><b>Type:</b> heavy display</span><span class="tag"><b>Best:</b> drops, brand voice</span></div>
   <div class="frame"><div class="store t6">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Configure</span><span>Catalog</span><span>Custom</span><span>Docs</span></div><div class="s-icons"><span>⌘K</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Live 3D · 4K rendering</span><h3>Design it. Render it. Order it.</h3><p>Real-time configuration with instant pricing and 4K visualization.</p><button class="s-cta">Open configurator</button></div><div class="art"><div class="piece"></div><span class="chip">render · 3840×2160</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Every parameter, live</div><div><b>Preview in 4K</b>Server-rendered hero</div><div><b>We craft it</b>BOM → production</div></div>
-    <div class="s-cards"><div class="label">Templates</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Blank</span></div><div class="b"><p class="t">Start from scratch</p><div class="p">quote</div><div class="cfg">Open Atelier3d ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ orbit</span><span>⤢ zoom</span><span>AR</span><span>wireframe</span></div><div class="piece"></div><div class="render">● rendering 4K… 82%</div></div>
-      <div class="panel"><h4>shelf.config · Tile</h4>
-        <div class="opt"><label>style</label><div class="seg"><button class="on">tile</button><button>art_back</button><button>custom</button></div></div>
-        <div class="opt"><label>width_in</label><div class="seg"><button>24</button><button class="on">36</button><button>48</button></div></div>
-        <div class="opt"><label>wood</label><div class="dots"><i class="on" style="background:#6B4A2B"></i><i style="background:#caa472"></i><i style="background:#3b2f25"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="priceblk"><div><div class="lbl">price (live)</div><div class="amt">$248.00</div></div><button class="addbtn">add_to_cart()</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Stories</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">The Shelf Edit · Issue 01</span><h2>MAKE IT YOURS.</h2><p>Configurable woodwork with a point of view.</p><div class="hero-cta"><button class="btn">Shop the edit</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>4K</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Grid</span></div><div class="pmeta"><b>Grid Shelf</b><span class="from">from $279</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Grid Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Grid</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Finish</label><div class="seg"><button class="on">Matte</button><button>Satin</button><button>Hand-oiled</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$318</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 7 ============ -->
-<section class="iter" id="i7">
-  <div class="iter-head"><span class="num">07</span><h2>Organic Botanical</h2><span class="concept">Nature-led warmth — wood, plants, and light.</span></div>
-  <div class="swatches"><span style="background:#F3EFE6"></span><span style="background:#23291F"></span><span style="background:#4F6B3A"></span><span style="background:#B5673E"></span><span style="background:#DAD3C2"></span></div>
-  <div class="meta"><span><b>Type:</b> soft serif + humanist sans</span><span><b>Best for:</b> emotional décor, sustainability</span><span><b>Trade-off:</b> keep organic shapes legible</span></div>
+<!-- 7 -->
+<section class="variant" id="v7">
+  <div class="v-head"><span class="num">07</span><h2>Organic Botanical</h2><span class="concept">Nature-led warmth — moss + terracotta, soft serif, plants and light.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#f3efe6"></span><span class="sw" style="background:#23291f"></span><span class="sw" style="background:#4f6b3a"></span><span class="sw" style="background:#b5673e"></span><span class="tag"><b>Type:</b> soft serif</span><span class="tag"><b>Best:</b> décor emotion, eco story</span></div>
   <div class="frame"><div class="store t7">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Sustainability</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Sustainably sourced wood</span><h3>Bring the outside in.</h3><p>Natural pieces, configured for your space and made to last.</p><button class="s-cta">Design naturally</button></div><div class="art"><div class="piece"></div><span class="chip">FSC wood</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Style, size, wood, finish</div><div><b>Preview in 4K</b>See it in your room</div><div><b>We craft it</b>Low-waste, by hand</div></div>
-    <div class="s-cards"><div class="label">Rooted in craft</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Live Edge</span></div><div class="b"><p class="t">Live-Edge Shelf</p><div class="p">from $269</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Live-Edge Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Live Edge</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i class="on" style="background:#4F6B3A"></i><i style="background:#6B4A2B"></i><i style="background:#B5673E"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="opt"><label>Finish</label><div class="seg"><button class="on">Natural oil</button><button>Matte</button><button>Wax</button></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$292</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Custom</span><span>Sustainability</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Sustainably sourced wood</span><h2>Bring the outside in.</h2><p>Natural pieces, configured for your space and made to last.</p><div class="hero-cta"><button class="btn">Design naturally</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>FSC wood</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Live Edge</span></div><div class="pmeta"><b>Live-Edge Shelf</b><span class="from">from $269</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Live-Edge Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Live Edge</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Ash</span></label><div class="dots"><i style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i class="on" style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Finish</label><div class="seg"><button class="on">Natural oil</button><button>Matte</button><button>Wax</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$292</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 8 ============ -->
-<section class="iter" id="i8">
-  <div class="iter-head"><span class="num">08</span><h2>Heritage Craft</h2><span class="concept">Timeless workshop heritage; trademark-quality, classic.</span></div>
-  <div class="swatches"><span style="background:#EFE9DC"></span><span style="background:#2A2620"></span><span style="background:#7B3B34"></span><span style="background:#A8852C"></span><span style="background:#D5CBB6"></span></div>
-  <div class="meta"><span><b>Type:</b> old-style serif + small caps</span><span><b>Best for:</b> legacy, gifting, trust</span><span><b>Trade-off:</b> balance classic with modern spacing</span></div>
+<!-- 8 -->
+<section class="variant" id="v8">
+  <div class="v-head"><span class="num">08</span><h2>Heritage Craft</h2><span class="concept">Timeless workshop heritage — oxblood + brass, old-style serif, maker story.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#efe9dc"></span><span class="sw" style="background:#2a2620"></span><span class="sw" style="background:#7b3b34"></span><span class="sw" style="background:#a8852c"></span><span class="tag"><b>Type:</b> old-style serif</span><span class="tag"><b>Best:</b> legacy, gifting, trust</span></div>
   <div class="frame"><div class="store t8">
-    <div class="s-head"><div class="s-logo">MEJA · EST.</div><div class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Bespoke</span><span>Our Story</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Craftsmanship since day one</span><h3>Built to be handed down.</h3><p>Classic woodwork, configured to your needs and made by hand.</p><button class="s-cta">Commission a piece</button></div><div class="art"><div class="piece"></div><span class="chip">hallmark</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Choose your specification</div><div><b>Preview in 4K</b>Approve every detail</div><div><b>We craft it</b>Signed by the maker</div></div>
-    <div class="s-cards"><div class="label">The collection</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Heirloom</span></div><div class="b"><p class="t">Heirloom Shelf</p><div class="p">from $389</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>AR</span></div><div class="piece"></div><div class="render">● 4K ready</div></div>
-      <div class="panel"><h4>Configure · Heirloom Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Heirloom</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i class="on" style="background:#7B3B34"></i><i style="background:#6B4A2B"></i><i style="background:#A8852C"></i><i style="background:#3b2f25"></i></div></div>
-        <div class="opt"><label>Engraving</label><div class="seg"><button class="on">None</button><button>Initials</button><button>Date</button></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$436</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA · EST.</div><nav class="s-nav"><span>Shelves</span><span>Wall Art</span><span>Bespoke</span><span>Our Story</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Craftsmanship, by hand</span><h2>Built to be handed down.</h2><p>Classic woodwork, configured to your needs and made to order.</p><div class="hero-cta"><button class="btn">Commission a piece</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>signed by the maker</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Heirloom</span></div><div class="pmeta"><b>Heirloom Shelf</b><span class="from">from $389</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Configure · Heirloom Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button>Tile</button><button>Art Back</button><button class="on">Heirloom</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Cherry</span></label><div class="dots"><i style="background:#5c3a21"></i><i style="background:#c7a877"></i><i class="on" style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="copt"><label>Engraving</label><div class="seg"><button class="on">None</button><button>Initials</button><button>Date</button></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$436</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 9 ============ -->
-<section class="iter" id="i9">
-  <div class="iter-head"><span class="num">09</span><h2>Minimal Mono</h2><span class="concept">Type-driven, near-monochrome, ruthless clarity.</span></div>
-  <div class="swatches"><span style="background:#FFFFFF;border-color:#ccc"></span><span style="background:#0A0A0A"></span><span style="background:#777"></span><span style="background:#E5E5E5"></span><span style="background:#F4F4F4"></span></div>
-  <div class="meta"><span><b>Type:</b> one superb sans, all weights</span><span><b>Best for:</b> design-savvy, low maintenance</span><span><b>Trade-off:</b> warmth must come from imagery</span></div>
+<!-- 9 -->
+<section class="variant" id="v9">
+  <div class="v-head"><span class="num">09</span><h2>Minimal Mono</h2><span class="concept">Type-driven, monochrome, ruthless clarity. Photography in black &amp; white.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#fff;border-color:#ccc"></span><span class="sw" style="background:#0a0a0a"></span><span class="sw" style="background:#777"></span><span class="sw" style="background:#e5e5e5"></span><span class="tag"><b>Type:</b> one grotesque</span><span class="tag"><b>Best:</b> design-savvy, low-maintenance</span></div>
   <div class="frame"><div class="store t9">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Shelves</span><span>Art</span><span>Custom</span><span>Info</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">001 — Configurable woodwork</span><h3>Less, but better.</h3><p>Configure. Preview. Order. Nothing in the way.</p><button class="s-cta">Configure</button></div><div class="art"><div class="piece"></div><span class="chip">4K</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>Options, clearly</div><div><b>Preview in 4K</b>No surprises</div><div><b>We craft it</b>Made to order</div></div>
-    <div class="s-cards"><div class="label">Catalog</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Plain</span></div><div class="b"><p class="t">Plain Shelf</p><div class="p">from $119</div><div class="cfg">Configure ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>rotate</span><span>zoom</span><span>AR</span></div><div class="piece"></div><div class="render">4K ready</div></div>
-      <div class="panel"><h4>Tile Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Plain</button></div></div>
-        <div class="opt"><label>Width</label><div class="seg"><button>24"</button><button class="on">36"</button><button>48"</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i class="on" style="background:#0A0A0A"></i><i style="background:#777"></i><i style="background:#6B4A2B"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="priceblk"><div><div class="lbl">Price</div><div class="amt">$248</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Shelves</span><span>Art</span><span>Custom</span><span>Info</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">001 — Configurable woodwork</span><h2>Less, but better.</h2><p>Configure. Preview. Order. Nothing in the way.</p><div class="hero-cta"><button class="btn">Configure</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>4K</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Plain</span></div><div class="pmeta"><b>Plain Shelf</b><span class="from">from $119</span><span class="rate sm">★ 5.0</span><span class="cfg">Configure ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ ⤢ AR</span><span class="rstate"><span class="d"></span>4K ready</span></div>
+      <div class="cfg-panel"><h3>Tile Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button class="on">Tile</button><button>Art Back</button><button>Plain</button></div></div>
+        <div class="copt"><label>Width</label><div class="seg"><button>24″</button><button class="on">36″</button><button>48″</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$248</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
-<!-- ============ 10 ============ -->
-<section class="iter" id="i10">
-  <div class="iter-head"><span class="num">10</span><h2>Showroom 3D Immersive</h2><span class="concept">Walk-through showroom — full-bleed 3D scenes; AR-forward.</span></div>
-  <div class="swatches"><span style="background:#0E0F12"></span><span style="background:#181A1F"></span><span style="background:#E0A458"></span><span style="background:#F4F5F7"></span><span style="background:#23262B"></span></div>
-  <div class="meta"><span><b>Type:</b> cinematic display + mono HUD</span><span><b>Best for:</b> maximum 4K/Atelier3d wow</span><span><b>Trade-off:</b> heaviest build, Phase 3+</span></div>
+<!-- 10 -->
+<section class="variant" id="v10">
+  <div class="v-head"><span class="num">10</span><h2>Showroom Immersive</h2><span class="concept">Cinematic dark stage — amber accent, full-bleed photography. Maximum 4K wow.</span></div>
+  <div class="v-meta"><span class="sw" style="background:#0e0f12"></span><span class="sw" style="background:#e0a458"></span><span class="sw" style="background:#f4f5f7"></span><span class="sw" style="background:#23262b"></span><span class="tag"><b>Type:</b> serif + sans HUD</span><span class="tag"><b>Best:</b> 4K / Atelier3D wow</span></div>
   <div class="frame"><div class="store t10">
-    <div class="s-head"><div class="s-logo">MEJA</div><div class="s-nav"><span>Showroom</span><span>Shelves</span><span>Atelier</span><span>Rooms</span></div><div class="s-icons"><span>Search</span><span>Account</span><span>Cart (0)</span></div></div>
-    <div class="s-hero"><div class="copy"><span class="s-eyebrow">Immersive · Real-time · 4K</span><h3>Step into the showroom.</h3><p>See your piece in a real room, lit and rendered in 4K, before it's made.</p><button class="s-cta">Enter showroom</button></div><div class="art"><div class="piece"></div><span class="chip">scene · 4K · AR</span></div></div>
-    <div class="s-steps"><div><b>Configure</b>In a living 3D scene</div><div><b>Preview in 4K</b>Cinematic, in-room</div><div><b>We craft it</b>Exactly as shown</div></div>
-    <div class="s-cards"><div class="label">Featured scenes</div><div class="row">
-      <div class="card"><div class="img"><span class="style-tag">Tile</span></div><div class="b"><p class="t">Tile Shelf</p><div class="p">from $189</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Art Back</span></div><div class="b"><p class="t">Art Back Shelf</p><div class="p">from $229</div><div class="cfg">Configure ›</div></div></div>
-      <div class="card"><div class="img"><span class="style-tag">Atelier3d</span></div><div class="b"><p class="t">Custom Build</p><div class="p">design it</div><div class="cfg">Open Atelier3d ›</div></div></div>
-    </div></div>
-    <div class="s-config"><div class="viewer"><div class="hud"><span>↻ orbit</span><span>⤢ zoom</span><span>AR view</span><span>scene: Loft</span></div><div class="piece"></div><div class="render">● 4K · 3840×2160</div></div>
-      <div class="panel"><h4>Scene · Art Back Shelf</h4>
-        <div class="opt"><label>Style</label><div class="seg"><button>Tile</button><button class="on">Art Back</button><button>Custom</button></div></div>
-        <div class="opt"><label>Scene</label><div class="seg"><button class="on">Loft</button><button>Studio</button><button>Bedroom</button></div></div>
-        <div class="opt"><label>Wood</label><div class="dots"><i class="on" style="background:#E0A458"></i><i style="background:#6B4A2B"></i><i style="background:#3b2f25"></i><i style="background:#d8c4a0"></i></div></div>
-        <div class="priceblk"><div><div class="lbl">Live price</div><div class="amt">$274</div></div><button class="addbtn">Add to cart</button></div>
+    <div class="s-head"><div class="s-logo">MEJA</div><nav class="s-nav"><span>Showroom</span><span>Shelves</span><span>Atelier</span><span>Rooms</span></nav><div class="s-icons"><span>Search</span><span>Account</span><span class="bag">Cart 0</span></div></div>
+    <div class="s-hero"><div class="s-hero-bg"></div><div class="s-hero-scrim"></div><div class="s-hero-in"><span class="eyebrow">Immersive · Real-time · 4K</span><h2>Step into the showroom.</h2><p>See your piece in a real room, lit and rendered in 4K, before it’s made.</p><div class="hero-cta"><button class="btn">Enter showroom</button><span class="rate">★ 4.9 · 126</span></div></div><span class="hero-chip"><span class="d"></span>4K · 3840×2160</span></div>
+    <div class="s-strip">
+      <div class="pcard"><div class="pimg"><span class="ptag">Tile</span></div><div class="pmeta"><b>Tile Shelf</b><span class="from">from $189</span><span class="rate sm">★ 4.9</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Art Back</span></div><div class="pmeta"><b>Art Back Shelf</b><span class="from">from $229</span><span class="rate sm">★ 4.8</span><span class="cfg">Configure ›</span></div></div>
+      <div class="pcard"><div class="pimg"><span class="ptag">Atelier3D</span></div><div class="pmeta"><b>Custom Build</b><span class="from">design it</span><span class="rate sm">★ 5.0</span><span class="cfg">Open Atelier3D ›</span></div></div>
+    </div>
+    <div class="s-config"><div class="cfg-view"><span class="hud">↻ orbit · ⤢ · AR · scene: Loft</span><span class="rstate"><span class="d"></span>4K · 3840×2160</span></div>
+      <div class="cfg-panel"><h3>Scene · Art Back Shelf</h3>
+        <div class="copt"><label>Style</label><div class="seg"><button>Tile</button><button class="on">Art Back</button><button>Custom</button></div></div>
+        <div class="copt"><label>Scene</label><div class="seg"><button class="on">Loft</button><button>Studio</button><button>Bedroom</button></div></div>
+        <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
+        <div class="cprice"><div><span class="lbl">Made to order</span><b>$274</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
   </div></div>
 </section>
 
 <p class="intro" style="margin:40px auto 70px">
-  <b>Next step:</b> approve one primary direction (Decision&nbsp;D2 in the Master Plan). Accents — e.g. the Showroom (10) / Tech (6) configurator HUD — can be borrowed into a warmer primary such as Atelier&nbsp;Gallery (1) or Modern&nbsp;Luxe (3). These are flat HTML/CSS approximations of palette, type feel, and layout — not the production build.
+  <b>Next:</b> pick one primary variant (Decision D2). Backgrounds are licensed Adobe Stock (5-image set, reused) — the final build commissions/licenses brand photography per page. Variant 1 (Indigo Atelier) keeps the store visually identical to the CRM &amp; Atelier3D.
 </p>
 
 </body>
