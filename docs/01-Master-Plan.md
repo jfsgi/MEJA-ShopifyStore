@@ -397,9 +397,10 @@ gantt
     section Phase 0 — Foundations
     Discovery & current-state audit      :p0a, 2026-06-16, 14d
     UI direction approval (10 iterations):p0b, after p0a, 10d
+    Per-UI HTML mockups → approval        :p0d, after p0b, 21d
     API contracts v1 frozen              :p0c, after p0a, 14d
     section Phase 1 — Commerce + CRM push
-    OS 2.0 theme + design tokens         :p1a, after p0b, 28d
+    OS 2.0 theme + design tokens         :p1a, after p0d, 28d
     Extend CRM job queue + Shopify push  :p1b, after p0c, 28d
     Private/hybrid listing push          :p1c, after p1b, 21d
     section Phase 2 — Configurable shelves
@@ -419,14 +420,14 @@ gantt
 
 | Phase | Outcome | "Done" means |
 |-------|---------|--------------|
-| **0 — Foundations** | Approved direction + frozen contracts. | UI iteration chosen; API v1 signed off; current-state confirmed. |
+| **0 — Foundations** | Approved direction + frozen contracts. | UI iteration chosen; **every design-standard UI has an approved HTML mockup (mockup-first gate, UI Standard §9)**; API v1 signed off; current-state confirmed. |
 | **1 — Commerce + CRM push** | Sell ready-made; CRM can push private/hybrid listings. | A real quote pushes to a working private PDP and checks out. |
 | **2 — Configurable shelves** | Self-serve Tile/Art Back with live price. | Customer configures a shelf and buys; price matches rules. |
 | **3 — Atelier3d + 4K** | Bespoke design with live 4K. | Custom piece designed in 3D, 4K render attached to order. |
 | **4 — Sandbox live testing & demo** | A production-parity sandbox where the whole store is exercised **live** and demoed for sign-off **before any swap**. The existing store keeps serving customers untouched. | All product types + all 4 integrations pass live end-to-end in sandbox; stakeholder demo signed off; NFRs (perf/a11y/SEO) met; parallel run clean; **go/no-go = GO**. |
 | **5 — Cutover & launch** | Production swap from the existing store. | 301 map live; DNS swapped; rollback tested & on standby; post-launch monitoring green. |
 
-### 11.1 Sandbox live testing & demo — the pre-swap gate
+> **Mockup-first gate (Phase 0–1):** per the UI Standard §9, **every UI ships an approved HTML mockup before any theme code is written.** No UI is build-ready without an approved mockup; the approved mockups are the reference for the §11.1 sandbox demo.
 
 **Before the existing mejadesigns.com is swapped for the new store, everything runs first in a production-parity sandbox that is exercised *live* and demoed for sign-off.** The current store keeps serving real customers, untouched, until the go/no-go gate passes — so there is zero customer risk during testing.
 

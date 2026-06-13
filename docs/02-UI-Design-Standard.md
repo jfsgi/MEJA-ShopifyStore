@@ -18,6 +18,12 @@ This document defines **one design system** with **interchangeable visual "itera
 
 ---
 
+### 0.1 Mockup-first rule (MANDATORY)
+
+> **No UI gets built without an approved HTML mockup.** Every page layout, component, state, and the chosen iteration in this standard ships a **self-contained HTML mockup** (in [`../mockups/`](../mockups/)) that is **rendered and explicitly signed off** before any Online Store 2.0 theme code is written. The full requirement, the **mockup register** (every UI that needs one), and the approval process are in **§9**.
+
+---
+
 ## 1. Brand foundations
 
 | Foundation | Direction |
@@ -271,9 +277,67 @@ Each iteration = the same system, a different soul. For each: **concept**, **pal
 Once a primary iteration is approved:
 1. Lock token *values* for that direction (color/type/texture) **as overrides/aliases of the CRM `--mj-*` tokens** so the suite stays consistent (D12).
 2. Apply to the shared component library + page blueprints.
-3. Produce a high-fidelity prototype of Home + Collection + Configurator + Private listing.
-4. Accessibility + performance pass against §6 before engineering hand-off.
+3. **Produce an approved HTML mockup for *every* UI** in the mockup register (§9) — all page layouts, key components, and responsive/empty/loading/error states — not just a few hero pages.
+4. Accessibility + performance pass against §6 on the mockups.
+5. Only **approved** mockups proceed to Online Store 2.0 theme build (the mockup-first gate, §0.1 / §9).
 
 ---
 
-_End of UI Design Standard (Draft v0.1). Please approve one primary iteration (and any accents) — Decision D2._
+## 9. Mockup-first approval gate (mandatory)
+
+**Rule:** every UI in this standard must have a **self-contained HTML mockup**, rendered for review and **explicitly approved**, *before* it is built in the Online Store 2.0 theme. This covers all page layouts (§4), all shared components (§3), their responsive and empty/loading/error states, and the chosen iteration's full-fidelity pages.
+
+### 9.1 What a mockup deliverable is
+- A **self-contained HTML/CSS file** in [`../mockups/`](../mockups/) using the **approved iteration's tokens** (aliasing `--mj-*`, §2 / D12) — openable in any browser, no build step.
+- **Rendered to PDF/PNG** for sharing/sign-off via [`../tools/render_mockups.mjs`](../tools/render_mockups.mjs).
+- Shows **real content + representative states** (live price, render viewer states, locked vs editable options) — not lorem where data matters.
+- **Mobile + desktop** wherever the layout differs.
+
+### 9.2 Process (per UI)
+1. **Draft** the HTML mockup in `../mockups/`.
+2. **Render** it to PDF/PNG.
+3. **Review** with stakeholders; capture feedback; iterate.
+4. **Approve** — record sign-off (date + who) in the register below.
+5. **Build** — only an approved mockup may proceed to theme code.
+
+A UI **cannot be marked build-ready without an approved mockup.** This is a gate in Phase 0–1 (Master Plan §11), and the approved mockups are the reference for the §11.1 sandbox demo.
+
+### 9.3 Mockup register (every UI that needs a mockup)
+
+> Status: ☐ to do · ◐ in review · ✓ approved. The existing [`../mockups/index.html`](../mockups/index.html) covers the **10-iteration selection** (✓ produced); the per-UI mockups below are produced in the **approved** iteration once D2 is chosen.
+
+**Pages (§4)**
+
+| UI | Mockup file | Status |
+|----|-------------|:------:|
+| Iteration selection (10 directions) | `mockups/index.html` | ✓ produced |
+| Home | `mockups/home.html` | ☐ |
+| Collection / catalog | `mockups/collection.html` | ☐ |
+| Product (ready-made) PDP | `mockups/product.html` | ☐ |
+| Configurator (Tile / Art Back) + 4K viewer | `mockups/configurator.html` | ☐ |
+| Private / hybrid listing | `mockups/private-listing.html` | ☐ |
+| Cart | `mockups/cart.html` | ☐ |
+| Account + saved configs | `mockups/account.html` | ☐ |
+| My quotes | `mockups/account-quotes.html` | ☐ |
+| Content (FAQ / made-to-order policy) | `mockups/content.html` | ☐ |
+
+**Components & states (§3)**
+
+| UI | Mockup file | Status |
+|----|-------------|:------:|
+| Header / nav + mega-menu | `mockups/components/header.html` | ☐ |
+| Product card | `mockups/components/product-card.html` | ☐ |
+| Configurator panel + option controls (swatch / segmented / stepper / asset / locked) | `mockups/components/configurator-panel.html` | ☐ |
+| 4K render viewer (rendering / ready / AR / fullscreen) | `mockups/components/render-viewer.html` | ☐ |
+| Price block + made-to-order microcopy | `mockups/components/price-block.html` | ☐ |
+| Quote / Private banner | `mockups/components/quote-banner.html` | ☐ |
+| Cart line | `mockups/components/cart-line.html` | ☐ |
+| Buttons / forms / inputs | `mockups/components/forms.html` | ☐ |
+| Empty / loading / error states | `mockups/components/states.html` | ☐ |
+| Toasts / dialogs | `mockups/components/overlays.html` | ☐ |
+
+**Responsive:** each page mockup includes a **mobile** view (≤ md) where the layout differs (especially the configurator's stacked viewer + sticky price/CTA bar).
+
+---
+
+_End of UI Design Standard (Draft v0.2). Please approve one primary iteration (and any accents) — Decision D2 — then the per-UI mockups land per §9._
