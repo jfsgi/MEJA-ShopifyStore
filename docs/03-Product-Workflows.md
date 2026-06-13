@@ -18,7 +18,7 @@ This document specifies, for **every product type**, the journey from entry → 
 4. **Hybrid Listing** (CRM-seeded but customer-editable)
 5. **Custom Build-Out** (Atelier3d + live 4K render)
 
-Plus three cross-cutting flows: **CRM quote push**, **live 4K rendering**, and **order → fulfillment**.
+Plus four cross-cutting flows: **CRM quote push**, **live 4K rendering**, **order → fulfillment**, and **customer reviews (post-purchase UGC)**.
 
 Workflows A–H below cover the **customer & system** path. **§12 adds the operational (back-of-house) workflow** the production/ops team follows to fulfill each product type — intake, spec verification, sourcing, build, QA, pack, ship, and close-out.
 
@@ -297,6 +297,36 @@ sequenceDiagram
 
 ---
 
+## 9b. Workflow I — Customer Reviews (post-purchase UGC, cross-cutting)
+
+**Goal:** collect and display **verified-buyer reviews** (rating + text + photos) after a piece is delivered. Reviews are the **trust mechanism in place of returns** for a made-to-order brand.
+
+```mermaid
+sequenceDiagram
+    participant SH as Shopify
+    participant CRM as MEJA-CRM
+    participant RV as Reviews app
+    participant C as Customer (verified buyer)
+    participant CS as CS / moderation
+    SH-->>CRM: orders/fulfilled
+    CRM->>CRM: enqueue review_request (after delivery window)
+    CRM->>C: review invite (email/SMS · deep link)
+    C->>RV: submit rating + text + photos
+    RV->>CS: queue (auto spam/profanity + photo screen) → manual review
+    CS-->>RV: approve / reject / request edit
+    RV-->>SH: publish to PDP (family-level) · update aggregate rating · SEO schema
+    RV-->>CRM: ingest review (Ad Studio / lead score)
+```
+
+**Rules**
+- **Verified-buyer only:** invites fire **after fulfillment**; only fulfilled-order buyers can review.
+- **Family-level:** reviews attach to the **product family / `product_type`**, so configurable and **private/one-off** purchases still contribute to the family PDP; private listing pages themselves show no public reviews.
+- **Moderation gate:** auto-filter + **CS approval** before publish; photos screened for PII/inappropriate content; brand may **respond publicly**.
+- **SEO:** published reviews emit `AggregateRating`/`Review` structured data; collection cards show star badges.
+- **Approach:** Decision **D13** — reviews app + CRM-triggered requests.
+
+---
+
 ## 10. Decision points summary (per workflow)
 
 | Workflow | Key approval decision (see Master Plan §16) |
@@ -307,6 +337,7 @@ sequenceDiagram
 | E Custom | self-serve threshold vs. forced CRM review (propose: feasibility flags decide) |
 | F Push | idempotency + expiry policy |
 | G Render | D7 WebGL-first, 4K async |
+| I Reviews | D13 reviews approach + CRM-triggered, verified-buyer requests |
 
 **Open workflow question (E):** what defines "needs human review" vs "buyable now"? Proposed: a feasibility ruleset (max size, allowed materials, joinery complexity). **Please confirm.**
 
@@ -322,6 +353,8 @@ sequenceDiagram
 | Price mismatch (store display vs CRM) | CRM pricing engine is sole authority; store re-fetches the CRM price; reconciliation flags drift at order ingest. |
 | Out-of-stock component (BOM) | Surface lead-time/feasibility; offer alternates. |
 | Customer not logged in for private listing | Token grants scoped access; prompt login to save/track. |
+| Abusive / fake review | Held by moderation; verified-buyer only; reject + takedown path. |
+| Review photo with PII / inappropriate content | Auto-flag + manual screen before publish; photos never auto-publish. |
 
 ---
 
@@ -452,6 +485,7 @@ flowchart TD
 | **QA — render vs build** | The approved **4K render is the spec of record**; QA verifies the built piece matches it (dimensions, wood, finish, layout) before pack. |
 | **No returns — all items custom-made · rework / remake** | **Every product is made to order, so there are no returns or exchanges.** This is stated clearly on the PDP, in the cart, at checkout, and in CS comms. If an item arrives **defective or not matching the approved 4K render**, MEJA repairs, reworks, or remakes it; such cases are logged to CRM. Refunds occur **only** where MEJA cannot fulfill an order it accepted. |
 | **Capacity & scheduling** | OPS queues by product type; WIP limits per maker; lead-time SLAs published to CS so quotes/PDP show realistic ship dates. |
+| **Reviews & UGC moderation** | CS works the review queue within SLA, screens photos, approves/responds, and flags ≤3★ reviews for service follow-up (Workflow I). |
 
 ### 12.7 Operational RACI (by stage)
 

@@ -44,6 +44,7 @@ These systems are **real, in-flight applications** (reviewed 2026-06-13; see [`0
 - **G4** — Extend the CRM's **typed job-queue contract** (`integration_jobs`) and listings/store-order surfaces to connect Shopify ⇄ MEJA‑CRM ⇄ Atelier3D ⇄ 4kGraphics; keep contracts documented and versioned.
 - **G5** — Establish a **UI Design Standard** the brand can grow on (see [`02-UI-Design-Standard.md`](02-UI-Design-Standard.md)).
 - **G6** — Preserve SEO, brand equity, and existing customer accounts during cutover.
+- **G7** — Capture and display **customer reviews & photo UGC** — verified-buyer, invited **after fulfillment**, aggregated at the product-family level, moderated, with review structured data for SEO. (Reviews are the trust mechanism in place of returns.)
 
 ### 2.2 Non-goals (this phase)
 - Building MEJA‑CRM, Atelier3D, or 4kGraphics themselves (we integrate via the CRM's existing job queue, listings, and store-order surfaces, and the 4kGraphics engine/service).
@@ -227,6 +228,9 @@ Cross-system work is coordinated by **MEJA‑CRM** via its **typed job queue** (
 | MEJA‑CRM → 4kGraphics | async | `integration_jobs` `render_4k` → `/v1/render` `/v1/buildplan` | server 4K render + build-plan; result lands in Drive `drive_files` |
 | MEJA‑CRM → Atelier3D | async | `integration_jobs` `atelier_import` | bespoke design → **draft product** (dims + parts, `atelier_model_ref`) |
 | MEJA‑CRM (internal) | sync | pricing engine + `assembly_cut_list` view | authoritative price + flattened BOM/cut list |
+| MEJA‑CRM → reviews/email | async | `integration_jobs` `review_request` | post-fulfillment review invite to verified buyers |
+| Reviews app ↔ Shopify | sync | app + theme app-blocks | capture/display ratings, text, photo UGC; SEO `AggregateRating`/`Review` schema |
+| Reviews → MEJA‑CRM | async | webhook / sync | ingest reviews for marketing (Ad Studio) + customer lead scoring |
 
 ### 6.2 Canonical configuration object (CRM ↔ store)
 
@@ -304,6 +308,16 @@ sequenceDiagram
 - **Reliability:** all async consumers are **idempotent**; failed jobs **requeue (≤3×) then reap-stuck** (the CRM `integration_jobs` contract) with alerting; order webhooks are idempotent; every cross-system call is correlation-ID traced.
 - **Secrets:** stored in a managed secret store; never in the storefront bundle.
 
+### 6.6 Customer reviews & UGC
+
+The store carries **product reviews** — rating + text + **customer photos** — which matter especially for handmade pieces (buyers want to see *real* made results) and serve as the **trust mechanism in place of returns**.
+
+- **Verified-buyer only:** reviews are invited **after fulfillment**. The CRM (which owns `store_orders` + fulfillment) enqueues a **`review_request`** job that emails/SMSes the buyer after a delivery window; only fulfilled-order buyers can review.
+- **Family-level aggregation:** because configurable and private listings are unique per order, reviews aggregate to the **product family / `product_type`** (e.g., "Tile Shelf"), not the one-off listing — so a configured or private purchase still contributes its review + photos to the family PDP. One-off **private** listing pages don't show public reviews.
+- **Moderation:** automated spam/profanity + photo screening, then **CS approval** before publish; the brand can **respond publicly**.
+- **Display:** PDP reviews section (summary, star histogram, photo gallery, sortable/filterable cards), collection-card **star badges**, and home social proof; emit **`AggregateRating`/`Review`** structured data for SEO.
+- **Approach (Decision D13):** a reviews app (e.g., **Judge.me / Loox / Okendo** — strong photo-UGC, theme app-blocks, schema) for capture/display, with **requests triggered by the CRM** post-fulfillment; reviews optionally ingested into the CRM for **Ad Studio** + lead scoring.
+
 ---
 
 ## 7. Data model (essentials)
@@ -336,6 +350,7 @@ erDiagram
 - **Configurable options live in `shelf_templates` + the parts/`dim_map` model**; the flattened BOM/cut list comes from the CRM `assembly_cut_list` view and 4kGraphics `getBuildPlan()` — never recomputed separately.
 - **Conventions** (CRM ERD): `uuid` PKs, `numeric(12,2)` money (never floats), `timestamptz` audit columns, soft-archive via `status`/`archived_at`; **immutable pricing snapshots** on quote line items.
 - **Metafields / line-item properties** carry `configId` + the config snapshot + 4K URL into Shopify so checkout/back-office see exactly what was bought.
+- **Reviews** live in the reviews app (per D13), keyed to the **product family / `product_type`** (not unique listings), with verified-buyer + moderation state; optionally ingested into a CRM `reviews` table for marketing / lead-scoring.
 
 ---
 
@@ -345,7 +360,8 @@ erDiagram
 |-------|-----------|-------|
 | `/` | Home | Brand story, featured collections, configurator entry, social proof. |
 | `/collections/:handle` | Collection / catalog | Filter, sort, quick-view. |
-| `/products/:handle` | Product (ready-made) | Standard PDP. |
+| `/products/:handle` | Product (ready-made) | Standard PDP; **reviews section** (family-level) + star summary. |
+| `/products/:handle#reviews` · `/account/reviews` | Reviews | PDP reviews block; "write a review" (verified-buyer) from order history; collection cards show star badges. |
 | `/configure/:family/:style?` | Configurator | Atelier3d surface + option panel + 4K viewer + live price. |
 | `/q/:signedToken` | Private/hybrid listing | Quote-backed PDP; editable options if hybrid; expiry aware. |
 | `/cart` | Cart | Shows config snapshot + render thumbnail per line. |
@@ -379,7 +395,8 @@ Each product type's full sequence diagram and step list is in [`03-Product-Workf
 | **Performance** | LCP < 2.5s on PDP/collection (4K loads progressively, never blocks); configurator interaction < 100ms client-side. |
 | **Availability** | Storefront 99.9%; checkout inherits Shopify SLA; render engine degradation must not block buying (fallback to WebGL preview). |
 | **Accessibility** | WCAG 2.2 AA across storefront; configurator keyboard-operable with non-visual fallbacks. |
-| **SEO** | SSR for public pages; clean URLs; structured data; private listings excluded from indexing. |
+| **SEO** | SSR for public pages; clean URLs; structured data (incl. `AggregateRating`/`Review`); private listings excluded from indexing. |
+| **Reviews/UGC** | Verified-buyer gating; spam/profanity + photo moderation before publish; accessible star widgets (keyboard + AT); no PII in published photos. |
 | **Security** | Signed/expiring private URLs; HMAC webhooks; least-privilege API tokens; no secrets in client bundle. |
 | **Privacy** | Customer-scoped private listings never leak across accounts; PII stays in Shopify/CRM, not the storefront cache. |
 | **Observability** | Correlation IDs end-to-end; dashboards for render queue depth, webhook DLQ, push success rate. |
@@ -403,6 +420,7 @@ gantt
     OS 2.0 theme + design tokens         :p1a, after p0d, 28d
     Extend CRM job queue + Shopify push  :p1b, after p0c, 28d
     Private/hybrid listing push          :p1c, after p1b, 21d
+    Reviews & UGC (verified-buyer)        :p1d, after p1c, 14d
     section Phase 2 — Configurable shelves
     shelf_templates option matrix (CRM)  :p2a, after p1a, 28d
     Tile & Art Back configurators        :p2b, after p2a, 28d
@@ -497,6 +515,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraph
 | R6 | SEO/traffic loss at cutover | Med | High | 301 map, parity audit, **sandbox parallel run + go/no-go gate (§11.1)**, staged rollout, monitoring; existing store kept as rollback target. |
 | R7 | Variant explosion exceeds Shopify limits (3 options / 2,048 variants); custom tile/art are un-enumerable | **High** | High | **Variant & Options Engine (§5.4)**: options as data + server-side pricing + custom-priced line items (Cart Transform / Draft Orders); inventory at BOM level; never model combinations as native variants. |
 | R8 | "Shelf" (Tile/Art Back) is not yet a 4kGraphics parametric `kind` | Med | Med | Author Tile/Art Back as a parametric component (Atelier3D/4kGraphics) for live 3D + auto build-plan, or model via `shelf_templates` only (Decision **D11**). |
+| R9 | Fake/abusive reviews or photo misuse | Med | Med | Verified-buyer only (post-fulfillment); auto spam/profanity + photo screening; CS approval before publish; takedown + response path. |
 
 ---
 
@@ -508,6 +527,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraph
 - **Render success rate** and median 4K render time.
 - **PDP performance** (LCP) and **accessibility** (automated AA pass rate).
 - **Revenue mix** across the four product modes.
+- **Review coverage & rating:** request→submit rate, average star rating, and **photo-review %**.
 
 ---
 
@@ -537,6 +557,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraph
 | **D10** | How configured purchases reach Shopify checkout (§5.4) | Cart Transform Functions (Plus) / Draft Orders API / both | **Both** — Cart Transform on Plus for self-serve native UX; Draft Orders for CRM-pushed quotes & non-Plus fallback. Makes **D3 = Plus** effectively required. |
 | **D11** | Shelf (Tile/Art Back) as true 3D | Parametric component (Atelier3D/4kGraphics) / `shelf_templates` matrix only | **Author as a parametric component** for live 3D + auto build-plan; `shelf_templates` holds the option matrix. _(New — shelf isn't yet a render `kind`.)_ |
 | **D12** | Store design tokens | Adopt CRM **Indigo Atelier `--mj-*`** / bespoke | **Adopt Indigo Atelier tokens** for one-brand consistency across CRM, Atelier3D, and store. _(New.)_ |
+| **D13** | Reviews approach + request trigger (§6.6) | Reviews app (Judge.me / Loox / Okendo) / native metaobjects · request via CRM vs app | **Reviews app + CRM-triggered requests** (verified-buyer, post-fulfillment, photo UGC); ingest reviews into CRM for marketing. _(New.)_ |
 
 ---
 

@@ -97,6 +97,10 @@ Line-height: tight 1.1 · normal 1.5 · relaxed 1.7
 | **Made-to-order policy microcopy** | "Made to order · no returns or exchanges" shown near add-to-cart, in the cart, and at checkout — every product is custom-made. |
 | **Quote/Private banner** | "Prepared for {name} · expires {date}" on private/hybrid PDPs. |
 | **Cart line** | Thumbnail (render), config summary, edit link. |
+| **Star rating** | Aggregate + inline stars; half-stars; count; keyboard/AT-operable (input variant for "write a review"). |
+| **Review summary** | Average score, star **histogram** (5→1), total count, "% recommend", photo-gallery strip, sort/filter (with photos, rating, recent). |
+| **Review card** | Reviewer name + **verified-buyer** badge, date, rating, body, **customer photos**, helpful votes, and optional **brand response**. |
+| **Write-a-review form/modal** | Star input, title/body, photo upload, consent; verified-buyer gated from order history; submitting / success / moderation-pending states. |
 | **Buttons** | primary / secondary / ghost / destructive; loading & disabled states. |
 | **Forms & inputs** | Labels always visible; inline validation; error + helper text. |
 | **Empty / loading / error** | Skeletons for cards & viewer; friendly empty states. |
@@ -112,10 +116,10 @@ Line-height: tight 1.1 · normal 1.5 · relaxed 1.7
 Hero (brand + "Design yours" CTA) → featured styles (Tile / Art Back / …) → "How custom works" (3 steps: Configure → Preview in 4K → We craft it) → shop-by-room → social proof → newsletter/footer.
 
 ### 4.2 Collection
-Filter rail (style, room, size, wood, finish, price) + sortable responsive grid + quick-view; "Configure" badge on configurable items.
+Filter rail (style, room, size, wood, finish, price) + sortable responsive grid + quick-view; "Configure" badge on configurable items; **star-rating badge** on cards.
 
 ### 4.3 Product (ready-made)
-Gallery left / details right; variant picker; add-to-cart; specs; care; related.
+Gallery left / details right; variant picker; add-to-cart; specs; care; related. **Reviews section** (family-level): review summary + histogram + photo gallery + sortable/filterable review cards, with a verified-buyer "write a review" entry. The configurator and private/hybrid pages link to the same family-level reviews.
 
 ### 4.4 Configurator (`/configure/...`)
 ```
@@ -158,7 +162,7 @@ Orders, **saved configurations**, **my quotes** (active private/hybrid listings)
 ## 6. Accessibility & responsive standard (non-negotiable, all iterations)
 - **WCAG 2.2 AA**: contrast ≥ 4.5:1 text / 3:1 large; visible focus rings; 44px min targets.
 - **Keyboard**: full configurator operability; logical focus order; skip links.
-- **Screen readers**: option groups labelled; live region announces price/render changes; render viewer has text/spec fallback.
+- **Screen readers**: option groups labelled; live region announces price/render changes; render viewer has text/spec fallback. **Star ratings** expose an accessible name (e.g., "4.8 out of 5, 126 reviews); the review-input stars are keyboard-operable radios.
 - **Responsive**: mobile-first; no horizontal scroll; sticky CTA on small screens.
 - **Performance budget**: hero/preview never block on 4K; images responsive + lazy.
 
@@ -313,7 +317,7 @@ A UI **cannot be marked build-ready without an approved mockup.** This is a gate
 | Iteration selection (10 directions) | `mockups/index.html` | ✓ produced |
 | Home | `mockups/home.html` | ◐ in review |
 | Collection / catalog | `mockups/collection.html` | ☐ |
-| Product (ready-made) PDP | `mockups/product.html` | ☐ |
+| Product (ready-made) PDP — incl. reviews section | `mockups/product.html` | ☐ |
 | Configurator (Tile / Art Back) + 4K viewer | `mockups/configurator.html` | ◐ in review |
 | Private / hybrid listing | `mockups/private-listing.html` | ☐ |
 | Cart | `mockups/cart.html` | ☐ |
@@ -335,6 +339,8 @@ A UI **cannot be marked build-ready without an approved mockup.** This is a gate
 | Buttons / forms / inputs | `mockups/components/forms.html` | ☐ |
 | Empty / loading / error states | `mockups/components/states.html` | ☐ |
 | Toasts / dialogs | `mockups/components/overlays.html` | ☐ |
+| Reviews section (summary + histogram + photo gallery + cards) | `mockups/components/reviews.html` | ☐ |
+| Write-a-review (verified-buyer modal/page + states) | `mockups/components/write-review.html` | ☐ |
 
 **Responsive:** each page mockup includes a **mobile** view (≤ md) where the layout differs (especially the configurator's stacked viewer + sticky price/CTA bar).
 
