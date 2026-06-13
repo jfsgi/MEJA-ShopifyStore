@@ -546,7 +546,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraph
 | ID | Decision | Options | Recommendation |
 |----|----------|---------|----------------|
 | **D1** | Storefront architecture | (a) **Shopify OS 2.0 theme + embedded 4kGraphics engine** · (b) Hybrid-headless · (c) Full headless | **(a)** — matches the CRM's Phase 8 plan; the engine embeds in Liquid; lowest cost. Headless optional for flagship pages. _(Revised after reviewing the sibling apps.)_ |
-| **D2** | Primary UI iteration | One of the 10 variants (`../mockups/index.html`) | ✅ **CHOSEN: Variant 5 — Scandi Light** (light, sage/slate accent, geometric sans, rounded). Note: this differs from the CRM's indigo "Indigo Atelier" (D12) — confirm whether to keep Scandi's accent or adopt the indigo for suite consistency. |
+| **D2** | Primary UI iteration | One of the 10 variants (`../mockups/index.html`) | ✅ **CHOSEN: Variant 5 — Scandi Light** (light, sage/slate accent, geometric sans, rounded). Accent confirmed — see D12. |
 | **D3** | Shopify tier | Standard/Advanced vs **Plus** | **Plus** if checkout extensibility / scripting / volume warrant. |
 | **D4** | Pricing authority model | **CRM-only** / Rules-only / Hybrid | **CRM pricing engine is the sole authority** (golden-tested to the cent); the store never computes price. _(Revised — there is one real pricing engine.)_ |
 | **D5** | Private-listing access | Signed expiring URL / account-gated / both | **Both** (signed URL *and* customer scope). |
@@ -556,7 +556,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraph
 | **D9** | Pre-swap parallel-run length & demo sign-off group (§11.1) | 1 wk / 2 wks / longer · who signs off | **~2 weeks** parallel run; named stakeholders sign the recorded go/no-go before swap. |
 | **D10** | How configured purchases reach Shopify checkout (§5.4) | Cart Transform Functions (Plus) / Draft Orders API / both | **Both** — Cart Transform on Plus for self-serve native UX; Draft Orders for CRM-pushed quotes & non-Plus fallback. Makes **D3 = Plus** effectively required. |
 | **D11** | Shelf (Tile/Art Back) as true 3D | Parametric component (Atelier3D/4kGraphics) / `shelf_templates` matrix only | **Author as a parametric component** for live 3D + auto build-plan; `shelf_templates` holds the option matrix. _(New — shelf isn't yet a render `kind`.)_ |
-| **D12** | Store design tokens | Adopt CRM **Indigo Atelier `--mj-*`** / bespoke | **Adopt Indigo Atelier tokens** for one-brand consistency across CRM, Atelier3D, and store. _(New.)_ |
+| **D12** | Store design tokens / accent | Adopt CRM **Indigo Atelier** accent / keep Scandi | ✅ **DECIDED: keep the `--mj-*` token *structure* + neutrals, but the store's brand accent is Scandi sage/slate `#5b6b73`** — intentionally distinct from the CRM's indigo. _(Compared side-by-side; `assets/MEJA-accent-comparison.pdf`.)_ |
 | **D13** | Reviews approach + request trigger (§6.6) | Reviews app (Judge.me / Loox / Okendo) / native metaobjects · request via CRM vs app | **Reviews app + CRM-triggered requests** (verified-buyer, post-fulfillment, photo UGC); ingest reviews into CRM for marketing. _(New.)_ |
 
 ---

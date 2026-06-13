@@ -14,7 +14,7 @@ This document defines **one design system** with **interchangeable visual "itera
 
 **Your job at this stage:** review the 10 iterations (§7) — in the doc and in the live gallery — and approve **one primary direction** (plus any accents to borrow). Everything else here is the standard we build on once a direction is chosen.
 
-> **Suite alignment (added after reviewing the sibling apps — [`05-Integration-Context.md`](05-Integration-Context.md)):** the store is part of a **family** — **MEJA‑CRM** already ships a locked design system, **"Indigo Atelier,"** built on **`--mj-*` design tokens** (Tailwind v4, token-only color rule), and **Atelier3D** uses a warm-neutral workspace with a single **teal** accent (dark "Studio" for color accuracy). For one-brand consistency, the store should **consume the same `--mj-*` token set** (Decision **D12**). The token roles below map 1:1 onto `--mj-*`; the 10 iterations remain useful exploration, with the warm/atelier directions (#1/#2/#3) the closest fit to Indigo Atelier.
+> **Suite alignment (added after reviewing the sibling apps — [`05-Integration-Context.md`](05-Integration-Context.md)):** the store is part of a **family** — **MEJA‑CRM** already ships a locked design system, **"Indigo Atelier,"** built on **`--mj-*` design tokens** (Tailwind v4, token-only color rule), and **Atelier3D** uses a warm-neutral workspace with a single **teal** accent (dark "Studio" for color accuracy). The store keeps the same **`--mj-*` token structure + neutrals**, but **Decision (D12): the storefront uses its own brand accent — Scandi sage/slate `#5b6b73` — *not* the CRM indigo** (compared side-by-side: `../assets/MEJA-accent-comparison.pdf`). Layout, type roles, and neutrals stay shared; only the accent value differs.
 
 ---
 
