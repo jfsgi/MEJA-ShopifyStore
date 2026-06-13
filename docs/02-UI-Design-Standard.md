@@ -1,7 +1,7 @@
 # MEJA Designs WebStore — UI Design Standard
 
 **Document type:** Design system + 10 design iterations (for approval)
-**Version:** 0.1 (Draft)
+**Version:** 0.2 (Draft — aligned to the suite's Indigo Atelier `--mj-*` tokens)
 **Date:** 2026-06-13
 **Companion:** Open [`../mockups/index.html`](../mockups/index.html) in a browser to *see* the 10 iterations.
 **Status:** 🟡 Draft — awaiting approval of **one primary iteration** (Decision D2).
@@ -13,6 +13,8 @@
 This document defines **one design system** with **interchangeable visual "iterations."** The *structure* (layouts, components, grid, behavior, accessibility) is shared across all ten; each **iteration** is a distinct **visual direction** (palette, type, texture, motion, imagery treatment) applied to that same structure.
 
 **Your job at this stage:** review the 10 iterations (§7) — in the doc and in the live gallery — and approve **one primary direction** (plus any accents to borrow). Everything else here is the standard we build on once a direction is chosen.
+
+> **Suite alignment (added after reviewing the sibling apps — [`05-Integration-Context.md`](05-Integration-Context.md)):** the store is part of a **family** — **MEJA‑CRM** already ships a locked design system, **"Indigo Atelier,"** built on **`--mj-*` design tokens** (Tailwind v4, token-only color rule), and **Atelier3D** uses a warm-neutral workspace with a single **teal** accent (dark "Studio" for color accuracy). For one-brand consistency, the store should **consume the same `--mj-*` token set** (Decision **D12**). The token roles below map 1:1 onto `--mj-*`; the 10 iterations remain useful exploration, with the warm/atelier directions (#1/#2/#3) the closest fit to Indigo Atelier.
 
 ---
 
@@ -33,7 +35,9 @@ This document defines **one design system** with **interchangeable visual "itera
 
 Tokens are the contract between design and code. Each **iteration overrides the *values*** (esp. color & type); the **token *names* never change**, so swapping directions is a theme change, not a rebuild.
 
-### 2.1 Color (token roles — values set per iteration)
+> **Map to the suite:** these `--color-*` / `--font-*` roles **alias the CRM's `--mj-*` tokens** (Indigo Atelier). In the OS 2.0 theme they compile from the same source so the store, CRM, and Atelier3D stay visually one product (D12).
+
+### 2.1 Color (token roles — values set per iteration; alias `--mj-*`)
 ```
 --color-bg            /* page background            */
 --color-surface       /* cards, panels              */
@@ -140,7 +144,7 @@ Orders, **saved configurations**, **my quotes** (active private/hybrid listings)
 ## 5. Motion & interaction principles
 - **Purposeful, not decorative.** Motion explains state (render progress, option applied, price change).
 - **Respect `prefers-reduced-motion`.** Provide instant equivalents.
-- **Optimistic UI** for option changes; reconcile price/validity from rules engine.
+- **Optimistic UI** for option changes; reconcile price/validity from the **CRM pricing engine**.
 - **Never trap the user** waiting on a 4K render — preview stays interactive.
 
 ---
@@ -259,13 +263,13 @@ Each iteration = the same system, a different soul. For each: **concept**, **pal
 | 9 | Minimal Mono | Stark modern | ●○○ | ●●○ | ●○○ | ●●● |
 | 10 | Showroom 3D Immersive | Cinematic | ●●○ | ●●● | ●●● | ●●● |
 
-**Recommendation (Decision D2):** lead with **#1 Atelier Gallery** or **#3 Modern Luxe** for brand warmth + premium feel, and **borrow #6/#10 patterns** for the configurator and 4K viewer. Final call is yours.
+**Recommendation (Decision D2):** lead with **#1 Atelier Gallery** or **#2 Warm Workshop** — they sit closest to the CRM's **Indigo Atelier** and Atelier3D's warm-neutral + teal, keeping the suite one brand (#3 Modern Luxe is the premium-dark alternative). **Borrow #6/#10 patterns** for the configurator and 4K viewer. Whichever wins, its tokens **alias the `--mj-*` set** (D12). Final call is yours.
 
 ---
 
 ## 8. From iteration to build
 Once a primary iteration is approved:
-1. Lock token *values* for that direction (color/type/texture).
+1. Lock token *values* for that direction (color/type/texture) **as overrides/aliases of the CRM `--mj-*` tokens** so the suite stays consistent (D12).
 2. Apply to the shared component library + page blueprints.
 3. Produce a high-fidelity prototype of Home + Collection + Configurator + Private listing.
 4. Accessibility + performance pass against §6 before engineering hand-off.

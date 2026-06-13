@@ -1,7 +1,7 @@
 # MEJA Designs WebStore — Master Plan
 
 **Document type:** Complex implementation plan (for approval)
-**Version:** 0.1 (Draft)
+**Version:** 0.2 (Draft — reconciled with the real sibling apps; see [`05-Integration-Context.md`](05-Integration-Context.md))
 **Date:** 2026-06-13
 **Owner:** MEJA Designs
 **Status:** 🟡 Draft — awaiting approval
@@ -29,9 +29,9 @@ The new store turns mejadesigns.com into a **configurable commerce platform** th
 
 A **hybrid mode** spans #2 and #3: MEJA‑CRM pushes a *private, pre-customized* listing, **but the customer can still change selected options** before buying.
 
-All systems talk over **APIs** through a thin **Integration Layer**, with **Shopify** as the commerce system of record.
+These systems are **real, in-flight applications** (reviewed 2026-06-13; see [`05-Integration-Context.md`](05-Integration-Context.md)): **MEJA‑CRM** (Next.js 15 + Supabase) is the **business system of record + integration hub** — it owns customers, products, the golden-tested **pricing engine**, quotes, work orders, and **listings**, and already plans the Shopify storefront. **Atelier3D** (React + Three.js + NestJS) is the parametric design studio. **4kGraphics** is the render engine (embeddable Three.js library + headless `/v1/render` service). They connect through the CRM's **typed job-queue contract** (`integration_jobs`), not ad-hoc point-to-point APIs.
 
-**Recommended approach:** a **hybrid-headless** build — Shopify owns commerce (catalog, cart, checkout, orders, payments, customers); a custom storefront renders rich product/configurator experiences and hosts the Atelier3d + 4K rendering surfaces. This balances Shopify's reliability and PCI-compliant checkout with the UX freedom that live 3D/4K configuration demands. _(See §16, Decision D1 for alternatives.)_
+**Recommended approach:** build the storefront as a **Shopify Online Store 2.0 theme** (the CRM's own Phase 8 plan) with the **4kGraphics engine embedded** in the theme for live 3D + 4K — its `browser.js` drop-in loads via a `<script>` in any Liquid template. **Shopify owns the storefront + checkout** (PCI-compliant); **MEJA‑CRM is the system of record + hub** (catalog, pricing, listings, order-ingest). Full headless is *not* required — keep it optional for a few flagship-immersive pages only. _(See §16, Decision D1.)_
 
 ---
 
@@ -41,12 +41,12 @@ All systems talk over **APIs** through a thin **Integration Layer**, with **Shop
 - **G1** — Sell ready-made, private/unlisted, configurable, and custom (Atelier3d) products from one storefront and one checkout.
 - **G2** — Let MEJA‑CRM **push quotes** as private or hybrid listings, with correct pricing, options, and customer scoping.
 - **G3** — Give customers **live option selection** with **real-time price** updates and **4K-quality** visualization.
-- **G4** — Provide a **documented, versioned API contract** between Shopify, MEJA‑CRM, Atelier3d, and the render engine.
+- **G4** — Extend the CRM's **typed job-queue contract** (`integration_jobs`) and listings/store-order surfaces to connect Shopify ⇄ MEJA‑CRM ⇄ Atelier3D ⇄ 4kGraphics; keep contracts documented and versioned.
 - **G5** — Establish a **UI Design Standard** the brand can grow on (see [`02-UI-Design-Standard.md`](02-UI-Design-Standard.md)).
 - **G6** — Preserve SEO, brand equity, and existing customer accounts during cutover.
 
 ### 2.2 Non-goals (this phase)
-- Building MEJA‑CRM itself (we integrate with it; we assume it exposes/consumes APIs).
+- Building MEJA‑CRM, Atelier3D, or 4kGraphics themselves (we integrate via the CRM's existing job queue, listings, and store-order surfaces, and the 4kGraphics engine/service).
 - Replacing Shopify checkout or becoming a payment processor.
 - Marketplace/multi-vendor features.
 - A native mobile app (the storefront is responsive PWA-capable).
@@ -63,11 +63,11 @@ All systems talk over **APIs** through a thin **Integration Layer**, with **Shop
 | Platform | Shopify (URL patterns like `/pages/faq`, `/listing/...` and Etsy presence). |
 | Catalog | Fixed listings; made-to-order via messages/Etsy; limited self-serve customization. |
 | Shelves | Sold in styles incl. **Tile** and **Art Back**; sizing/finish handled manually. |
-| Quoting | Handled outside the store (the future **MEJA‑CRM** centralizes this). |
+| Quoting | Centralized in **MEJA‑CRM** (Next.js 15 + Supabase) — pricing engine golden-tested; quote→work-order live; listings (Phase 8) push to Shopify. |
 | Visualization | Static product photography; no live 3D/4K configuration. |
 | Gaps | No self-serve configurator, no private/unlisted quote listings, no live rendering, no documented system integration. |
 
-**Implication:** the new store is not a re-skin — it adds *configurable commerce*, *quote-to-listing automation*, and *3D/4K visualization* on top of a Shopify foundation.
+**Implication:** the new store is not a re-skin — it adds *configurable commerce*, *quote-to-listing automation*, and *3D/4K visualization* on top of a Shopify foundation, wired into the **already-built MEJA‑CRM** (quoting, pricing, listings, work orders) and its **Atelier3D** / **4kGraphics** workers. See [`05-Integration-Context.md`](05-Integration-Context.md).
 
 ---
 
@@ -92,12 +92,14 @@ flowchart TD
 
 | Term | Definition | Visibility | Pricing source |
 |------|------------|-----------|----------------|
-| **Ready-Made Listing** | Standard catalog product, fixed or simple variants. | Public | Shopify |
+| **Ready-Made Listing** | Standard catalog product, fixed or simple variants. | Public | MEJA‑CRM catalog → Shopify |
 | **Private / Unlisted Listing** | A quote materialized as a product, reachable only via signed link / customer account. | Hidden from nav, search, sitemap | MEJA‑CRM (locked) |
-| **Configurable Product** | Customer-driven options recompute SKU + price. | Public | Pricing rules engine |
-| **Hybrid Listing** | CRM seeds a configuration **and** leaves chosen options editable. | Private or public | CRM baseline + rules for editable options |
-| **Custom Build-Out** | Atelier3d session designs a bespoke piece; 4K render; quote → cart. | Public entry, private result | Atelier3d BOM → pricing rules |
+| **Configurable Product** | Customer-driven options recompute the price. | Public | MEJA‑CRM pricing engine (`shelf_templates`) |
+| **Hybrid Listing** | CRM seeds a configuration **and** leaves chosen options editable. | Private or public | MEJA‑CRM pricing engine (locked + editable) |
+| **Custom Build-Out** | Atelier3D session designs a bespoke piece; 4K render; quote → cart. | Public entry, private result | Atelier3D BOM → MEJA‑CRM pricing engine |
 | **Shelf Style** | A configurable product family. **Tile** and **Art Back** are the two primary styles; the system is **not limited to two** (e.g., Floating, Ledge, Grid, Modular are future styles). | — | — |
+
+> **Maps to the CRM `listings.kind`:** `catalog` = Ready-Made · `private` = Private/Unlisted (quote-required) · `shelf_template` = Configurable & Hybrid shelves. Private listings always originate from a quote (CRM rule).
 
 > **Design principle:** *Styles **and options** are **data**, not code — and not Shopify variants.* Adding a new shelf style, option dimension, or value is a configuration change, never a redeploy. The combinatorial option space (often 10⁵+ combinations — e.g., one Tile-Back shelf = **139,968**) lives in the **Variant & Options Engine** (§5.4), never in Shopify's native variant model (3-option / 2,048-variant limits).
 
@@ -105,76 +107,60 @@ flowchart TD
 
 ## 5. System architecture (recommended)
 
+> The four systems are real apps — see [`05-Integration-Context.md`](05-Integration-Context.md). **MEJA‑CRM is the business system of record + integration hub; Shopify is the storefront + checkout; Atelier3D and 4kGraphics are workers behind the CRM's job queue.**
+
 ### 5.1 Context diagram
 
 ```mermaid
 flowchart LR
-    subgraph Customer
-      U[Shopper / Account holder]
+    U[Shopper / Account holder]
+
+    subgraph SHOP["Shopify — storefront + checkout"]
+      THEME[Online Store 2.0 theme]
+      ENG[4kGraphics engine<br/>embedded browser.js]
+      CO[Native checkout]
+      WH[(Order webhooks)]
     end
 
-    subgraph Storefront["Storefront (hybrid-headless)"]
-      SF[Custom Storefront<br/>Hydrogen/Remix or Next.js]
-      CFG[Atelier3d Configurator<br/>embedded surface]
-      RV[4K Render Viewer]
+    subgraph CRM["MEJA-CRM — system of record + hub (Next.js + Supabase)"]
+      CAT[Catalog / product model]
+      PRICE[Pricing engine]
+      LIST[Listings · shelf_templates]
+      SO[store_orders / order_lines]
+      WO[Work orders / cut_parts]
+      JQ[(integration_jobs queue)]
     end
 
-    subgraph IL["Integration Layer (middleware)"]
-      API[API Gateway]
-      Q[Event/Webhook Bus]
-      MAP[Pricing & Mapping Service]
-      JOB[Render Job Orchestrator]
-    end
+    A3D[Atelier3D<br/>NestJS + Blender farm]
+    R4K[4kGraphics render service<br/>/v1/render · /v1/buildplan]
 
-    subgraph Shopify
-      ST[Storefront API]
-      AD[Admin API]
-      CO[Checkout]
-      WH[(Webhooks)]
-    end
-
-    CRM[MEJA-CRM Quoting Platform]
-    A3D[Atelier3d Service + Config API]
-    R4K[4K Rendering Engine]
-    CDN[(Media/CDN)]
-
-    U --> SF
-    SF <--> CFG
-    CFG --> RV
-    SF <--> ST
-    SF --> CO
-    SF <--> API
-
-    API <--> MAP
-    API <--> CRM
-    CFG <--> A3D
-    JOB --> R4K
-    R4K --> CDN
-    RV --> CDN
-
-    CRM <--> Q
-    Q <--> AD
-    Shopify -. order/customer events .-> WH --> Q
-    MAP <--> AD
+    U --> THEME
+    THEME <--> ENG
+    LIST -->|publish / push| THEME
+    THEME --> CO --> WH
+    WH -->|order ingest| SO
+    SO --> WO
+    PRICE --> LIST
+    JQ -->|render_4k| R4K
+    JQ -->|atelier_import| A3D
+    ENG <-. specs / renders .-> R4K
 ```
 
 ### 5.2 Layers & responsibilities
 
-| Layer | Responsibility | Example tech (illustrative) |
-|-------|----------------|------------------------------|
-| **Storefront** | Renders pages, configurator, render viewer; reads catalog via Storefront API; sends to Shopify checkout. | Shopify Hydrogen/Remix on Oxygen, **or** Next.js; React; TypeScript. |
-| **Integration Layer** | The glue: auth, mapping, pricing, webhook fan-out, render orchestration, idempotency, retries. | Node/TypeScript service; queue (e.g., SQS/PubSub); Postgres for mapping/state. |
-| **Shopify (system of record)** | Catalog, variants, inventory, cart, checkout, orders, customers, payments, taxes. | Shopify Plus recommended for scripting/checkout extensibility. |
-| **MEJA‑CRM** | Quote authoring; pushes private/hybrid listings; receives order status. | External; integrates via REST + webhooks. |
-| **Atelier3d** | 3D configuration logic, scene/state, BOM output. | Embedded SDK + Config API. |
-| **4K Render Engine** | High-resolution render jobs from configuration state. | Async job API → CDN asset URLs. |
+| Layer | Responsibility | Actual implementation |
+|-------|----------------|------------------------|
+| **Shopify (storefront + checkout)** | Renders pages, hosts the embedded 3D/4K configurator, owns cart/checkout/orders/payments/taxes. | **Online Store 2.0 theme** (Liquid + sections) with the **4kGraphics `browser.js`** embedded; native checkout (Plus for Functions — D3/D10). |
+| **MEJA‑CRM (system of record + hub)** | Catalog/product model, **pricing engine**, quotes, **listings** (`catalog/private/shelf_template`), **store-order ingestion**, work orders, and the **job queue** that drives the workers. | **Next.js 15 + Supabase (Postgres/RLS) + Drizzle.** Worker API `POST /api/jobs/claim`, `POST /api/jobs/[id]` (bearer `JOBS_WORKER_TOKEN`). |
+| **4kGraphics (render worker)** | Live WebGL preview, client-side 4K snapshot, headless server 4K + build-plan; render & cut list share one part layout. | Embeddable engine + headless `POST /v1/render` & `/v1/buildplan` (persistent host — Railway/Fly/VPS). Driven by `render_4k` jobs. |
+| **Atelier3D (design worker)** | Bespoke parametric design; exports a draft product (dims + parts) into the CRM. | React + Three.js + NestJS; Blender Cycles farm; driven by `atelier_import` jobs. |
 
-### 5.3 Why hybrid-headless (recommendation rationale)
+### 5.3 Why an OS 2.0 theme + embedded engine (recommendation rationale)
 
-- **Live 4K + 3D** needs a custom canvas, async render handling, and viewer UX that a stock Liquid theme constrains.
-- **Private/hybrid listings** need fine-grained, customer-scoped visibility and signed access that's cleaner in a custom storefront.
-- **Shopify checkout stays native** → PCI scope, fraud, taxes, and payments remain Shopify's problem, not ours.
-- We can **start native + apps** for speed and **graduate pages to headless** (see Decision D1 and the phased roadmap).
+- **It matches the CRM's own plan** ("Shopify Online Store 2.0 theme in `/storefront` — Phase 8"), so store and CRM stay one program, not two.
+- **The 4kGraphics `browser.js` embeds in Liquid** via a `<script type="module">` — live 3D + client-side 4K **without** a headless storefront.
+- **Shopify checkout stays native** → PCI scope, fraud, taxes, and payments remain Shopify's.
+- **Lower cost/complexity than headless**; full headless stays optional for a few flagship-immersive pages if ever justified (D1).
 
 ### 5.4 Variant & Options Engine — *why Shopify-native variants do not fit*
 
@@ -199,9 +185,9 @@ Shopify cannot model this natively, on **two** independent limits — and a thir
 
 ```mermaid
 flowchart LR
-    subgraph Engine["Variant & Options Engine (Integration Layer)"]
+    subgraph Engine["Variant & Options Engine (MEJA-CRM: shelf_templates + parts model)"]
       OM[Option Model<br/>dimensions · values · constraints · custom inputs]
-      PR[Pricing Rules Engine<br/>base + modifiers + formulas]
+      PR[CRM pricing engine<br/>golden-tested to the cent]
       CFG[Configuration<br/>configId · selections · BOM · price · render]
     end
     OM --> CFG
@@ -214,40 +200,38 @@ flowchart LR
 
 | Concern | Approach |
 |---------|----------|
-| **What's selectable** | The **Option Model** (per family/style) defines *unlimited* dimensions, values, dependencies, constraints, and free-form input types (upload/text). Source of truth in the Integration Layer; mirrored to Atelier3d for the 3D scene. Adding a stain — or a whole new dimension — is **data**, not code or variants. |
-| **Price** | The **Pricing Rules Engine** computes price deterministically: `base + Σ option modifiers + formulas` (e.g., length → material cost, tile count → labor). Versioned. **Server-side authority** — the client never sets price. |
+| **What's selectable** | The **Option Model** (per family/style) defines *unlimited* dimensions, values, dependencies, constraints, and free-form input types (upload/text). Source of truth in the **CRM (`shelf_templates` + parts/`dim_map`)**; mirrored to Atelier3D for the 3D scene. Adding a stain — or a whole new dimension — is **data**, not code or variants. |
+| **Price** | The **CRM pricing engine** (golden-tested to the cent) computes price deterministically from the parts/materials/features model. **Server-side authority** — the client never sets price. |
 | **Catalog footprint in Shopify** | **One base "configurable" product per family/style** (a handful of products) — *not* 139,968 variants. The chosen configuration rides on the cart line as **line-item properties + a `configId`**. |
-| **Getting the price into checkout** (Decision **D10**) | **A. Cart Transform Function (Shopify Plus):** a base variant sits in the native cart; a server-side Shopify Function rewrites its price to the engine-computed amount from the attached `configId`. Keeps native cart/checkout UX. · **B. Draft Orders API:** the Integration Layer creates a draft order with a custom-priced line, then converts it to a checkout. Works without Plus; ideal for **CRM-pushed private/hybrid quotes**. |
+| **Getting the price into checkout** (Decision **D10**) | **A. Cart Transform Function (Shopify Plus):** a base variant sits in the native cart; a server-side Shopify Function rewrites its price to the CRM-computed amount from the attached `configId`. Keeps native cart/checkout UX. · **B. Draft Orders API:** the CRM creates a draft order with a custom-priced line, then converts it to a checkout. Works without Plus; ideal for **CRM-pushed private/hybrid quotes**. |
 | **Inventory** | Tracked at the **component / BOM level** (blanks, tiles, hooks, stain), never per combination. Feasibility = component availability, not 139,968 phantom SKUs. |
 | **Merchandising & filtering** | Collection filters (e.g., "available in walnut") are driven by **option metadata**, not variants. |
 | **Anti-tampering** | Final price is always (re)computed and set **server-side** (Function or Draft Order) and re-validated against `configId` at the `orders/create` webhook. |
 
-**Recommendation:** **Cart Transform Functions on Shopify Plus** for self-serve configurators (native UX), **plus Draft Orders** for CRM-pushed quotes and as a non-Plus fallback. This makes **Shopify Plus (Decision D3) effectively required**, and reinforces **hybrid-headless (D1)** — native variant pickers cannot express this, so the **configurator UI is mandatory** for these products.
+**Recommendation:** **Cart Transform Functions on Shopify Plus** for self-serve configurators (native UX), **plus Draft Orders** for CRM-pushed quotes and as a non-Plus fallback. This makes **Shopify Plus (Decision D3) effectively required**, and reinforces **the OS 2.0 theme + embedded engine (D1)** — native variant pickers cannot express this, so the **embedded configurator UI is mandatory** for these products.
 
 ---
 
 ## 6. API integration specification
 
-All cross-system calls go through the **Integration Layer**. No system calls another's internals directly; this gives us one place for auth, logging, retries, idempotency, and versioning.
+Cross-system work is coordinated by **MEJA‑CRM** via its **typed job queue** (`integration_jobs`: enqueue → atomic claim `SKIP LOCKED` → complete → fail-with-requeue ≤3× → reap-stuck) plus Shopify's Admin/Storefront APIs and order webhooks. This gives one hub for auth, retries, idempotency, and versioning.
 
 ### 6.1 Integration matrix
 
 | From → To | Direction | Transport | Key operations |
 |-----------|-----------|-----------|----------------|
-| Storefront → Shopify | sync | Storefront API (GraphQL) | read products/collections, create cart, go to checkout |
-| Integration Layer → Shopify | sync | Admin API (GraphQL/REST) | create/update base products, set metafields, manage publications/visibility |
-| Integration Layer → Shopify | sync | Draft Orders / Cart Transform Function | set the **configured line price** (server-side) + attach `configId` & option properties — see §5.4 |
-| Shopify → Integration Layer | async | Webhooks | `orders/create`, `orders/paid`, `orders/fulfilled`, `customers/*` |
-| MEJA‑CRM → Integration Layer | async + sync | Webhook + REST | push quote → create private/hybrid listing; price updates; expirations |
-| Integration Layer → MEJA‑CRM | sync | REST | acknowledge listing creation; send order status; reconcile |
-| Storefront ↔ Atelier3d | sync | Embedded SDK + Config API | start/resume session, read option model, emit configuration + BOM |
-| Integration Layer → 4K Render | async | Job API | submit render job (config state) → poll/callback → CDN URL |
-| 4K Render → CDN | one-way | upload | store rendered hi-res assets |
+| Theme → Shopify | sync | Liquid + Storefront/Ajax API | read products/collections, cart, native checkout |
+| Theme ↔ 4kGraphics engine | in-page | embedded `browser.js` | live 3D preview, `renderSnapshot()` (client 4K), `getBuildPlan()` |
+| MEJA‑CRM → Shopify | sync | Admin API + (Cart Transform Fn / Draft Orders) | publish/push **listings** as base products; set configured **line price** server-side + `configId`/option props (§5.4) |
+| Shopify → MEJA‑CRM | async | Order webhooks → `store_orders` | ingest `orders/create\|paid\|fulfilled`; buyers without a quote auto-create a CRM customer |
+| MEJA‑CRM → 4kGraphics | async | `integration_jobs` `render_4k` → `/v1/render` `/v1/buildplan` | server 4K render + build-plan; result lands in Drive `drive_files` |
+| MEJA‑CRM → Atelier3D | async | `integration_jobs` `atelier_import` | bespoke design → **draft product** (dims + parts, `atelier_model_ref`) |
+| MEJA‑CRM (internal) | sync | pricing engine + `assembly_cut_list` view | authoritative price + flattened BOM/cut list |
 
-### 6.2 Canonical objects (Integration Layer vocabulary)
+### 6.2 Canonical configuration object (CRM ↔ store)
 
 ```jsonc
-// A configuration captured from configurator or CRM
+// A configuration captured from configurator or CRM (aligns with the CRM listing/line model)
 {
   "configurationId": "cfg_01H...",          // idempotency key
   "source": "atelier3d | crm | storefront",
@@ -271,85 +255,87 @@ All cross-system calls go through the **Integration Layer**. No system calls ano
 
 ```mermaid
 sequenceDiagram
-    participant CRM as MEJA-CRM
-    participant IL as Integration Layer
+    participant CRM as MEJA-CRM (hub)
     participant SH as Shopify Admin
-    participant ST as Storefront
-    CRM->>IL: POST /quotes/push (quote + options + price + scope)
-    IL->>IL: Validate against option model; idempotency check
-    IL->>SH: Create product + variants + metafields (visibility=private)
-    SH-->>IL: productId, variantIds
-    IL->>IL: Store mapping (quoteId ↔ productId), signed access token
-    IL-->>CRM: 201 { productId, privateUrl, expiresAt }
-    Note over ST: Customer opens signed private URL
-    ST->>SH: Storefront API: fetch private product by token
-    ST-->>ST: Render listing (editable options if hybrid)
+    participant TH as Theme (storefront)
+    CRM->>CRM: Accept quote → "List on Shopify" (listing kind = private / shelf_template)
+    CRM->>CRM: Validate options; idempotency on quoteId
+    CRM->>SH: Create base product/listing (no variants) + metafields (visibility=private)
+    SH-->>CRM: productId
+    CRM->>CRM: Store listing↔quote↔product link, signed access token, expiry
+    Note over TH: Customer opens signed private URL
+    TH->>SH: Storefront API: fetch private product by token
+    TH-->>TH: Render listing (editable options if hybrid)
 ```
 
 **Rules:**
-- **Idempotency:** `quoteId` is the dedupe key; re-push updates, never duplicates.
+- **Idempotency:** `quoteId` is the dedupe key; re-push updates the listing, never duplicates.
 - **Locked vs. editable:** CRM marks each option `locked:true|false`. Locked options render read-only; unlocked render as editable controls (this is what makes a listing *hybrid*).
 - **Visibility:** private listings get `metafield: visibility=private`, excluded from collections, search, sitemap, and require a **signed, expiring access token** or logged-in scoped customer.
-- **Pricing authority:** for private/locked options, CRM price is authoritative; for editable options, the **Pricing Rules Engine** recomputes deltas.
+- **Pricing authority:** the **MEJA‑CRM pricing engine is the sole authority** for all options (locked and editable); the store never computes price — it displays the CRM number.
 
 ### 6.4 Live 4K rendering
 
 ```mermaid
 sequenceDiagram
-    participant CFG as Atelier3d (in storefront)
-    participant IL as Integration Layer
-    participant R as 4K Render Engine
-    participant CDN as CDN
-    participant V as Render Viewer
-    CFG->>V: Real-time low-latency preview (WebGL)
-    Note over CFG,V: Interactive preview is instant (client-side)
-    CFG->>IL: Debounced "render4k" (configuration state)
-    IL->>R: Submit job (state, camera, lighting)
-    R-->>IL: jobId (accepted)
-    R->>CDN: Upload 4K asset on completion
-    R-->>IL: callback { jobId, url, status }
-    IL-->>V: push (websocket) { url }
-    V->>CDN: Load 4K image progressively
+    participant ENG as 4kGraphics engine (in theme)
+    participant CRM as MEJA-CRM (render_4k job)
+    participant R as 4kGraphics service
+    participant CDN as Drive / CDN
+    participant V as Render viewer
+    ENG->>V: Instant client-side WebGL preview + renderSnapshot() (client 4K)
+    Note over ENG,V: Interactive preview never blocks
+    ENG->>CRM: enqueue render_4k (spec, material, lighting)
+    CRM->>R: claim → POST /v1/render
+    R-->>CRM: 4K PNG → store in drive_files (tagged with product code)
+    CRM-->>V: push (websocket) { url }
+    V->>CDN: load 4K progressively
 ```
 
-- **Two-tier visualization:** instant client-side **WebGL preview** for interactivity; **server-side 4K** for hero shots, PDP, and order records. Never block interaction on the 4K job.
+- **Two-tier visualization:** instant client-side **WebGL preview** (and `renderSnapshot()` client 4K) for interactivity; **server-side 4K** (`render_4k` → `/v1/render`) for hero shots, PDP, and order records. Never block interaction on the 4K job.
 - **Caching:** key 4K assets by a hash of the configuration so identical configs reuse renders.
-- **Order capture:** the chosen config's 4K URL + BOM are attached to the order line item (Shopify metafields/line-item properties) so production and the customer see exactly what was bought.
+- **BOM = the build plan:** the cut list/BOM comes from 4kGraphics `getBuildPlan()` / `/v1/buildplan` and the CRM `assembly_cut_list` view — render and cut list derive from one part layout, so they can never disagree.
+- **Order capture:** the chosen config's 4K URL + build plan are attached to the order line (`configId` in metafields/line-item properties) so production and the customer see exactly what was bought.
 
 ### 6.5 Auth, versioning, reliability
 
 - **Auth:** OAuth2 client-credentials / signed webhooks (HMAC) between systems; short-lived signed URLs for private listings and render assets.
 - **Versioning:** every external contract is `v1`-prefixed; breaking changes ship a new version, old version deprecated on a published schedule.
-- **Reliability:** all async consumers are **idempotent**; failed webhooks go to a **dead-letter queue** with retry + alerting; every cross-system call is correlation-ID traced.
+- **Reliability:** all async consumers are **idempotent**; failed jobs **requeue (≤3×) then reap-stuck** (the CRM `integration_jobs` contract) with alerting; order webhooks are idempotent; every cross-system call is correlation-ID traced.
 - **Secrets:** stored in a managed secret store; never in the storefront bundle.
 
 ---
 
 ## 7. Data model (essentials)
 
+The authoritative model is the **MEJA‑CRM Postgres schema** (approved ERD; see [`05-Integration-Context.md`](05-Integration-Context.md)). Store-relevant entities:
+
 ```mermaid
 erDiagram
-    PRODUCT ||--o{ VARIANT : has
-    PRODUCT ||--o{ OPTION_MODEL : "configured by"
-    PRODUCT }o--|| VISIBILITY : "scoped by"
-    QUOTE ||--|| PRODUCT : "materializes as"
-    CONFIGURATION ||--|| RENDER_ASSET : "produces"
-    CONFIGURATION }o--|| PRICING_RULESET : "priced by"
-    ORDER ||--o{ ORDER_LINE : contains
-    ORDER_LINE }o--|| CONFIGURATION : "snapshot of"
+    quotes ||--o{ listings : "pushed as"
+    product_types ||--o{ listings : "catalogued in"
+    shelf_templates ||--o{ listings : "option matrix for"
+    listings ||--o{ order_lines : "purchased via"
+    store_orders ||--o{ order_lines : contains
+    store_orders ||--o| work_orders : "linked to"
+    quote_versions ||--o| work_orders : generates
+    work_orders ||--|{ wo_items : contains
+    wo_items ||--|{ cut_parts : "cut list"
+    product_types ||--|{ product_parts : "built from"
+    product_types ||--o{ product_children : assembles
+    integration_jobs }o--|| listings : "render_4k / push"
 
-    PRODUCT { string shopifyId; string family; string style; string visibility }
-    OPTION_MODEL { json options; json constraints; json dependencies }
-    QUOTE { string crmQuoteId; string customerId; string status; date expiresAt }
-    CONFIGURATION { string configId; json options; json bom; money price }
-    RENDER_ASSET { string previewUrl; string render4kUrl; string status }
-    PRICING_RULESET { string id; json baseRates; json modifiers }
+    listings { string platform; string kind; uuid product; uuid quote; numeric price; string status }
+    shelf_templates { uuid id; json option_matrix }
+    store_orders { string shopify_order_id; uuid customer; string status }
+    integration_jobs { string kind; string status; json payload }
 ```
 
-- **Shopify holds** base products (a handful per family/style — **not** the option combinations), **component-level inventory**, orders, customers (system of record). See §5.4 for why combinations are never stored as variants.
-- **Integration Layer DB holds** the *mapping & state* Shopify can't model well: **option models**, configurations, **pricing rulesets**, render-job state, quote↔product links, signed-access tokens.
-- **Inventory is tracked at the component/BOM level** (blanks, tiles, hooks, stain), not per option-combination — there is no per-combination SKU.
-- **Metafields** carry per-product config schema, visibility flags, and per-line-item config snapshots (incl. `configId`) into Shopify so back-office/fulfillment can see exactly what was bought.
+- **MEJA‑CRM (Supabase Postgres) is the authoritative data model** — products, the pricing engine, quotes, work orders, **listings**, **shelf_templates**, **store_orders**.
+- **Shopify holds** the published storefront mirror: base products (a handful per family/style — **not** option combinations), component-level inventory, native cart/checkout/orders.
+- **Configurable options live in `shelf_templates` + the parts/`dim_map` model**; the flattened BOM/cut list comes from the CRM `assembly_cut_list` view and 4kGraphics `getBuildPlan()` — never recomputed separately.
+- **Conventions** (CRM ERD): `uuid` PKs, `numeric(12,2)` money (never floats), `timestamptz` audit columns, soft-archive via `status`/`archived_at`; **immutable pricing snapshots** on quote line items.
+- **Metafields / line-item properties** carry `configId` + the config snapshot + 4K URL into Shopify so checkout/back-office see exactly what was bought.
 
 ---
 
@@ -378,11 +364,11 @@ Each product type's full sequence diagram and step list is in [`03-Product-Workf
 
 | Product type | Entry | Configuration | Pricing | Visualization | Checkout |
 |--------------|-------|---------------|---------|---------------|----------|
-| Ready-made | Collection/PDP | none/simple variants | Shopify | product photos | native |
-| Private/unlisted | Signed link / account | locked | CRM | CRM-provided/render | native |
-| Configurable (shelves) | Configurator | full options | rules engine | WebGL + 4K | native |
-| Hybrid | Signed link / account | partial (editable) | CRM + rules | render | native |
-| Custom (Atelier3d) | Configurator | bespoke 3D | BOM → rules | WebGL + 4K | native |
+| Ready-made | Collection/PDP | none/simple variants | CRM → Shopify | product photos | native |
+| Private/unlisted | Signed link / account | locked | CRM engine | CRM render / 4K | native |
+| Configurable (shelves) | Configurator | full options | CRM engine | WebGL + 4K | native |
+| Hybrid | Signed link / account | partial (editable) | CRM engine | WebGL + 4K | native |
+| Custom (Atelier3D) | Configurator | bespoke 3D | BOM → CRM engine | WebGL + 4K | native |
 
 ---
 
@@ -413,14 +399,14 @@ gantt
     UI direction approval (10 iterations):p0b, after p0a, 10d
     API contracts v1 frozen              :p0c, after p0a, 14d
     section Phase 1 — Commerce + CRM push
-    Storefront skeleton + design system  :p1a, after p0b, 28d
-    Integration Layer + Shopify sync     :p1b, after p0c, 28d
+    OS 2.0 theme + design tokens         :p1a, after p0b, 28d
+    Extend CRM job queue + Shopify push  :p1b, after p0c, 28d
     Private/hybrid listing push          :p1c, after p1b, 21d
     section Phase 2 — Configurable shelves
-    Option model + pricing rules engine  :p2a, after p1a, 28d
+    shelf_templates option matrix (CRM)  :p2a, after p1a, 28d
     Tile & Art Back configurators        :p2b, after p2a, 28d
-    section Phase 3 — Atelier3d + 4K
-    Atelier3d embed + config capture      :p3a, after p2b, 28d
+    section Phase 3 — Atelier3D + 4K
+    Embed 4kGraphics engine + config      :p3a, after p2b, 28d
     4K render orchestration + viewer     :p3b, after p3a, 21d
     section Phase 4 — Sandbox live testing & demo
     Stand up production-parity sandbox   :p4a, after p3b, 10d
@@ -452,7 +438,7 @@ gantt
 | MEJA‑CRM | CRM sandbox/test tenant pushing **demo** quotes only (no real customer PII). |
 | Atelier3d | Sandbox project + keys; same option models as production. |
 | 4K render engine | Test render queue writing to a **non-production** CDN bucket. |
-| Integration Layer | Staging deployment with its own DB, secrets, and webhook endpoints. |
+| MEJA‑CRM hub + job queue | Staging deployment (Supabase + Next.js) with its own DB, secrets, and `integration_jobs` worker endpoints. |
 
 **Live demo scope — every workflow exercised end-to-end, for real, in the sandbox:**
 - Ready-made purchase → test checkout → order created.
@@ -494,7 +480,7 @@ Only after a recorded **GO** decision does **Phase 5** perform the cutover. The 
 | QA | P1–P4 |
 | Project lead | All |
 
-Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d licensing, 4K render compute + CDN egress, Integration Layer hosting, and monitoring.
+Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, the **4kGraphics render service** (persistent host — Railway/Fly/VPS) + GPU/compute, CDN/Drive egress, **MEJA‑CRM hosting** (Vercel + Supabase), Atelier3D render farm, and monitoring.
 
 ---
 
@@ -502,13 +488,14 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 
 | # | Risk | Likelihood | Impact | Mitigation |
 |---|------|-----------|--------|------------|
-| R1 | Atelier3d / render-engine API capabilities unknown | High | High | **Spike in Phase 0**; design Integration Layer to swap providers; abstract behind our own config/render interface. |
-| R2 | 4K render latency hurts UX | Med | High | Two-tier (instant WebGL + async 4K); cache by config hash; never block checkout. |
+| R1 | Sibling-app contracts (CRM job queue, 4kGraphics, Atelier3D) | **Low (reviewed)** | Med | Contracts documented 2026-06-13 ([`05-Integration-Context.md`](05-Integration-Context.md)); track their in-progress phases (CRM Listings P8, job-queue P7, render/Atelier worker services). |
+| R2 | 4K render latency hurts UX | Med | High | Two-tier (instant WebGL + async `render_4k`); cache by config hash; never block checkout. |
 | R3 | Private-listing leakage | Low | High | Signed expiring URLs + customer scoping + exclusion from index; security review. |
-| R4 | Pricing drift between CRM and rules engine | Med | High | Single pricing authority per option; reconciliation job; CRM price locked for locked options. |
-| R5 | Headless complexity/cost overruns | Med | Med | Hybrid path: start native+apps, graduate pages; staged budget gates. |
+| R4 | Pricing drift (store vs CRM) | Low | High | **CRM pricing engine is the sole authority** (golden-tested to the cent); store only displays it; reconcile at order ingest. |
+| R5 | Storefront build complexity/cost | Low | Med | **OS 2.0 theme + embedded engine** (not headless) keeps it simple; headless optional later. |
 | R6 | SEO/traffic loss at cutover | Med | High | 301 map, parity audit, **sandbox parallel run + go/no-go gate (§11.1)**, staged rollout, monitoring; existing store kept as rollback target. |
 | R7 | Variant explosion exceeds Shopify limits (3 options / 2,048 variants); custom tile/art are un-enumerable | **High** | High | **Variant & Options Engine (§5.4)**: options as data + server-side pricing + custom-priced line items (Cart Transform / Draft Orders); inventory at BOM level; never model combinations as native variants. |
+| R8 | "Shelf" (Tile/Art Back) is not yet a 4kGraphics parametric `kind` | Med | Med | Author Tile/Art Back as a parametric component (Atelier3D/4kGraphics) for live 3D + auto build-plan, or model via `shelf_templates` only (Decision **D11**). |
 
 ---
 
@@ -525,11 +512,11 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 
 ## 15. Assumptions & dependencies
 
-- MEJA‑CRM **exposes/consumes REST + webhooks** (or will, by Phase 1).
-- Atelier3d provides an **embeddable SDK** and a **configuration/BOM API**.
-- The 4K engine offers an **async job API** with callbacks and CDN delivery.
-- Shopify plan supports the needed **API limits, metafields, and checkout extensibility** (likely Plus).
-- Brand assets (logo, fonts, photography) are available for the design system.
+- **MEJA‑CRM** (Next.js 15 + Supabase) exposes the **`integration_jobs` worker API** + listings/store-order surfaces (Listings P8 / job-queue P7 land on schedule).
+- **Atelier3D** exports a draft product via `atelier_import`; embeddable for design where needed.
+- **4kGraphics** provides the **embeddable engine** (live preview + client 4K) and a **`/v1/render` + `/v1/buildplan`** service on a persistent host.
+- **Shopify** plan supports OS 2.0 + the API/metafield/checkout-extensibility (Functions) needs — **Plus likely required** (D3/D10).
+- Brand assets + the CRM **Indigo Atelier `--mj-*` tokens** are available for the design system.
 
 ---
 
@@ -537,16 +524,18 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 
 | ID | Decision | Options | Recommendation |
 |----|----------|---------|----------------|
-| **D1** | Storefront architecture | (a) Native Shopify theme + apps · (b) **Hybrid-headless** · (c) Full headless (Hydrogen/Oxygen) | **(b) Hybrid-headless** — start native where possible, headless for configurator/4K pages. |
+| **D1** | Storefront architecture | (a) **Shopify OS 2.0 theme + embedded 4kGraphics engine** · (b) Hybrid-headless · (c) Full headless | **(a)** — matches the CRM's Phase 8 plan; the engine embeds in Liquid; lowest cost. Headless optional for flagship pages. _(Revised after reviewing the sibling apps.)_ |
 | **D2** | Primary UI iteration | One of the 10 in [`02-UI-Design-Standard.md`](02-UI-Design-Standard.md) | Shortlist **#1 Atelier Gallery**, **#3 Modern Luxe**, **#10 Showroom 3D Immersive**; pick one + accents. |
 | **D3** | Shopify tier | Standard/Advanced vs **Plus** | **Plus** if checkout extensibility / scripting / volume warrant. |
-| **D4** | Pricing authority model | CRM-only / Rules-only / **Hybrid per-option** | **Hybrid per-option** (locked=CRM, editable=rules). |
+| **D4** | Pricing authority model | **CRM-only** / Rules-only / Hybrid | **CRM pricing engine is the sole authority** (golden-tested to the cent); the store never computes price. _(Revised — there is one real pricing engine.)_ |
 | **D5** | Private-listing access | Signed expiring URL / account-gated / both | **Both** (signed URL *and* customer scope). |
 | **D6** | Phase 1 scope | Commerce only vs Commerce + CRM push | **Commerce + CRM push** (highest business value early). |
 | **D7** | Render fallback policy | Block on 4K vs **WebGL-first** | **WebGL-first**, 4K async, never block. |
 | **D8** | New shelf styles beyond Tile/Art Back at launch? | which, if any | Confirm launch styles; system supports unlimited via data. |
 | **D9** | Pre-swap parallel-run length & demo sign-off group (§11.1) | 1 wk / 2 wks / longer · who signs off | **~2 weeks** parallel run; named stakeholders sign the recorded go/no-go before swap. |
 | **D10** | How configured purchases reach Shopify checkout (§5.4) | Cart Transform Functions (Plus) / Draft Orders API / both | **Both** — Cart Transform on Plus for self-serve native UX; Draft Orders for CRM-pushed quotes & non-Plus fallback. Makes **D3 = Plus** effectively required. |
+| **D11** | Shelf (Tile/Art Back) as true 3D | Parametric component (Atelier3D/4kGraphics) / `shelf_templates` matrix only | **Author as a parametric component** for live 3D + auto build-plan; `shelf_templates` holds the option matrix. _(New — shelf isn't yet a render `kind`.)_ |
+| **D12** | Store design tokens | Adopt CRM **Indigo Atelier `--mj-*`** / bespoke | **Adopt Indigo Atelier tokens** for one-brand consistency across CRM, Atelier3D, and store. _(New.)_ |
 
 ---
 
@@ -556,6 +545,7 @@ Recurring cost drivers to budget: **Shopify (Plus tier — TBD)**, Atelier3d lic
 - **B. API objects** — see §6.2.
 - **C. Diagrams** — Mermaid sources are inline; rendered automatically on GitHub.
 - **D. Related docs** — [UI Design Standard](02-UI-Design-Standard.md), [Product Workflows](03-Product-Workflows.md), [Mockups](../mockups/index.html).
+- **E. Integration context** — [Integration Context](05-Integration-Context.md) — the real sibling apps (MEJA‑CRM, Atelier3D, 4kGraphics) and their contracts.
 
 ---
 
