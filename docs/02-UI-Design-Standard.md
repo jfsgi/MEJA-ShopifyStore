@@ -1,0 +1,272 @@
+# MEJA Designs WebStore — UI Design Standard
+
+**Document type:** Design system + 10 design iterations (for approval)
+**Version:** 0.1 (Draft)
+**Date:** 2026-06-13
+**Companion:** Open [`../mockups/index.html`](../mockups/index.html) in a browser to *see* the 10 iterations.
+**Status:** 🟡 Draft — awaiting approval of **one primary iteration** (Decision D2).
+
+---
+
+## 0. Purpose & how to use this
+
+This document defines **one design system** with **interchangeable visual "iterations."** The *structure* (layouts, components, grid, behavior, accessibility) is shared across all ten; each **iteration** is a distinct **visual direction** (palette, type, texture, motion, imagery treatment) applied to that same structure.
+
+**Your job at this stage:** review the 10 iterations (§7) — in the doc and in the live gallery — and approve **one primary direction** (plus any accents to borrow). Everything else here is the standard we build on once a direction is chosen.
+
+---
+
+## 1. Brand foundations
+
+| Foundation | Direction |
+|------------|-----------|
+| **Essence** | Handcrafted • warm • precise • considered. Wood as the hero material. |
+| **Tone** | Confident, calm, expert. We make heirloom pieces, not mass goods. |
+| **Promise** | "Designed with you, made for your space." (configurability is the brand.) |
+| **Personality dial** | Artisanal ←——●——→ Modern. We sit center-warm; iterations slide this dial. |
+| **Do** | Show real wood grain, scale cues, the making process, the 3D/4K capability. |
+| **Don't** | Look like a generic dropship store; bury the configurator; hide price logic. |
+
+---
+
+## 2. Design tokens (system-wide)
+
+Tokens are the contract between design and code. Each **iteration overrides the *values*** (esp. color & type); the **token *names* never change**, so swapping directions is a theme change, not a rebuild.
+
+### 2.1 Color (token roles — values set per iteration)
+```
+--color-bg            /* page background            */
+--color-surface       /* cards, panels              */
+--color-ink           /* primary text               */
+--color-ink-muted     /* secondary text             */
+--color-line          /* borders/dividers           */
+--color-brand         /* primary brand accent       */
+--color-brand-contrast/* text on brand              */
+--color-accent        /* secondary accent           */
+--color-success / --color-warning / --color-danger
+--color-focus         /* focus ring (AA visible)    */
+```
+
+### 2.2 Typography (roles)
+```
+--font-display   /* hero/headlines               */
+--font-text      /* body/UI                      */
+--font-mono      /* price math, SKUs, specs      */
+Scale (rem): 0.75 0.875 1 1.125 1.25 1.5 2 2.5 3.25 4.25
+Line-height: tight 1.1 · normal 1.5 · relaxed 1.7
+```
+
+### 2.3 Space, radius, elevation, motion
+```
+--space: 4 8 12 16 24 32 48 64 96 (px, 4-based scale)
+--radius: 0 4 8 16 999(pill)
+--shadow: sm / md / lg (soft, low-contrast; "lifted paper")
+--ease: standard cubic-bezier(.2,0,0,1) · duration 120/200/320ms
+--container: 1280px max; gutters 16/24/32 at sm/md/lg
+```
+
+### 2.4 Grid & breakpoints
+- **12-column** fluid grid; 8px baseline rhythm.
+- Breakpoints: `sm 480 · md 768 · lg 1024 · xl 1280 · 2xl 1536`.
+- Configurator uses a **split canvas**: ≥lg = viewer left / controls right; <lg = stacked (viewer top, sticky control bar bottom).
+
+---
+
+## 3. Core components (shared library)
+
+| Component | Notes / states |
+|-----------|----------------|
+| **App header** | Logo, primary nav, search, account, cart. Sticky, condenses on scroll. |
+| **Mega-menu / collection nav** | Styles (Tile, Art Back, …), Shop by room, Custom (Atelier3d entry). |
+| **Product card** | Image, title, from-price, style tag, "Configure" vs "Buy" affordance. |
+| **PDP gallery** | Photo set + (when applicable) live render thumbnail. |
+| **Configurator panel** | Grouped option controls; live price; validity/constraint messaging. |
+| **Option controls** | Swatches (wood/finish), segmented (style), steppers (dimensions), toggles, asset pickers (back art). Locked = read-only chip. |
+| **4K render viewer** | Zoom, pan, AR/fullscreen, "rendering…" → "4K ready" state. |
+| **Price block** | Live total, `--font-mono`, expandable breakdown. |
+| **Quote/Private banner** | "Prepared for {name} · expires {date}" on private/hybrid PDPs. |
+| **Cart line** | Thumbnail (render), config summary, edit link. |
+| **Buttons** | primary / secondary / ghost / destructive; loading & disabled states. |
+| **Forms & inputs** | Labels always visible; inline validation; error + helper text. |
+| **Empty / loading / error** | Skeletons for cards & viewer; friendly empty states. |
+| **Toasts & dialogs** | Non-blocking confirmations; modal only for destructive/auth. |
+
+---
+
+## 4. Page layout blueprints (shared across iterations)
+
+> These are the **structural** layouts. Iterations restyle them; they do not restructure them.
+
+### 4.1 Home
+Hero (brand + "Design yours" CTA) → featured styles (Tile / Art Back / …) → "How custom works" (3 steps: Configure → Preview in 4K → We craft it) → shop-by-room → social proof → newsletter/footer.
+
+### 4.2 Collection
+Filter rail (style, room, size, wood, finish, price) + sortable responsive grid + quick-view; "Configure" badge on configurable items.
+
+### 4.3 Product (ready-made)
+Gallery left / details right; variant picker; add-to-cart; specs; care; related.
+
+### 4.4 Configurator (`/configure/...`)
+```
+┌───────────────────────────────────────────────┐
+│ header                                          │
+├───────────────────────┬─────────────────────────┤
+│                       │  Style: [Tile][Art Back] │
+│   4K / WebGL VIEWER    │  Dimensions  ▭▭▭         │
+│   (rotate · zoom · AR) │  Wood swatches ● ● ●     │
+│                       │  Finish ● ●              │
+│   [render4k] [AR]      │  Back art  [pick]        │
+│                       │  ───────────────────     │
+│                       │  Price  $248  (▼ details)│
+│                       │  [ Add to cart ]         │
+└───────────────────────┴─────────────────────────┘
+```
+≥lg split; <lg stacks viewer on top with a **sticky price+CTA bar**.
+
+### 4.5 Private / hybrid listing (`/q/:token`)
+Same as configurator/PDP **plus** a "Prepared for you" banner, expiry, locked options shown read-only, editable options interactive (hybrid).
+
+### 4.6 Cart → Checkout
+Cart shows render thumbnail + config summary per line; checkout is **Shopify-native**.
+
+### 4.7 Account
+Orders, **saved configurations**, **my quotes** (active private/hybrid listings).
+
+---
+
+## 5. Motion & interaction principles
+- **Purposeful, not decorative.** Motion explains state (render progress, option applied, price change).
+- **Respect `prefers-reduced-motion`.** Provide instant equivalents.
+- **Optimistic UI** for option changes; reconcile price/validity from rules engine.
+- **Never trap the user** waiting on a 4K render — preview stays interactive.
+
+---
+
+## 6. Accessibility & responsive standard (non-negotiable, all iterations)
+- **WCAG 2.2 AA**: contrast ≥ 4.5:1 text / 3:1 large; visible focus rings; 44px min targets.
+- **Keyboard**: full configurator operability; logical focus order; skip links.
+- **Screen readers**: option groups labelled; live region announces price/render changes; render viewer has text/spec fallback.
+- **Responsive**: mobile-first; no horizontal scroll; sticky CTA on small screens.
+- **Performance budget**: hero/preview never block on 4K; images responsive + lazy.
+
+---
+
+## 7. The 10 design iterations (FOR APPROVAL)
+
+Each iteration = the same system, a different soul. For each: **concept**, **palette**, **type**, **layout/texture signature**, **best for**, and **trade-off**. See them live in [`../mockups/index.html`](../mockups/index.html).
+
+> **Reading the palettes:** values are starting points; all are tuned to pass AA before build.
+
+---
+
+### Iteration 1 — "Atelier Gallery"
+- **Concept:** Museum-grade minimalism. The product is the artwork; the UI disappears.
+- **Palette:** Gallery white `#FAF9F6`, ink `#1A1A1A`, muted `#6B6B6B`, brand walnut `#6B4A2B`, line `#E7E3DC`.
+- **Type:** Display serif (e.g., a refined transitional serif) + clean grotesque body; mono for specs.
+- **Signature:** Enormous whitespace, hairline rules, centered hero, slow fades, oversized product imagery.
+- **Best for:** Premium positioning; lets 4K renders shine.
+- **Trade-off:** Can feel sparse; needs excellent photography/renders to carry it.
+
+### Iteration 2 — "Warm Workshop"
+- **Concept:** The maker's bench. Tactile, honest, handcrafted.
+- **Palette:** Kraft `#EFE7D8`, ink `#2B2117`, brand amber `#B8742A`, sage `#7C8466`, line `#D8CBB3`.
+- **Type:** Humanist serif headlines + humanist sans body; hand-drawn accent marks.
+- **Signature:** Paper/wood textures, stamp-like badges, process photography, warm shadows.
+- **Best for:** Storytelling, artisanal trust, "made by hand" narrative.
+- **Trade-off:** Texture must be restrained to keep the configurator legible.
+
+### Iteration 3 — "Modern Luxe"
+- **Concept:** Editorial luxury. Dark, quiet, expensive.
+- **Palette:** Espresso `#171411`, surface `#211C17`, ink `#F3EEE6`, brand brass `#C9A227`, line `#3A332B`.
+- **Type:** High-contrast display serif + tight modern sans; brass-on-dark accents.
+- **Signature:** Dark canvas, gold hairlines, generous margins, cinematic product lighting.
+- **Best for:** High-ticket custom pieces; pairs beautifully with 4K hero renders.
+- **Trade-off:** Dark UI needs careful contrast tuning for forms/configurator.
+
+### Iteration 4 — "Scandi Light"
+- **Concept:** Functional, airy, calm. Form follows function.
+- **Palette:** Snow `#FFFFFF`, mist `#F2F4F3`, ink `#222826`, brand birch `#C9B79C`, accent slate `#5B6B73`.
+- **Type:** Geometric sans throughout; light weights; lots of air.
+- **Signature:** Light woods, soft grids, rounded radii, gentle shadows, lifestyle-in-bright-rooms.
+- **Best for:** Broad appeal, clarity, fast comprehension of configurable options.
+- **Trade-off:** Risk of feeling generic without strong photography/brand marks.
+
+### Iteration 5 — "Bold Editorial"
+- **Concept:** Magazine energy. Big type, confident layout, asymmetric.
+- **Palette:** Bone `#F5F2EC`, ink `#111`, brand vermilion `#D7492B`, ink-blue `#1F2A44`, line `#E3DDD2`.
+- **Type:** Oversized display + tight tracking; sans body; numerals as graphics.
+- **Signature:** Asymmetric grids, full-bleed type, editorial captions, strong color blocks.
+- **Best for:** Marketing-led, drops/collections, a brand with a point of view.
+- **Trade-off:** Strong personality must not overpower the configurator's clarity.
+
+### Iteration 6 — "Tech Configurator-First"
+- **Concept:** The configurator *is* the homepage. Product-as-software.
+- **Palette:** Graphite `#15171A`, surface `#1E2125`, ink `#EAECEE`, brand cyan `#2FB6C9`, line `#2C3036`.
+- **Type:** Precise neo-grotesque + mono for all numerics; UI-dense but tidy.
+- **Signature:** Dashboard panels, live readouts, segmented controls, keyboard hints, dark "app" feel.
+- **Best for:** Showcasing Atelier3d + live 4K as the core differentiator.
+- **Trade-off:** Leans "tool" over "warmth"; needs lifestyle moments to stay human.
+
+### Iteration 7 — "Organic Botanical"
+- **Concept:** Nature-led warmth. Wood + plants + light.
+- **Palette:** Linen `#F3EFE6`, ink `#23291F`, brand moss `#4F6B3A`, terracotta `#B5673E`, line `#DAD3C2`.
+- **Type:** Soft serif headlines + humanist sans; leaf/curve accents.
+- **Signature:** Organic shapes, botanical styling in lifestyle shots, earthy gradients.
+- **Best for:** Home-décor emotional appeal, sustainability story.
+- **Trade-off:** Must keep organic shapes from interfering with grid/legibility.
+
+### Iteration 8 — "Heritage Craft"
+- **Concept:** Timeless workshop heritage; trademark-quality, classic.
+- **Palette:** Parchment `#EFE9DC`, ink `#2A2620`, brand oxblood `#7B3B34`, brass `#A8852C`, line `#D5CBB6`.
+- **Type:** Classic serif (old-style) + small-caps labels; engraved feel.
+- **Signature:** Crests/monograms, rule-lined sections, letterpress textures, archival photography.
+- **Best for:** Legacy/trust, gifting, premium heritage narrative.
+- **Trade-off:** Can read "old" if not balanced with modern spacing/motion.
+
+### Iteration 9 — "Minimal Mono"
+- **Concept:** Type-driven, near-monochrome, ruthless clarity.
+- **Palette:** Paper `#FFFFFF`, ink `#0A0A0A`, grey scale only, single brand hairline accent `#0A0A0A`.
+- **Type:** One superb sans across weights; mono for data; no decoration.
+- **Signature:** Black/white, strict grid, type hierarchy does all the work, micro-interactions only.
+- **Best for:** Ultra-modern, design-savvy audience; cheapest to keep consistent.
+- **Trade-off:** Little warmth; relies entirely on imagery + copy for emotion.
+
+### Iteration 10 — "Showroom 3D Immersive"
+- **Concept:** Walk-through showroom. Full-bleed 3D scenes; the piece lives in a space.
+- **Palette:** Near-black stage `#0E0F12`, ink `#F4F5F7`, brand warm-white `#EDE7DB`, accent amber `#E0A458`, line `#23262B`.
+- **Type:** Cinematic display + clean sans HUD; mono overlays for specs.
+- **Signature:** Immersive scenes, scene transitions, floating HUD controls, 4K renders as backdrops, AR-forward.
+- **Best for:** Maximizing the 4K render + Atelier3d "wow"; flagship differentiator.
+- **Trade-off:** Heaviest to build/perform; needs the render pipeline mature (Phase 3+).
+
+---
+
+### 7.1 Comparison matrix
+
+| # | Iteration | Mood | Warmth | "Wow" | Build effort | Configurator fit |
+|---|-----------|------|:------:|:-----:|:------------:|:----------------:|
+| 1 | Atelier Gallery | Premium minimal | ●●○ | ●●● | ●○○ | ●●○ |
+| 2 | Warm Workshop | Artisanal | ●●● | ●●○ | ●●○ | ●●○ |
+| 3 | Modern Luxe | Dark luxury | ●●○ | ●●● | ●●○ | ●●○ |
+| 4 | Scandi Light | Calm functional | ●●○ | ●○○ | ●○○ | ●●● |
+| 5 | Bold Editorial | Magazine | ●●○ | ●●○ | ●●○ | ●●○ |
+| 6 | Tech Configurator-First | App-like | ●○○ | ●●● | ●●● | ●●● |
+| 7 | Organic Botanical | Natural | ●●● | ●●○ | ●●○ | ●●○ |
+| 8 | Heritage Craft | Classic | ●●● | ●●○ | ●●○ | ●●○ |
+| 9 | Minimal Mono | Stark modern | ●○○ | ●●○ | ●○○ | ●●● |
+| 10 | Showroom 3D Immersive | Cinematic | ●●○ | ●●● | ●●● | ●●● |
+
+**Recommendation (Decision D2):** lead with **#1 Atelier Gallery** or **#3 Modern Luxe** for brand warmth + premium feel, and **borrow #6/#10 patterns** for the configurator and 4K viewer. Final call is yours.
+
+---
+
+## 8. From iteration to build
+Once a primary iteration is approved:
+1. Lock token *values* for that direction (color/type/texture).
+2. Apply to the shared component library + page blueprints.
+3. Produce a high-fidelity prototype of Home + Collection + Configurator + Private listing.
+4. Accessibility + performance pass against §6 before engineering hand-off.
+
+---
+
+_End of UI Design Standard (Draft v0.1). Please approve one primary iteration (and any accents) — Decision D2._
