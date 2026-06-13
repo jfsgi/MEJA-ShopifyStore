@@ -93,6 +93,27 @@
   .cprice b{font-family:var(--mono);font-size:22px}
   .addbtn{background:var(--brand);color:var(--brandink);border:none;padding:11px 16px;border-radius:var(--radius);font-size:12px;font-weight:600;letter-spacing:.4px;cursor:pointer;font-family:var(--text)}
 
+  /* customer reviews */
+  .s-reviews{border-top:1px solid var(--line);background:var(--surface);padding:20px 22px}
+  .s-reviews h3{font-family:var(--display);font-size:16px;margin:0}
+  .rev-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .rev-write{background:none;border:1.5px solid var(--line);color:var(--ink);border-radius:var(--radius);padding:7px 12px;font-size:11.5px;cursor:pointer;font-family:var(--text)}
+  .rev-head{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+  .rev-summary .big{font-family:var(--display);font-size:38px;font-weight:700;line-height:1}
+  .rev-summary .stars{color:var(--brand);font-size:15px;letter-spacing:2px}
+  .rev-summary .count{font-size:11.5px;color:var(--muted)}
+  .rev-hist{flex:1;min-width:220px;display:flex;flex-direction:column;gap:5px}
+  .rev-hist .row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+  .rev-hist .bar{flex:1;height:7px;background:var(--line);border-radius:999px;overflow:hidden}
+  .rev-hist .bar i{display:block;height:100%;background:var(--brand)}
+  .rev-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  .rev-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:13px;display:flex;gap:12px}
+  .rev-card .ph{width:62px;height:62px;border-radius:8px;background-size:cover;background-position:center;flex:none;filter:var(--filter)}
+  .rev-card .who{font-size:12.5px;font-weight:600}
+  .rev-card .vb{font-size:10px;color:var(--accent);font-weight:600;margin-left:4px}
+  .rev-card .rstars{color:var(--brand);font-size:12px;letter-spacing:1px;margin:2px 0}
+  .rev-card p{font-size:11.5px;color:var(--muted);margin:2px 0 0}
+
   /* ===================== THEMES ===================== */
   .t1{--bg:#f8f8fa;--surface:#fff;--ink:#1c1c24;--muted:#5a5a68;--line:#e6e6ec;--brand:#4f46e5;--brandink:#fff;--accent:#4f46e5;--radius:10px;--hero:url(stock/drawerunit.jpg);--view:url(stock/drawerbox.jpg)}
   .t1 .eyebrow{color:#4f46e5}.t1 .s-hero-scrim{background:linear-gradient(90deg,rgba(248,248,250,.95),rgba(248,248,250,.55) 55%,transparent)}
@@ -115,7 +136,7 @@
   .t10{--bg:#0e0f12;--surface:#16181c;--ink:#f4f5f7;--muted:#9aa1aa;--line:#23262b;--brand:#e0a458;--brandink:#1a1206;--accent:#e0a458;--radius:10px;--display:"Iowan Old Style",Georgia,serif;--hero:url(stock/shelf-dark.jpg);--view:url(stock/drawerunit.jpg)}
   .t10 .eyebrow{color:#e0a458}.t10 .s-hero{min-height:330px}.t10 .s-hero-scrim{background:linear-gradient(90deg,rgba(14,15,18,.85),rgba(14,15,18,.45) 55%,rgba(14,15,18,.15))}.t10 .s-hero-in{color:#f4f5f7;max-width:62%}
 
-  @media(max-width:760px){.s-hero-in{max-width:88%}.s-strip{grid-template-columns:1fr 1fr}.s-config{grid-template-columns:1fr}.s-nav{display:none}}
+  @media(max-width:760px){.s-hero-in{max-width:88%}.s-strip{grid-template-columns:1fr 1fr}.s-config{grid-template-columns:1fr}.rev-cards{grid-template-columns:1fr}.s-nav{display:none}}
 </style>
 </head>
 <body>
@@ -155,6 +176,23 @@
         <div class="copt"><label>Bottom</label><div class="seg"><button class="on">¼″ Ply</button><button>½″ Solid</button><button>Undermount notches</button></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$48</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -178,6 +216,23 @@
         <div class="copt"><label>Edge profile</label><div class="seg"><button>Square</button><button class="on">Roundover</button><button>Ogee</button></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$44</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -201,6 +256,23 @@
         <div class="copt"><label>Wood · <span class="wname">Cherry</span></label><div class="dots"><i style="background:#5c3a21"></i><i style="background:#c7a877"></i><i class="on" style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$429</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -224,6 +296,23 @@
         <div class="copt"><label>Raise profile</label><div class="seg"><button>Cove</button><button class="on">Ogee</button><button>Bevel</button></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$58</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -247,6 +336,23 @@
         <div class="copt"><label>Wood · <span class="wname">Maple</span></label><div class="dots"><i style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i class="on" style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$42</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -270,6 +376,23 @@
         <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$520</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -293,6 +416,23 @@
         <div class="copt"><label>Back art</label><div class="seg"><button class="on">Botanical</button><button>Floral</button><button>Upload yours</button></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$269</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -316,6 +456,23 @@
         <div class="copt"><label>Engraving</label><div class="seg"><button class="on">None</button><button>Initials</button><button>Date</button></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$64</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -339,6 +496,23 @@
         <div class="copt"><label>Pull</label><div class="seg"><button class="on">None</button><button>Routed finger-pull</button></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$34</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
@@ -362,6 +536,23 @@
         <div class="copt"><label>Wood · <span class="wname">Walnut</span></label><div class="dots"><i class="on" style="background:#5c3a21"></i><i style="background:#c7a877"></i><i style="background:#7a3b25"></i><i style="background:#e0cda4"></i><i style="background:#c9b89a"></i></div></div>
         <div class="cprice"><div><span class="lbl">Made to order</span><b>$429</b></div><button class="addbtn">Add to cart</button></div>
       </div></div>
+    <div class="s-reviews">
+      <div class="rev-top"><h3>Customer reviews</h3><button class="rev-write">＋ Write a review</button></div>
+      <div class="rev-head">
+        <div class="rev-summary"><div class="big">4.9</div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% recommend</div></div>
+        <div class="rev-hist">
+          <div class="row"><span>5★</span><span class="bar"><i style="width:86%"></i></span><span>86%</span></div>
+          <div class="row"><span>4★</span><span class="bar"><i style="width:10%"></i></span><span>10%</span></div>
+          <div class="row"><span>3★</span><span class="bar"><i style="width:3%"></i></span><span>3%</span></div>
+          <div class="row"><span>2★</span><span class="bar"><i style="width:1%"></i></span><span>1%</span></div>
+          <div class="row"><span>1★</span><span class="bar"><i style="width:0%"></i></span><span>0%</span></div>
+        </div>
+      </div>
+      <div class="rev-cards">
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly."</p></div></div>
+        <div class="rev-card"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.<span class="vb">✓ Verified buyer</span></div><div class="rstars">★★★★★</div><p>"Shaker doors to match our kitchen — beautiful walnut, on time, hung perfectly."</p></div></div>
+      </div>
+    </div>
   </div></div>
 </section>
 
