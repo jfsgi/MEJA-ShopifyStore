@@ -1,4 +1,5 @@
 <header class="site"><div class="wrap nav">
+  <input class="nav-toggle-cb" type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu">
   <a class="logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
     {%- if section.settings.logo != blank -%}
       <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name | escape }}"
@@ -21,6 +22,7 @@
     <a href="{{ routes.account_url }}">Account</a>
     <a href="{{ routes.cart_url }}">Cart <span class="cartdot">{{ cart.item_count }}</span></a>
   </div>
+  <label class="burger" for="nav-toggle" aria-hidden="true"><span></span><span></span><span></span></label>
 </div></header>
 {% schema %}
 {
