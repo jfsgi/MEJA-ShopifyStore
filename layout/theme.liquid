@@ -19,7 +19,7 @@
 </head>
 <body class="template-{{ request.page_type }}">
   {% section 'header' %}
-  <main id="main" role="main">{{ content_for_layout }}</main>
+  <main id="main" role="main">{% render 'breadcrumbs' %}{{ content_for_layout }}</main>
   {% section 'footer' %}
   {% render 'cart-drawer' %}
   <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
