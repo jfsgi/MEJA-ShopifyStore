@@ -18,6 +18,7 @@
   <style>:root{ --brand: {{ settings.color_brand }}; --accent: {{ settings.color_accent }}; --ink: {{ settings.color_ink }}; }</style>
 </head>
 <body class="template-{{ request.page_type }}">
+  <a class="skip-link" href="#main">Skip to content</a>
   {% section 'header' %}
   <main id="main" role="main">{% render 'breadcrumbs' %}{{ content_for_layout }}</main>
   {% section 'footer' %}

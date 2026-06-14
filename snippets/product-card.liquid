@@ -6,7 +6,7 @@
   <div class="b">
     <h3>{{ card_product.title }}</h3>
     <div class="price">from {{ card_product.price_min | money }}</div>
-    {%- if card_product.metafields.reviews.rating -%}<div class="rate"><span class="stars">★</span> {{ card_product.metafields.reviews.rating }}</div>{%- endif -%}
+    {%- if card_product.metafields.reviews.rating -%}<div class="rate"><span class="stars" aria-hidden="true">★</span> {{ card_product.metafields.reviews.rating }} <span class="sr-only">average rating</span></div>{%- endif -%}
     <span class="cfg">Configure ›</span>
   </div>
 </a>
