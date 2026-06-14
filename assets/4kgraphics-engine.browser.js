@@ -10,6 +10,9 @@
  *   const e = new FurnitureEngine({ container })
  *   e.showFurniture({ kind, widthMm, depthMm, heightMm, stockThicknessMm, joinery, drawers, style })
  *   e.setMaterial('walnut' | 'whiteoak' | 'cherry' | 'maple' | 'ash')
+ *   e.setStain('matte' | 'satin' | 'oiled')
+ *   e.setLighting('studio' | 'showroom' | 'daylight')
+ *   e.renderSnapshot({ width, height }) -> PNG data URL
  *   e.dispose()
  *
  * Renders a parametric WebGL preview (drag to rotate, wheel to zoom, auto-spin).
@@ -35,7 +38,7 @@ export class FurnitureEngine {
     const w = container.clientWidth || 600;
     const h = container.clientHeight || 600;
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.setSize(w, h);
     this.renderer.shadowMap.enabled = true;
@@ -52,10 +55,12 @@ export class FurnitureEngine {
     key.shadow.mapSize.set(1024, 1024);
     key.shadow.camera.near = 0.1; key.shadow.camera.far = 8;
     this.scene.add(key);
-    this.scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe3e0, 1.0));
+    const hemi = new THREE.HemisphereLight(0xffffff, 0xdfe3e0, 1.0);
+    this.scene.add(hemi);
     const fill = new THREE.DirectionalLight(0xffffff, 0.55);
     fill.position.set(-0.9, 0.5, -0.7);
     this.scene.add(fill);
+    this.key = key; this.hemi = hemi; this.fill = fill;
 
     const ground = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), new THREE.ShadowMaterial({ opacity: 0.13 }));
     ground.rotation.x = -Math.PI / 2;
@@ -66,6 +71,8 @@ export class FurnitureEngine {
     this.scene.add(this.root);
 
     this.material = new THREE.MeshStandardMaterial({ color: WOODS.walnut.color, roughness: WOODS.walnut.roughness, metalness: 0.02 });
+    this._wood = WOODS.walnut;
+    this._finish = 'matte';
 
     this.azimuth = -0.7;
     this.elevation = 0.42;
@@ -106,9 +113,46 @@ export class FurnitureEngine {
   }
 
   setMaterial(wood) {
-    const w = WOODS[wood] || WOODS.walnut;
-    this.material.color.setHex(w.color);
-    this.material.roughness = w.roughness;
+    this._wood = WOODS[wood] || WOODS.walnut;
+    this.material.color.setHex(this._wood.color);
+    this._applyFinish();
+  }
+
+  setStain(finish) {
+    this._finish = finish;
+    this._applyFinish();
+  }
+
+  _applyFinish() {
+    const base = (this._wood || WOODS.walnut).roughness;
+    const factor = { matte: 1.12, satin: 0.82, oiled: 0.6 }[this._finish] || 1;
+    this.material.roughness = Math.max(0.12, Math.min(1, base * factor));
+  }
+
+  setLighting(mode) {
+    const M = {
+      studio:   { key: 2.6, keyC: 0xffffff, hemi: 1.0,  fill: 0.55 },
+      showroom: { key: 3.1, keyC: 0xfff0db, hemi: 0.6,  fill: 0.4 },
+      daylight: { key: 2.2, keyC: 0xeaf2ff, hemi: 1.45, fill: 0.75 },
+    };
+    const c = M[mode] || M.studio;
+    if (this.key) { this.key.intensity = c.key; this.key.color.setHex(c.keyC); }
+    if (this.hemi) this.hemi.intensity = c.hemi;
+    if (this.fill) this.fill.intensity = c.fill;
+  }
+
+  // Render the current view at an arbitrary resolution and return a PNG data URL.
+  renderSnapshot({ width = 1600, height = 1200 } = {}) {
+    const cw = this.container.clientWidth || 600, ch = this.container.clientHeight || 600;
+    this.renderer.setSize(width, height, false);
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.render(this.scene, this.camera);
+    const url = this.renderer.domElement.toDataURL('image/png');
+    this.renderer.setSize(cw, ch, false);
+    this.camera.aspect = cw / ch;
+    this.camera.updateProjectionMatrix();
+    return url;
   }
 
   _box(wMm, hMm, dMm, xMm, yMm, zMm) {

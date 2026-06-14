@@ -73,6 +73,7 @@ function updatePreview() {
   try {
     eng.showFurniture(engineSpec());
     if (selection.wood) eng.setMaterial(selection.wood.value);
+    if (selection.finish && eng.setStain) eng.setStain(selection.finish.value);
   } catch (e) { /* preview is best-effort */ }
 }
 
@@ -283,6 +284,24 @@ if (form) {
     }
   });
 }
+
+// Lighting modes + downloadable preview snapshot (engine polish).
+document.querySelectorAll('#meja-lights button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#meja-lights button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+  b.setAttribute('aria-pressed', 'true');
+  const eng = window.__mejaEngine;
+  if (eng && eng.setLighting) eng.setLighting(b.dataset.light);
+}));
+
+const dlBtn = document.getElementById('meja-download');
+if (dlBtn) dlBtn.addEventListener('click', () => {
+  const eng = window.__mejaEngine;
+  if (!eng || !eng.renderSnapshot) { setStatus('Preview engine still loading — try again in a moment.', 'err'); return; }
+  const a = document.createElement('a');
+  a.href = eng.renderSnapshot({ width: 2000, height: 1500 });
+  a.download = (model[product]?.title || 'design').toLowerCase().replace(/\s+/g, '-') + '-preview.png';
+  document.body.appendChild(a); a.click(); a.remove();
+});
 
 async function boot(){
   if (!viewer) return;

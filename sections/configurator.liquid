@@ -27,7 +27,13 @@
   </div>
   <div class="cfg">
     <div class="viewer" id="meja-viewer" data-engine="{{ '4kgraphics-engine.browser.js' | asset_url }}" data-render-service="{{ settings.render_service_url }}">
-      <div class="hud"><span>&#8635; rotate</span><span>&#10530; zoom</span><span>AR</span></div>
+      <div class="hud"><span>&#8635; rotate</span><span>&#10530; zoom</span></div>
+      <button type="button" class="vdl" id="meja-download" aria-label="Download preview image" title="Download preview image">&#10515;</button>
+      <div class="vlights" id="meja-lights">
+        <button type="button" data-light="studio" aria-pressed="true">Studio</button>
+        <button type="button" data-light="showroom" aria-pressed="false">Showroom</button>
+        <button type="button" data-light="daylight" aria-pressed="false">Daylight</button>
+      </div>
       <div class="rstate"><span class="dot" id="meja-rdot"></span><span id="meja-rtext">4K render ready</span></div>
     </div>
     <form class="panel" id="meja-form" action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
