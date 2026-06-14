@@ -1,0 +1,74 @@
+<div class="wrap"><section class="block reviews">
+  <div class="rev-top">
+    <div class="rev-summary"><div class="big">{{ section.settings.score }}</div><div><div class="s">★★★★★</div><div class="count">{{ section.settings.count }} verified reviews · {{ section.settings.recommend }} would recommend</div></div></div>
+    <a class="more" href="#" style="color:var(--brand);border-bottom:1px solid var(--brand)">See all reviews →</a>
+  </div>
+  <div class="rev-cards">
+    {%- for block in section.blocks -%}
+      {%- if block.type == '@app' -%}
+        {% render block %}
+      {%- else -%}
+        <div class="rev-card" {{ block.shopify_attributes }}>
+          <div class="top"><div class="ph" {% if block.settings.photo %}style="background-image:url({{ block.settings.photo | image_url: width: 200 }})"{% endif %}></div><div><div class="who">{{ block.settings.name }}</div><div class="vb">✓ Verified buyer</div></div></div>
+          <div class="rstars">★★★★★</div><p>{{ block.settings.body }}</p>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section></div>
+{% schema %}
+{
+  "name": "Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "score",
+      "label": "Score",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "count",
+      "label": "Count",
+      "default": "312"
+    },
+    {
+      "type": "text",
+      "id": "recommend",
+      "label": "Recommend %",
+      "default": "98%"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Customer photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews"
+    }
+  ]
+}
+{% endschema %}

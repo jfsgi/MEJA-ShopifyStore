@@ -1,0 +1,45 @@
+<div class="wrap">
+  <div class="quote-banner">
+    <div class="qi">&#128274; <b>Prepared for {{ customer.first_name | default: 'you' }}</b> &middot; Quote {{ product.metafields.crm.quote_no | default: '#Q' }} &middot; private listing.</div>
+    {%- if product.metafields.crm.expires_at -%}<div class="exp">Expires <b>{{ product.metafields.crm.expires_at | date: '%b %-d, %Y' }}</b></div>{%- endif -%}
+  </div>
+  <div class="pdp">
+    <div class="viewer" {% if product.metafields.crm.render_4k %}style="background-image:url({{ product.metafields.crm.render_4k }})"{% endif %}>
+      <div class="hud">&#8635; &#10530; AR</div><div class="rstate">&#9679; 4K render ready</div>
+    </div>
+    {% form 'product', product %}
+    <div class="details">
+      <span class="eyebrow">Your custom quote &middot; hybrid</span>
+      <h1>{{ product.title }}</h1>
+      <div class="price">{{ product.price | money }} &middot; made to order</div>
+
+      <div class="opt"><label>Set by your quote</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          {%- for chip in product.metafields.crm.locked_options.value -%}
+            <span class="locked">&#128274; {{ chip }}</span>
+          {%- else -%}
+            <span class="locked">&#128274; (locked options from the quote)</span>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- for grp in product.metafields.crm.editable_options.value -%}
+        <div class="opt"><label>{{ grp.label }} <span class="editable-tag">you can change</span></label>
+          <div class="seg">{%- for o in grp.options -%}<button type="button">{{ o }}</button>{%- endfor -%}</div>
+        </div>
+      {%- endfor -%}
+
+      <div class="hint">Some options are fixed by your quote (&#128274;). You can still choose the ones marked <b>you can change</b> &mdash; the price updates automatically.</div>
+      {% render 'price-block' %}
+    </div>
+    {% endform %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Private listing",
+  "settings": [
+
+  ]
+}
+{% endschema %}

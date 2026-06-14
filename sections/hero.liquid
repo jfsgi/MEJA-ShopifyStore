@@ -1,0 +1,72 @@
+<div class="wrap"><section class="hero">
+  <div class="bg" {% if section.settings.image %}style="background-image:url({{ section.settings.image | image_url: width: 2200 }})"{% endif %}></div>
+  <div class="scrim"></div>
+  <div class="in">
+    <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+    <h1>{{ section.settings.heading }}</h1>
+    <p class="lead">{{ section.settings.subtext }}</p>
+    <div class="ctas">
+      <a class="btn" href="{{ section.settings.button_url }}">{{ section.settings.button_label }}</a>
+      {%- if section.settings.rating -%}<span class="rate">★ <b>{{ section.settings.rating }}</b> · {{ section.settings.review_count }} reviews</span>{%- endif -%}
+    </div>
+  </div>
+  <div class="chip"><span class="pulse"></span> 4K render · live</div>
+</section></div>
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Made to measure · Made by hand"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Replacements that just fit."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Custom drawer boxes, drawer units, cabinet doors & shelves — configured in 3D, previewed in 4K."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Configure a piece"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Rating",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count",
+      "default": "312"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

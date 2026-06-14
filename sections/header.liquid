@@ -1,0 +1,52 @@
+<header class="site"><div class="wrap nav">
+  <a class="logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+    {%- if section.settings.logo != blank -%}
+      <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name | escape }}"
+           loading="eager" fetchpriority="high"
+           width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}"
+           style="height:{{ section.settings.logo_height }}px;width:auto;max-width:100%;display:block">
+    {%- else -%}
+      {{ shop.name | default: 'MEJA' }}
+    {%- endif -%}
+  </a>
+  <nav class="main" aria-label="Primary">
+    {%- for link in section.settings.menu.links -%}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {%- else -%}
+      <a href="#">Drawer Boxes</a><a href="#">Drawer Units</a><a href="#">Cabinet Doors</a><a href="#">Shelves</a><a href="#">Custom</a>
+    {%- endfor -%}
+  </nav>
+  <div class="icons">
+    <a href="{{ routes.search_url }}">Search</a>
+    <a href="{{ routes.account_url }}">Account</a>
+    <a href="{{ routes.cart_url }}">Cart <span class="cartdot">{{ cart.item_count }}</span></a>
+  </div>
+</div></header>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo height",
+      "default": 44
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}
