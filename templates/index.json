@@ -21,33 +21,146 @@
       "blocks": {
         "drawer_boxes": {
           "type": "category",
-          "settings": { "default_image": "cat-drawer-boxes.jpg", "title": "Drawer Boxes", "price": "from $39", "note": "★ 4.9 · dovetail / half-blind", "url": "/collections/drawer-boxes" }
+          "settings": {
+            "default_image": "cat-drawer-boxes.jpg",
+            "title": "Drawer Boxes",
+            "price": "from $39",
+            "note": "★ 4.9 · dovetail / half-blind",
+            "url": "/collections/drawer-boxes"
+          }
         },
         "drawer_units": {
           "type": "category",
-          "settings": { "default_image": "cat-drawer-units.jpg", "title": "Drawer Units", "price": "from $389", "note": "★ 5.0 · 3–6 drawers", "url": "/collections/drawer-units" }
+          "settings": {
+            "default_image": "cat-drawer-units.jpg",
+            "title": "Drawer Units",
+            "price": "from $389",
+            "note": "★ 5.0 · 3–6 drawers",
+            "url": "/collections/drawer-units"
+          }
         },
         "cabinet_doors": {
           "type": "category",
-          "settings": { "default_image": "cat-cabinet-doors.jpg", "title": "Cabinet Doors", "price": "from $29", "note": "★ 4.8 · slab / shaker / raised", "url": "/collections/cabinet-doors" }
+          "settings": {
+            "default_image": "cat-cabinet-doors.jpg",
+            "title": "Cabinet Doors",
+            "price": "from $29",
+            "note": "★ 4.8 · slab / shaker / raised",
+            "url": "/collections/cabinet-doors"
+          }
         },
         "shelves": {
           "type": "category",
-          "settings": { "default_image": "cat-shelves.jpg", "title": "Shelves", "price": "from $149", "note": "★ 4.9 · tile / art back", "url": "/collections/shelves" }
+          "settings": {
+            "default_image": "cat-shelves.jpg",
+            "title": "Shelves",
+            "price": "from $149",
+            "note": "★ 4.9 · tile / art back",
+            "url": "/collections/shelves"
+          }
         }
       },
-      "block_order": ["drawer_boxes", "drawer_units", "cabinet_doors", "shelves"]
+      "block_order": [
+        "drawer_boxes",
+        "drawer_units",
+        "cabinet_doors",
+        "shelves"
+      ]
+    },
+    "how_it_works": {
+      "type": "how-it-works",
+      "settings": {
+        "eyebrow": "Made to order",
+        "heading": "How it works"
+      },
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Configure",
+            "text": "Choose size, wood, joinery and finish in the live configurator."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "See it in 4K",
+            "text": "Approve a photoreal 4K render of your exact piece before we build."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Hand-built",
+            "text": "We build it in solid hardwood to your specs — no mass production."
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "title": "Delivered",
+            "text": "Carefully packed and shipped to your door, typically in 1–3 weeks."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "eyebrow": "Ready to ship",
+        "heading": "Popular pieces",
+        "collection": "all",
+        "count": 4
+      }
     },
     "reviews": {
       "type": "reviews",
-      "settings": { "score": "4.9", "count": "312", "recommend": "98%" },
-      "blocks": {
-        "r1": { "type": "review", "settings": { "name": "Dana R.", "body": "Perfect-fit replacement drawer boxes — the dovetails are flawless and the 4K preview matched exactly." } },
-        "r2": { "type": "review", "settings": { "name": "Marcus T.", "body": "Ordered shaker doors to match our kitchen. Beautiful walnut, arrived on time, hung perfectly." } },
-        "r3": { "type": "review", "settings": { "name": "Priya & Sam", "body": "The art-back shelf let us frame our own print. Genuinely special, and the fit was exact." } }
+      "settings": {
+        "score": "4.9",
+        "count": "312",
+        "recommend": "98%"
       },
-      "block_order": ["r1", "r2", "r3"]
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "name": "Dana R.",
+            "body": "Perfect-fit replacement drawer boxes — the dovetails are flawless and the 4K preview matched exactly."
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "name": "Marcus T.",
+            "body": "Ordered shaker doors to match our kitchen. Beautiful walnut, arrived on time, hung perfectly."
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "name": "Priya & Sam",
+            "body": "The art-back shelf let us frame our own print. Genuinely special, and the fit was exact."
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ]
     }
   },
-  "order": ["hero", "categories", "reviews"]
+  "order": [
+    "hero",
+    "categories",
+    "how_it_works",
+    "featured",
+    "reviews"
+  ]
 }
