@@ -1,0 +1,50 @@
+<div class="wrap">
+  <div class="crumbs"><a href="{{ routes.root_url }}">Home</a> &rsaquo; <span>{{ blog.title }}</span></div>
+  <div class="titlebar" style="border-bottom:1px solid var(--line);margin-bottom:26px">
+    <div>
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1>{{ blog.title }}</h1>
+    </div>
+    <div class="meta">{{ blog.articles_count }} {% if blog.articles_count == 1 %}story{% else %}stories{% endif %}</div>
+  </div>
+
+  {%- paginate blog.articles by 12 -%}
+    <div class="journal">
+      {%- for article in blog.articles -%}
+        <a class="jcard" href="{{ article.url }}">
+          <div class="img"{% if article.image %} style="background-image:url({{ article.image | image_url: width: 720 }})"{% endif %}></div>
+          <div class="b">
+            {%- if article.tags.size > 0 -%}<span class="kicker">{{ article.tags.first }}</span>{%- endif -%}
+            <h3>{{ article.title }}</h3>
+            <p class="ex">{{ article.excerpt_or_content | strip_html | truncatewords: 22 }}</p>
+            <div class="m">{{ article.published_at | date: '%b %-d, %Y' }}{% if article.comments_count > 0 %} &middot; {{ article.comments_count }} comments{% endif %}</div>
+          </div>
+        </a>
+      {%- else -%}
+        <p class="muted">No stories yet — check back soon.</p>
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <div class="pagination">
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+          {%- else -%}<span class="current">{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+{% schema %}
+{
+  "name": "Blog posts",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Journal"
+    }
+  ]
+}
+{% endschema %}
