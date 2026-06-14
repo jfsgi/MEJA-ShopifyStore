@@ -68,5 +68,17 @@
         "content": "The 4kGraphics engine browser.js is uploaded to theme assets and embedded on the configurator template."
       }
     ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "info": "Order subtotal (in your store currency, e.g. 150) that unlocks free shipping. Shown as a progress bar in the cart drawer. Set 0 to hide.",
+        "default": 0
+      }
+    ]
   }
 ]

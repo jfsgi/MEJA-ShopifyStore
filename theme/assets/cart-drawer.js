@@ -7,6 +7,17 @@
   if (!drawer || !body) return;
 
   function money(c) { return '$' + (Number(c) / 100).toFixed(2); }
+
+  var freeThreshold = Math.round((parseFloat(drawer.dataset.freeThreshold) || 0) * 100); // store units -> cents
+  function shippingBar(cart) {
+    if (freeThreshold <= 0) return '';
+    var remaining = freeThreshold - cart.total_price;
+    var pct = Math.max(0, Math.min(100, (cart.total_price / freeThreshold) * 100));
+    var msg = remaining > 0
+      ? 'You’re <strong>' + money(remaining) + '</strong> away from free shipping'
+      : '<span class="ok">✓ You’ve unlocked free shipping</span>';
+    return '<div class="cd-ship"><p>' + msg + '</p><div class="cd-bar"><span style="width:' + pct + '%"></span></div></div>';
+  }
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -57,7 +68,8 @@
         '<a class="btn" href="/collections/all" data-cd-close>Browse products</a></div>';
       return;
     }
-    body.innerHTML = '<div class="cd-lines">' + cart.items.map(lineRow).join('') + '</div>' +
+    body.innerHTML = shippingBar(cart) +
+      '<div class="cd-lines">' + cart.items.map(lineRow).join('') + '</div>' +
       '<div class="cd-foot">' +
         '<div class="cd-sub"><span>Subtotal</span><span class="mono">' + money(cart.total_price) + '</span></div>' +
         '<p class="cd-note">Made to order — no returns. Shipping &amp; taxes at checkout.</p>' +
