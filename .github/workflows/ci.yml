@@ -19,7 +19,10 @@ jobs:
         run: |
           python - <<'PY'
           import json, glob, sys
-          files = glob.glob('theme/**/*.json', recursive=True)
+          # settings_data.json is Shopify-managed and legitimately contains /* */ comments
+          # (JSON-with-comments); the official theme-check job validates it. Skip it here.
+          skip = {'theme/config/settings_data.json'}
+          files = [f for f in glob.glob('theme/**/*.json', recursive=True) if f not in skip]
           bad = 0
           for f in files:
               try:
