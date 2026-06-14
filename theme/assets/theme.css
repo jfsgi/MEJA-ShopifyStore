@@ -119,6 +119,28 @@ section.block{padding:58px 0}
 .q404 a:hover{border-color:var(--brand);color:var(--brand)}
 @media(max-width:880px){.acct{grid-template-columns:1fr}.anav{position:static;flex-direction:row;flex-wrap:wrap}}
 
+/* header predictive search */
+.searchtrig{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;font-family:var(--text);padding:0}
+.searchtrig:hover{color:var(--brand)}
+.searchpanel{position:absolute;left:0;right:0;top:100%;background:#fff;border-bottom:1px solid var(--line);box-shadow:var(--shadow);z-index:25}
+.searchpanel .wrap{padding:16px 24px 20px}
+.searchpanel-form{display:flex;gap:10px;align-items:center}
+.searchpanel-form input[type="search"]{flex:1;min-width:0;padding:12px 16px;border:1.5px solid var(--line);border-radius:999px;font-size:15px;font-family:var(--text);background:#fff}
+.searchpanel-form input[type="search"]:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--brand)}
+.searchclose{background:none;border:none;font-size:16px;color:var(--muted);cursor:pointer;padding:6px 10px;flex:none}
+.searchresults{margin-top:6px}
+.sr-group{margin-bottom:6px}
+.sr-group h4{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:10px 0 4px;font-family:var(--text);font-weight:700}
+.sr-item{display:flex;align-items:center;gap:12px;padding:8px 6px;border-radius:10px;color:var(--ink)}
+.sr-item:hover{background:var(--surface)}
+.sr-thumb{width:46px;height:38px;border-radius:8px;background:var(--surface);background-size:cover;background-position:center;flex:none;border:1px solid var(--line)}
+.sr-meta{display:flex;flex-direction:column}
+.sr-title{font-size:14px}
+.sr-price{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.sr-text{font-size:14px}
+.sr-all{display:inline-block;margin-top:8px;font-size:13px;color:var(--brand);font-weight:600}
+.sr-empty{font-size:13.5px;color:var(--muted);padding:8px 6px}
+
 /* generic page / forms / search */
 .searchbar{display:flex;gap:10px;flex-wrap:wrap}
 .searchbar input[type="search"]{padding:12px 16px;border:1.5px solid var(--line);border-radius:999px;width:min(440px,100%);font-size:14px;font-family:var(--text);background:#fff}
