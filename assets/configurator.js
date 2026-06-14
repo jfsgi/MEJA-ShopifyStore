@@ -1,7 +1,7 @@
-// Configurator behavior: renders the option model, computes a price PREVIEW, wires
-// add-to-cart with line-item properties (Ajax Cart API), and embeds the 4kGraphics engine.
-// The authoritative price is the MEJA-CRM engine; the Cart Transform Function applies the
-// signed price server-side (see theme/functions/cart-transform). This preview is indicative.
+// Configurator behavior: renders the option model + exact-size inputs, computes a price
+// PREVIEW, wires add-to-cart with line-item properties (Ajax Cart API), and embeds the
+// 4kGraphics engine. The authoritative price is the MEJA-CRM engine; the Cart Transform
+// Function applies the signed price server-side (see theme/functions/cart-transform).
 const model = JSON.parse(document.getElementById('meja-option-model')?.textContent || '{}');
 const optionsEl = document.getElementById('meja-options');
 const propsEl = document.getElementById('meja-props');         // hidden line-item property inputs
@@ -13,6 +13,7 @@ const viewer = document.getElementById('meja-viewer');
 const form = document.getElementById('meja-form');
 const addBtn = document.getElementById('meja-add');
 const addStatus = document.getElementById('meja-add-status');
+const baseConnected = !!form?.querySelector('input[name="id"]')?.value;
 
 function setStatus(msg, kind){
   if (!addStatus) return;
@@ -28,21 +29,35 @@ async function updateCartCount(){
     document.querySelectorAll('.cartdot').forEach(el => { el.textContent = c.item_count; });
   } catch (e) { /* non-fatal */ }
 }
+
 let product = 'drawerbox';
 // selection[groupKey] = { groupLabel, value, optLabel, delta }
 const selection = {};
+// dims[axis] = inches (user-entered exact size)
+let dims = {};
+let dimsValid = true;
 
-// Default dimensions per furniture kind (mm); option selections override below.
-const DIMS = {
-  drawerbox:   { widthMm: 533, depthMm: 533, heightMm: 102, stockThicknessMm: 15 },
-  drawerunit:  { widthMm: 600, depthMm: 560, heightMm: 720, stockThicknessMm: 18 },
-  cabinetdoor: { widthMm: 380, depthMm: 19,  heightMm: 700, stockThicknessMm: 19 },
-  shelf:       { widthMm: 900, depthMm: 240, heightMm: 40,  stockThicknessMm: 40 },
+// Editable size axes per kind (inches). thickness maps to stock thickness in the engine.
+const DIM_FIELDS = {
+  drawerbox:   [ {key:'width',label:'Width',min:6,max:36,step:0.25,def:21}, {key:'depth',label:'Depth',min:8,max:24,step:0.25,def:21}, {key:'height',label:'Height',min:2,max:12,step:0.25,def:4} ],
+  drawerunit:  [ {key:'width',label:'Width',min:12,max:48,step:0.25,def:24}, {key:'depth',label:'Depth',min:16,max:28,step:0.25,def:22}, {key:'height',label:'Height',min:20,max:42,step:0.25,def:28} ],
+  cabinetdoor: [ {key:'width',label:'Width',min:6,max:36,step:0.125,def:15}, {key:'height',label:'Height',min:8,max:60,step:0.125,def:28} ],
+  shelf:       [ {key:'width',label:'Width',min:12,max:72,step:0.25,def:36}, {key:'depth',label:'Depth',min:6,max:16,step:0.25,def:10}, {key:'thickness',label:'Thickness',min:1,max:3,step:0.25,def:1.5} ],
 };
 
+const in2mm = (v) => Math.round(Number(v) * 25.4);
+const fmtIn = (v) => String(parseFloat(Number(v).toFixed(2)));
+
 function engineSpec() {
-  const d = Object.assign({ kind: product }, DIMS[product] || DIMS.drawerbox);
-  if (selection.width)   d.widthMm = Number(selection.width.value) || d.widthMm;
+  const d = { kind: product };
+  const f = DIM_FIELDS[product] || [];
+  f.forEach(df => {
+    const mm = in2mm(dims[df.key]);
+    if (df.key === 'width') d.widthMm = mm;
+    else if (df.key === 'depth') d.depthMm = mm;
+    else if (df.key === 'height') d.heightMm = mm;
+    else if (df.key === 'thickness') { d.stockThicknessMm = mm; d.heightMm = mm; }
+  });
   if (selection.joinery) d.joinery = selection.joinery.value;
   if (selection.drawers) d.drawers = Number(selection.drawers.value) || 3;
   if (selection.style)   d.style = selection.style.value;
@@ -81,11 +96,61 @@ function segGroup(key, label, opts){
   wrap.appendChild(seg); return wrap;
 }
 
+function dimsGroup(){
+  const fields = DIM_FIELDS[product] || [];
+  const wrap = document.createElement('div'); wrap.className = 'opt dims-opt';
+  wrap.innerHTML = '<div class="l"><label>Dimensions</label><span class="unit">inches</span></div>';
+  const grid = document.createElement('div'); grid.className = 'dims';
+  fields.forEach(df => {
+    dims[df.key] = df.def;
+    const cell = document.createElement('label'); cell.className = 'dimf';
+    cell.innerHTML = '<span>' + df.label + '</span>';
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.min = df.min; inp.max = df.max; inp.step = df.step;
+    inp.value = df.def; inp.inputMode = 'decimal'; inp.dataset.axis = df.key;
+    inp.setAttribute('aria-label', df.label + ' in inches');
+    inp.addEventListener('input', () => {
+      const v = parseFloat(inp.value);
+      dims[df.key] = isNaN(v) ? '' : v;
+      recompute();
+    });
+    cell.appendChild(inp);
+    grid.appendChild(cell);
+  });
+  wrap.appendChild(grid);
+  const err = document.createElement('p'); err.className = 'dimerr'; err.id = 'meja-dimerr'; err.hidden = true;
+  wrap.appendChild(err);
+  return wrap;
+}
+
+function validateDims(){
+  const fields = DIM_FIELDS[product] || [];
+  let bad = null;
+  for (const df of fields) {
+    const v = parseFloat(dims[df.key]);
+    if (isNaN(v) || v < df.min || v > df.max) { bad = df; break; }
+  }
+  dimsValid = !bad;
+  const err = document.getElementById('meja-dimerr');
+  if (err) {
+    if (bad) { err.hidden = false; err.textContent = bad.label + ' must be between ' + bad.min + '″ and ' + bad.max + '″.'; }
+    else { err.hidden = true; err.textContent = ''; }
+  }
+  document.querySelectorAll('.dims input').forEach(inp => {
+    const df = (DIM_FIELDS[product] || []).find(x => x.key === inp.dataset.axis);
+    const v = parseFloat(inp.value);
+    inp.classList.toggle('invalid', df && (isNaN(v) || v < df.min || v > df.max));
+  });
+  if (addBtn && baseConnected) addBtn.disabled = !dimsValid;
+}
+
 function renderProduct(){
   const def = model[product]; if (!def) return;
   titleEl.textContent = def.title;
   optionsEl.innerHTML = '';
   for (const k in selection) delete selection[k];
+  dims = {};
+  optionsEl.appendChild(dimsGroup());
   def.groups.forEach(g => optionsEl.appendChild(segGroup(g.key, g.label, g.options)));
   optionsEl.appendChild(segGroup('wood', 'Wood', model.wood));
   optionsEl.appendChild(segGroup('finish', 'Finish', model.finish));
@@ -94,16 +159,19 @@ function renderProduct(){
 
 function recompute(){
   const def = model[product]; if (!def) return;
+  validateDims();
   let total = def.base;
   for (const k in selection) total += selection[k].delta;
   if (priceEl) priceEl.textContent = money(total);
   if (unitPriceEl) unitPriceEl.value = (total / 100).toFixed(2);     // signed CRM price in production
-  const configId = product + ':' + Object.keys(selection).sort().map(k => k + '=' + selection[k].value).join('|');
-  if (configIdEl) configIdEl.value = configId;
+  const dimParts = (DIM_FIELDS[product] || []).map(df => df.key.charAt(0) + fmtIn(dims[df.key] || 0));
+  const optParts = Object.keys(selection).sort().map(k => k + '=' + selection[k].value);
+  if (configIdEl) configIdEl.value = product + ':' + optParts.concat(dimParts).join('|');
   // mirror readable selections into hidden line-item property inputs (form fallback)
   if (propsEl) {
     propsEl.innerHTML = '';
     propsEl.appendChild(hidden('properties[Product]', def.title));
+    (DIM_FIELDS[product] || []).forEach(df => propsEl.appendChild(hidden('properties[' + df.label + ']', fmtIn(dims[df.key] || 0) + ' in')));
     for (const k in selection) propsEl.appendChild(hidden('properties[' + selection[k].groupLabel + ']', selection[k].optLabel));
   }
   updatePreview();
@@ -136,7 +204,9 @@ if (form) {
       setStatus('This configurator isn’t connected to checkout yet — set a base product in the theme editor.', 'err');
       return;
     }
+    if (!dimsValid) { setStatus('Please enter valid dimensions before adding to cart.', 'err'); return; }
     const properties = { _configId: configIdEl?.value, _meja_unit_price: unitPriceEl?.value, Product: model[product]?.title };
+    (DIM_FIELDS[product] || []).forEach(df => { properties[df.label] = fmtIn(dims[df.key] || 0) + ' in'; });
     for (const k in selection) properties[selection[k].groupLabel] = selection[k].optLabel;
 
     const restore = addBtn ? addBtn.textContent : '';
@@ -160,7 +230,7 @@ if (form) {
     } catch (err) {
       setStatus('Network error — please try again.', 'err');
     } finally {
-      if (addBtn) { addBtn.disabled = false; addBtn.textContent = restore; }
+      if (addBtn) { addBtn.disabled = !dimsValid; addBtn.textContent = restore; }
     }
   });
 }
