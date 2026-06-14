@@ -344,6 +344,46 @@ if (dlBtn) dlBtn.addEventListener('click', async () => {
   if (href !== out) setTimeout(() => URL.revokeObjectURL(href), 10000);
 });
 
+// AR — "View in your room" (dormant until settings.ar_service_url is set). Lazy-loads
+// <model-viewer> only on click, fetches per-config GLB/USDZ from the 4kGraphics /v1/ar
+// endpoint, and reveals the model (model-viewer surfaces its own AR launch on mobile).
+const AR = (viewer?.dataset.arService || '').replace(/\/+$/, '');
+const arBtn = document.getElementById('meja-ar');
+const mv = document.getElementById('meja-mv');
+const mvClose = document.getElementById('meja-mv-close');
+let mvLoaded = false;
+async function ensureModelViewer(){
+  if (mvLoaded || (window.customElements && window.customElements.get('model-viewer'))) { mvLoaded = true; return; }
+  await import('https://cdn.jsdelivr.net/npm/@google/model-viewer@4/dist/model-viewer.min.js');
+  mvLoaded = true;
+}
+if (AR && arBtn && mv) {
+  arBtn.addEventListener('click', async () => {
+    if (!dimsValid) { setStatus('Enter valid dimensions before viewing in AR.', 'err'); return; }
+    var restore = arBtn.textContent;
+    arBtn.disabled = true; arBtn.textContent = 'Preparing…';
+    try {
+      const r = await fetch(AR + '/v1/ar', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ spec: engineSpec(), configId: configIdEl?.value })
+      });
+      if (!r.ok) throw new Error('ar');
+      const data = await r.json();
+      await ensureModelViewer();
+      if (data.glbUrl) mv.setAttribute('src', data.glbUrl);
+      if (data.usdzUrl) mv.setAttribute('ios-src', data.usdzUrl);
+      if (data.posterUrl) mv.setAttribute('poster', data.posterUrl);
+      mv.hidden = false;
+      if (mvClose) mvClose.hidden = false;
+    } catch (e) {
+      setStatus('AR isn’t available right now — please try again.', 'err');
+    } finally {
+      arBtn.disabled = false; arBtn.textContent = restore;
+    }
+  });
+  if (mvClose) mvClose.addEventListener('click', () => { mv.hidden = true; mvClose.hidden = true; });
+}
+
 async function boot(){
   if (!viewer) return;
   try {
