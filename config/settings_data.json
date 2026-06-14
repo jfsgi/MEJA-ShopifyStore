@@ -1,7 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_brand": "#5b6b73",
     "color_accent": "#9bb0a3",
-    "color_ink": "#232826"
+    "color_ink": "#232826",
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo": "shopify://shop_images/Meja_Logo_Trim_Clean_408b0390-449f-4eba-ab4d-32eabcde89f4.png",
+          "logo_height": 44,
+          "menu": "main-menu"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "blurb": "Custom drawer boxes, doors, units & shelves — made to order."
+        }
+      }
+    },
+    "content_for_index": []
   }
 }
