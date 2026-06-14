@@ -1,0 +1,58 @@
+<div class="wrap" style="padding:14px 0 56px">
+  <h1 style="font-size:32px;margin-bottom:6px">{{ page.title | default: 'Contact us' }}</h1>
+  <div class="contact">
+    <div>
+      {%- if page.content != blank -%}<div class="rte" style="margin-bottom:18px">{{ page.content }}</div>{%- endif -%}
+      {%- form 'contact' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="callout">Thanks — your message is in. We’ll reply within 1–2 business days.</div>
+        {%- endif -%}
+        {{ form.errors | default_errors }}
+        <div class="field2">
+          <div class="field"><label for="ct-name">Name</label><input id="ct-name" type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" required></div>
+          <div class="field"><label for="ct-email">Email</label><input id="ct-email" type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocomplete="email" required></div>
+        </div>
+        <div class="field"><label for="ct-phone">Phone (optional)</label><input id="ct-phone" type="tel" name="contact[phone]" value="{{ form.phone }}"></div>
+        <div class="field"><label for="ct-body">How can we help?</label><textarea id="ct-body" name="contact[body]" rows="5" required>{{ form.body }}</textarea></div>
+        <button class="btn" type="submit">Send message</button>
+      {%- endform -%}
+    </div>
+    <aside class="contact-aside">
+      {%- if section.settings.blurb != blank -%}<p>{{ section.settings.blurb }}</p>{%- endif -%}
+      {%- if section.settings.email != blank -%}<div class="ci"><h4>Email</h4><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></div>{%- endif -%}
+      {%- if section.settings.phone != blank -%}<div class="ci"><h4>Phone</h4><a href="tel:{{ section.settings.phone | remove: ' ' }}">{{ section.settings.phone }}</a></div>{%- endif -%}
+      {%- if section.settings.hours != blank -%}<div class="ci"><h4>Hours</h4><p>{{ section.settings.hours }}</p></div>{%- endif -%}
+      <div class="ci"><h4>Made to order</h4><p>Every piece is custom-built — all sales final. See our <a href="/policies/refund-policy">policy</a>.</p></div>
+    </aside>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Contact",
+  "settings": [
+    {
+      "type": "text",
+      "id": "blurb",
+      "label": "Intro blurb",
+      "default": "Questions about a custom piece, sizing, or an existing order? Send us a note."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Contact email",
+      "default": "hello@mejadesigns.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Hours",
+      "default": "Mon–Fri, 9–5 ET"
+    }
+  ]
+}
+{% endschema %}
