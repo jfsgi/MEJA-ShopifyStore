@@ -15,6 +15,32 @@ let product = 'drawerbox';
 // selection[groupKey] = { groupLabel, value, optLabel, delta }
 const selection = {};
 
+// Default dimensions per furniture kind (mm); option selections override below.
+const DIMS = {
+  drawerbox:   { widthMm: 533, depthMm: 533, heightMm: 102, stockThicknessMm: 15 },
+  drawerunit:  { widthMm: 600, depthMm: 560, heightMm: 720, stockThicknessMm: 18 },
+  cabinetdoor: { widthMm: 380, depthMm: 19,  heightMm: 700, stockThicknessMm: 19 },
+  shelf:       { widthMm: 900, depthMm: 240, heightMm: 40,  stockThicknessMm: 40 },
+};
+
+function engineSpec() {
+  const d = Object.assign({ kind: product }, DIMS[product] || DIMS.drawerbox);
+  if (selection.width)   d.widthMm = Number(selection.width.value) || d.widthMm;
+  if (selection.joinery) d.joinery = selection.joinery.value;
+  if (selection.drawers) d.drawers = Number(selection.drawers.value) || 3;
+  if (selection.style)   d.style = selection.style.value;
+  return d;
+}
+
+function updatePreview() {
+  const eng = window.__mejaEngine;
+  if (!eng) return;
+  try {
+    eng.showFurniture(engineSpec());
+    if (selection.wood) eng.setMaterial(selection.wood.value);
+  } catch (e) { /* preview is best-effort */ }
+}
+
 function money(cents){ return '$' + (cents / 100).toFixed(2); }
 
 function segGroup(key, label, opts){
@@ -63,6 +89,7 @@ function recompute(){
     propsEl.appendChild(hidden('properties[Product]', def.title));
     for (const k in selection) propsEl.appendChild(hidden('properties[' + selection[k].groupLabel + ']', selection[k].optLabel));
   }
+  updatePreview();
   busy();
 }
 
@@ -72,8 +99,10 @@ function hidden(name, value){
 
 let t; function busy(){
   const d = document.getElementById('meja-rdot'), x = document.getElementById('meja-rtext');
-  if (!d) return; d.classList.add('busy'); x.textContent = 'rendering 4K…';
-  clearTimeout(t); t = setTimeout(() => { d.classList.remove('busy'); x.textContent = '4K render ready'; }, 850);
+  if (!d) return;
+  const ready = window.__mejaEngine ? '4K preview live' : '4K render ready';
+  d.classList.add('busy'); x.textContent = 'rendering 4K…';
+  clearTimeout(t); t = setTimeout(() => { d.classList.remove('busy'); x.textContent = ready; }, 650);
 }
 
 document.querySelectorAll('#ptabs button').forEach(b => b.addEventListener('click', () => {
@@ -105,10 +134,11 @@ async function boot(){
   try {
     const mod = await import(viewer.dataset.engine);
     const FurnitureEngine = mod.FurnitureEngine || mod.default;
-    const engine = new FurnitureEngine({ container: viewer });
-    engine.showFurniture({ kind: 'drawerbox', widthMm: 533, depthMm: 533, heightMm: 102, stockThicknessMm: 15, joinery: 'dovetail' });
-    engine.setMaterial('walnut'); window.__mejaEngine = engine;
-  } catch (e) { console.warn('[MEJA] 4kGraphics engine asset not present in this scaffold:', e.message); }
+    window.__mejaEngine = new FurnitureEngine({ container: viewer });
+    updatePreview(); // render the currently-selected configuration
+    const x = document.getElementById('meja-rtext');
+    if (x) x.textContent = '4K preview live';
+  } catch (e) { console.warn('[MEJA] live preview engine unavailable; keeping static viewer:', e.message); }
 }
 
 renderProduct();
