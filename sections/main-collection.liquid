@@ -44,14 +44,21 @@
 
     <div>
       {%- paginate collection.products by 24 -%}
-        <div class="grid">
-          {%- for product in collection.products -%}
-            {% render 'product-card', card_product: product %}
-          {%- else -%}
-            <p class="muted">No products match these filters.</p>
-          {%- endfor -%}
-        </div>
-        {%- if paginate.pages > 1 -%}<div class="pagination">{{ paginate | default_pagination }}</div>{%- endif -%}
+        {%- if collection.products.size > 0 -%}
+          <div class="grid">
+            {%- for product in collection.products -%}
+              {% render 'product-card', card_product: product %}
+            {%- endfor -%}
+          </div>
+          {%- if paginate.pages > 1 -%}<div class="pagination">{{ paginate | default_pagination }}</div>{%- endif -%}
+        {%- else -%}
+          <div class="empty" style="margin:30px 0 60px;max-width:480px">
+            <h3 style="font-size:18px;margin-bottom:6px">Nothing matches right now</h3>
+            <p class="muted" style="margin-bottom:16px">Try clearing the filters, or browse the full range.</p>
+            <a class="btn ghost" href="{{ collection.url }}">Clear filters</a>
+            <a class="btn" href="/collections/all" style="margin-left:8px">Browse all</a>
+          </div>
+        {%- endif -%}
       {%- endpaginate -%}
     </div>
   </div>
