@@ -246,6 +246,16 @@ body.cd-lock{overflow:hidden}
 @media(max-width:880px){.journal{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.journal{grid-template-columns:1fr}}
 
+/* contact */
+.contact{display:grid;grid-template-columns:1.4fr .8fr;gap:40px;align-items:start;padding-top:18px}
+.contact-aside{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.contact-aside .ci{padding:11px 0;border-top:1px solid var(--line)}
+.contact-aside .ci:first-of-type{border-top:none;padding-top:4px}
+.contact-aside h4{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:0 0 4px;font-weight:700}
+.contact-aside a{color:var(--brand);font-weight:600}
+.contact-aside p{font-size:13.5px;margin:0;color:var(--ink);line-height:1.5}
+@media(max-width:760px){.contact{grid-template-columns:1fr}}
+
 /* collection filters + sort + pagination */
 .titlebar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .sort{border:1.5px solid var(--line);background:var(--surface-2);border-radius:999px;padding:9px 16px;font-size:13px;font-family:var(--text);color:var(--ink)}
