@@ -106,6 +106,9 @@ section.block{padding:58px 0}
 @media(max-width:880px){.acct{grid-template-columns:1fr}.anav{position:static;flex-direction:row;flex-wrap:wrap}}
 
 /* generic page / forms / search */
+.searchbar{display:flex;gap:10px;flex-wrap:wrap}
+.searchbar input[type="search"]{padding:12px 16px;border:1.5px solid var(--line);border-radius:999px;width:min(440px,100%);font-size:14px;font-family:var(--text);background:#fff}
+.searchbar input[type="search"]:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--brand)}
 .prose .rte{font-size:15px;color:var(--ink)} .prose .rte h2{font-size:22px;margin:26px 0 8px}
 .field{margin-bottom:14px}.field label{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:6px}
 .field input{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--text);background:#fff}
