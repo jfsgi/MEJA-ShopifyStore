@@ -1,5 +1,13 @@
 <header class="site"><div class="wrap nav">
-  <a class="logo" href="{{ routes.root_url }}">{{ shop.name | default: 'MEJA' }}</a>
+  <a class="logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+    {%- if section.settings.logo != blank -%}
+      <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name | escape }}"
+           width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}"
+           style="height:{{ section.settings.logo_height }}px;width:auto;max-width:100%;display:block">
+    {%- else -%}
+      {{ shop.name | default: 'MEJA' }}
+    {%- endif -%}
+  </a>
   <nav class="main" aria-label="Primary">
     {%- for link in section.settings.menu.links -%}
       <a href="{{ link.url }}">{{ link.title }}</a>
@@ -17,6 +25,21 @@
 {
   "name": "Header",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo height",
+      "default": 44
+    },
     {
       "type": "link_list",
       "id": "menu",
