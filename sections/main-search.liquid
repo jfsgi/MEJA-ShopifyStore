@@ -1,15 +1,47 @@
 <div class="wrap" style="padding:24px 0 56px">
   <h1 style="font-size:30px">Search</h1>
-  <form action="{{ routes.search_url }}" method="get" role="search" style="margin:16px 0">
-    <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search drawer boxes, doors, shelves..." style="padding:12px 16px;border:1.5px solid var(--line);border-radius:999px;width:min(440px,100%)">
+  <form action="{{ routes.search_url }}" method="get" role="search" class="searchbar" style="margin:16px 0">
+    <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search drawer boxes, doors, shelves…" aria-label="Search">
+    <input type="hidden" name="options[prefix]" value="last">
+    <button class="btn" type="submit">Search</button>
   </form>
+
   {%- if search.performed -%}
-    <p class="muted">{{ search.results_count }} results for &ldquo;{{ search.terms }}&rdquo;</p>
-    <div class="grid">
-      {%- for item in search.results -%}
-        {%- if item.object_type == 'product' -%}{% render 'product-card', card_product: item %}{%- endif -%}
-      {%- endfor -%}
-    </div>
+    {%- if search.results_count == 0 -%}
+      <div class="empty" style="margin:24px 0 50px;text-align:left;max-width:460px">
+        <h3 style="font-size:18px;margin-bottom:6px">No results for &ldquo;{{ search.terms }}&rdquo;</h3>
+        <p class="muted" style="font-size:13.5px">Try a different term, or browse <a href="{{ routes.all_products_collection_url }}" style="color:var(--brand)">all products</a>.</p>
+      </div>
+    {%- else -%}
+      <p class="muted">{{ search.results_count }} {% if search.results_count == 1 %}result{% else %}results{% endif %} for &ldquo;{{ search.terms }}&rdquo;</p>
+      {%- paginate search.results by 12 -%}
+        <div class="grid" style="margin-top:18px">
+          {%- for item in search.results -%}
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                {% render 'product-card', card_product: item %}
+              {%- when 'article' -%}
+                <a class="pcard" href="{{ item.url }}">
+                  <div class="img" {% if item.image %}style="background-image:url({{ item.image | image_url: width: 600 }})"{% endif %}><span class="tag">Journal</span></div>
+                  <div class="b"><h3>{{ item.title }}</h3><div class="rate">{{ item.excerpt_or_content | strip_html | truncatewords: 16 }}</div></div>
+                </a>
+              {%- when 'page' -%}
+                <a class="pcard" href="{{ item.url }}">
+                  <div class="b"><span class="kicker">Page</span><h3 style="margin-top:6px">{{ item.title }}</h3><div class="rate">{{ item.content | strip_html | truncatewords: 18 }}</div></div>
+                </a>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          <div class="pagination">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}<span class="current">{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
   {%- endif -%}
 </div>
 {% schema %}
