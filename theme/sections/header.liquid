@@ -20,7 +20,7 @@
   <div class="icons">
     <a class="searchtrig" id="search-trigger" href="{{ routes.search_url }}" role="button" aria-expanded="false" aria-controls="search-panel">Search</a>
     <a href="{{ routes.account_url }}">Account</a>
-    <a href="{{ routes.cart_url }}">Cart <span class="cartdot">{{ cart.item_count }}</span></a>
+    <a href="{{ routes.cart_url }}" data-cart-trigger>Cart <span class="cartdot">{{ cart.item_count }}</span></a>
   </div>
   <label class="burger" for="nav-toggle" aria-hidden="true"><span></span><span></span><span></span></label>
 </div>

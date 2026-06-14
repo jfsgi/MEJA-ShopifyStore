@@ -14,7 +14,7 @@
       <span class="eyebrow">{{ product.type }}</span>
       <h1>{{ product.title }}</h1>
       <a class="ratelink" href="#reviews"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating | default: '4.9' }}</a>
-      {%- form 'product', product -%}
+      {%- form 'product', product, class: 'product-form' -%}
         {%- assign pdp_variant = product.selected_or_first_available_variant | default: product.variants.first -%}
         <input type="hidden" name="id" value="{{ pdp_variant.id }}">
         <div class="price">{{ product.price | money }} <small>+ size · made to order</small></div>
