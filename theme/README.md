@@ -25,6 +25,10 @@ See `../docs/06-API-Contracts.md` and `../api/openapi.yaml`.
 - Cart Transform Function (Plus) for custom line price; private/hybrid listing template.
 - Reviews app blocks; metafield definitions; Shopify Markets.
 
+> **Configurator wiring:** the architecture, line-item/CRM contracts, and the remaining
+> base-product + Cart Transform + CRM-endpoint steps are in [`../SETUP.md`](../SETUP.md)
+> (broader theme deploy in [`DEPLOY.md`](DEPLOY.md)).
+
 > Run locally with the Shopify CLI (`shopify theme dev`) once connected to a dev store.
 
 ## Added in this pass
