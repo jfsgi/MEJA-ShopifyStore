@@ -33,19 +33,39 @@
   {%- endfor -%}
 </div>
 
+<div class="stickybar" id="pdp-sticky">
+  <div class="sb-info">
+    <span class="sb-title">{{ product.title }}</span>
+    <span class="sb-price">{{ product.price | money }}</span>
+  </div>
+  <button type="button" class="btn" id="sb-add">{{ 'products.product.add_to_cart' | t }}</button>
+</div>
+
 <script>
   (function () {
     var gallery = document.querySelector('.gallery');
-    if (!gallery) return;
-    var main = gallery.querySelector('#pdp-main');
-    var thumbs = gallery.querySelectorAll('.thumb');
-    thumbs.forEach(function (t) {
-      t.addEventListener('click', function () {
-        if (t.dataset.full) main.style.backgroundImage = "url(" + t.dataset.full + ")";
-        thumbs.forEach(function (x) { x.classList.remove('on'); });
-        t.classList.add('on');
+    if (gallery) {
+      var main = gallery.querySelector('#pdp-main');
+      var thumbs = gallery.querySelectorAll('.thumb');
+      thumbs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          if (t.dataset.full) main.style.backgroundImage = "url(" + t.dataset.full + ")";
+          thumbs.forEach(function (x) { x.classList.remove('on'); });
+          t.classList.add('on');
+        });
       });
-    });
+    }
+
+    // Mobile sticky add-to-cart: show when the in-form Add button is off-screen.
+    var sticky = document.getElementById('pdp-sticky');
+    var addBtn = document.getElementById('meja-add');
+    var sbAdd = document.getElementById('sb-add');
+    if (sticky && addBtn && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { sticky.classList.toggle('show', !e.isIntersecting); });
+      }, { rootMargin: '0px 0px -40% 0px' }).observe(addBtn);
+    }
+    if (sbAdd && addBtn) sbAdd.addEventListener('click', function () { addBtn.click(); });
   })();
 </script>
 {% schema %}
