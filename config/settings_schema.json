@@ -17,6 +17,12 @@
         "info": "Square image, 32×32 recommended (PNG)."
       },
       {
+        "type": "image_picker",
+        "id": "social_image",
+        "label": "Social share image",
+        "info": "Shown when pages are shared on social/Google (1200×630 recommended). Per-page it falls back to the product or article image."
+      },
+      {
         "type": "color",
         "id": "color_brand",
         "label": "Brand accent",

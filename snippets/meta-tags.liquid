@@ -1,0 +1,75 @@
+{%- comment -%} Open Graph + Twitter card + JSON-LD structured data. Rendered in <head>. {%- endcomment -%}
+{%- liquid
+  assign og_title = page_title | default: shop.name
+  assign og_desc = page_description | default: shop.description | default: shop.name
+  assign og_type = 'website'
+  if request.page_type == 'product'
+    assign og_type = 'product'
+  elsif request.page_type == 'article'
+    assign og_type = 'article'
+  endif
+  assign share_img = ''
+  if request.page_type == 'product' and product.featured_image
+    assign share_img = product.featured_image | image_url: width: 1200 | prepend: 'https:'
+  elsif request.page_type == 'article' and article.image
+    assign share_img = article.image | image_url: width: 1200 | prepend: 'https:'
+  elsif settings.social_image != blank
+    assign share_img = settings.social_image | image_url: width: 1200 | prepend: 'https:'
+  endif
+-%}
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:description" content="{{ og_desc | strip_html | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+{%- if share_img != blank %}
+<meta property="og:image" content="{{ share_img }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ share_img }}">
+{%- else %}
+<meta name="twitter:card" content="summary">
+{%- endif %}
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_desc | strip_html | escape }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }}{% if settings.social_image != blank %},
+  "logo": {{ settings.social_image | image_url: width: 600 | prepend: 'https:' | json }}{% endif %}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ shop.url }}/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+{%- if request.page_type == 'product' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  {% if product.featured_image %}"image": [{{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }}],
+  {% endif %}"description": {{ product.description | strip_html | truncatewords: 60 | json }},
+  "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": {{ shop.currency | json }},
+    "price": "{{ product.price | divided_by: 100.0 }}",
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": {{ shop.url | append: product.url | json }}
+  }
+}
+</script>
+{%- endif %}
