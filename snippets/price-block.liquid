@@ -3,12 +3,15 @@
   params:
     purchasable — pass `false` to disable Add (e.g. configurator with no base product set).
                   Omit on the PDP; nil is treated as purchasable.
+    breakdown   — pass `true` to show the "See breakdown" toggle + panel (configurator only;
+                  populated by assets/configurator.js).
 {%- endcomment -%}
 <div class="pricecard">
   <div class="priceline">
     <div><div class="lbl">Made to order</div><div class="amt" id="meja-price" data-config-price>{{ product.price | money }}</div><span class="pmode" id="meja-pmode" hidden></span></div>
-    <button class="toggle" type="button" aria-expanded="false">See breakdown ▾</button>
+    {%- if breakdown -%}<button class="toggle" type="button" id="meja-bd-toggle" aria-expanded="false" aria-controls="meja-breakdown">See breakdown ▾</button>{%- endif -%}
   </div>
+  {%- if breakdown -%}<div class="breakdown" id="meja-breakdown" hidden></div>{%- endif -%}
   <div class="addrow">
     <button class="addbtn" id="meja-add" type="submit" name="add"{% if purchasable == false %} disabled aria-disabled="true"{% endif %}>{{ 'products.product.add_to_cart' | t }}</button>
     <button class="save" id="meja-save" type="button" aria-label="Save configuration">♡</button>

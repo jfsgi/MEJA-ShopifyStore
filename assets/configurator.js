@@ -222,10 +222,33 @@ function recompute(){
     (DIM_FIELDS[product] || []).forEach(df => propsEl.appendChild(hidden('properties[' + df.label + ']', fmtIn(dims[df.key] || 0) + ' in')));
     for (const k in selection) propsEl.appendChild(hidden('properties[' + selection[k].groupLabel + ']', selection[k].optLabel));
   }
+  renderBreakdown(def, total);
   setPriceMode(false);
   requestLivePrice();
   updatePreview();
   busy();
+}
+
+function bdRow(label, val, muted){
+  return '<div class="bd-row' + (muted ? ' muted' : '') + '"><span>' + label + '</span><span class="mono">' + val + '</span></div>';
+}
+
+// Compose the indicative estimate (base + option deltas) shown under "See breakdown".
+function renderBreakdown(def, total){
+  const bd = document.getElementById('meja-breakdown');
+  if (!bd) return;
+  let rows = bdRow('Base · ' + def.title, money(def.base));
+  const sizeStr = (DIM_FIELDS[product] || []).map(df => fmtIn(dims[df.key] || 0)).join(' × ') + ' in';
+  rows += bdRow('Size', sizeStr, true);
+  for (const k in selection) {
+    const s = selection[k];
+    const d = s.delta || 0;
+    const val = d === 0 ? 'incl.' : (d > 0 ? '+' : '−') + money(Math.abs(d));
+    rows += bdRow(s.groupLabel + ': ' + s.optLabel, val, d === 0);
+  }
+  bd.innerHTML = '<div class="bd-rows">' + rows + '</div>' +
+    '<div class="bd-total"><span>Estimate</span><span class="mono">' + money(total) + '</span></div>' +
+    '<p class="bd-note">Indicative — your final made-to-order price is confirmed by the MEJA workshop.</p>';
 }
 
 function hidden(name, value){
@@ -284,6 +307,16 @@ if (form) {
     }
   });
 }
+
+// Price breakdown toggle.
+const bdToggle = document.getElementById('meja-bd-toggle');
+const bdPanel = document.getElementById('meja-breakdown');
+if (bdToggle && bdPanel) bdToggle.addEventListener('click', () => {
+  const open = bdToggle.getAttribute('aria-expanded') === 'true';
+  bdToggle.setAttribute('aria-expanded', String(!open));
+  bdPanel.hidden = open;
+  bdToggle.textContent = open ? 'See breakdown ▾' : 'Hide breakdown ▴';
+});
 
 // Lighting modes + downloadable preview snapshot (engine polish).
 document.querySelectorAll('#meja-lights button').forEach(b => b.addEventListener('click', () => {
