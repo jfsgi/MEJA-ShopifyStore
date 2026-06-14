@@ -148,7 +148,22 @@ section.block{padding:58px 0}
 .prose .rte{font-size:15px;color:var(--ink)} .prose .rte h2{font-size:22px;margin:26px 0 8px}
 .field{margin-bottom:14px}.field label{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);font-weight:700;display:block;margin-bottom:6px}
 .field input{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--text);background:#fff}
-.field input:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--brand)}
+.field input:focus,.field select:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--brand)}
+.field select{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-family:var(--text);background:#fff}
+.field2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.checkrow{display:flex;align-items:center;gap:8px;font-size:13.5px;margin:4px 0 16px}
+
+/* address book */
+.addrbox{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;background:var(--surface-2)}
+.addrbox summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--brand);list-style:none}
+.addr-card{border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px}
+.addr-card .fa{font-size:14px;line-height:1.55}
+.addr-actions{display:flex;gap:18px;align-items:flex-start;margin-top:12px;flex-wrap:wrap}
+.addr-actions details{flex:1;min-width:220px}
+.addr-actions summary{cursor:pointer;color:var(--brand);font-weight:600;font-size:13px;list-style:none}
+.linkbtn{background:none;border:none;color:var(--danger);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;font-family:var(--text)}
+.addr-badge{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--accent-deep);background:#e9f1ec;padding:3px 8px;border-radius:999px;margin-left:8px;white-space:nowrap}
+@media(max-width:560px){.field2{grid-template-columns:1fr}}
 
 /* journal (blog index) */
 .journal{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:6px 0 10px}
