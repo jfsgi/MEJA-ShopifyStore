@@ -1,0 +1,57 @@
+{%- comment -%}
+  Product recommendations. On a normal page load `recommendations.performed` is false, so we
+  render the shell + a loader script that fetches this same section via the Section Rendering
+  API (?section_id=…&product_id=…&intent=related); that request populates `recommendations`
+  and returns just the product grid, which the script injects into the shell.
+{%- endcomment -%}
+{%- if recommendations.performed -%}
+  {%- if recommendations.products_count > 0 -%}
+    <div class="reco-grid cats">
+      {%- for product in recommendations.products -%}
+        {% render 'product-card', card_product: product %}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+{%- else -%}
+  <section class="block reco" data-reco
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent=related">
+    <div class="wrap">
+      <div class="head"><div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h2>{{ section.settings.heading }}</h2></div></div>
+      <div class="reco-slot"></div>
+    </div>
+  </section>
+  <script src="{{ 'product-recommendations.js' | asset_url }}" defer></script>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "More to consider"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You might also like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "label": "Products to show",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product recommendations"
+    }
+  ]
+}
+{% endschema %}
