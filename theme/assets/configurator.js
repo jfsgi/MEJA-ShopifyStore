@@ -296,5 +296,88 @@ async function boot(){
   } catch (e) { console.warn('[MEJA] live preview engine unavailable; keeping static viewer:', e.message); }
 }
 
+// ---- Save / share configurations ----
+const LS = 'meja.savedConfigs';
+function loadSaved(){ try { return JSON.parse(localStorage.getItem(LS) || '[]'); } catch (e) { return []; } }
+function storeSaved(a){ try { localStorage.setItem(LS, JSON.stringify(a.slice(0, 24))); } catch (e) { /* quota/full */ } }
+function encodeConfig(cfg){ return btoa(unescape(encodeURIComponent(JSON.stringify(cfg)))); }
+function decodeConfig(str){ try { return JSON.parse(decodeURIComponent(escape(atob(str)))); } catch (e) { return null; } }
+
+function currentConfig(){
+  const s = {};
+  for (const k in selection) s[k] = selection[k].value;
+  const d = {};
+  (DIM_FIELDS[product] || []).forEach(df => { d[df.key] = fmtIn(dims[df.key] || 0); });
+  return { p: product, d, s, t: titleEl?.textContent || model[product]?.title || 'Design' };
+}
+function configKey(c){ return c.p + '|' + JSON.stringify(c.d) + '|' + JSON.stringify(c.s); }
+function configLabel(cfg){
+  const dimStr = Object.values(cfg.d || {}).join('×') + '″';
+  const wood = cfg.s && cfg.s.wood ? ' · ' + cfg.s.wood : '';
+  return (cfg.t || 'Design') + ' · ' + dimStr + wood;
+}
+
+function applyConfig(cfg){
+  if (!cfg || !model[cfg.p]) return;
+  product = cfg.p;
+  document.querySelectorAll('#ptabs button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.prod === product)));
+  renderProduct();
+  if (cfg.d) Object.keys(cfg.d).forEach(axis => {
+    const inp = optionsEl.querySelector('.dims input[data-axis="' + axis + '"]');
+    if (inp) { inp.value = cfg.d[axis]; dims[axis] = parseFloat(cfg.d[axis]); }
+  });
+  if (cfg.s) Object.keys(cfg.s).forEach(key => {
+    const btn = optionsEl.querySelector('.opt[data-group="' + key + '"] .seg button[data-value="' + cfg.s[key] + '"]');
+    if (btn) btn.click();
+  });
+  recompute();
+}
+
+function renderSaved(){
+  const panel = document.getElementById('meja-saved');
+  const list = document.getElementById('meja-saved-list');
+  if (!panel || !list) return;
+  const items = loadSaved();
+  if (!items.length) { panel.hidden = true; return; }
+  panel.hidden = false;
+  list.innerHTML = '';
+  items.forEach((cfg, i) => {
+    const row = document.createElement('div'); row.className = 'cfg-saved-item';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'cfg-restore'; b.textContent = configLabel(cfg);
+    b.addEventListener('click', () => applyConfig(cfg));
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'cfg-rm'; x.setAttribute('aria-label', 'Remove saved configuration'); x.textContent = '✕';
+    x.addEventListener('click', () => { const a = loadSaved(); a.splice(i, 1); storeSaved(a); renderSaved(); });
+    row.appendChild(b); row.appendChild(x); list.appendChild(row);
+  });
+}
+
+const saveBtn = document.getElementById('meja-save');
+if (saveBtn) saveBtn.addEventListener('click', () => {
+  if (!dimsValid) { setStatus('Enter valid dimensions before saving.', 'err'); return; }
+  const a = loadSaved();
+  const cfg = currentConfig();
+  if (!a.some(c => configKey(c) === configKey(cfg))) { a.unshift(cfg); storeSaved(a); }
+  renderSaved();
+  saveBtn.textContent = '♥'; saveBtn.classList.add('on');
+  setTimeout(() => { saveBtn.textContent = '♡'; saveBtn.classList.remove('on'); }, 1200);
+});
+
+const shareBtn = document.getElementById('meja-share');
+if (shareBtn) shareBtn.addEventListener('click', async () => {
+  const url = location.origin + location.pathname + '#cfg=' + encodeConfig(currentConfig());
+  try { await navigator.clipboard.writeText(url); shareBtn.textContent = 'Copied ✓'; }
+  catch (e) { window.prompt('Copy this link:', url); }
+  setTimeout(() => { shareBtn.textContent = 'Copy link to this design'; }, 1600);
+});
+
+function restoreFromHash(){
+  const m = location.hash.match(/cfg=([^&]+)/);
+  if (!m) return;
+  const cfg = decodeConfig(decodeURIComponent(m[1]));
+  if (cfg) applyConfig(cfg);
+}
+
 renderProduct();
+restoreFromHash();
+renderSaved();
 boot();

@@ -90,6 +90,18 @@ section.block{padding:58px 0}
 .addstatus{font-size:12.5px;margin-top:10px;min-height:1.15em}
 .addstatus.ok{color:var(--accent-deep);font-weight:600}
 .addstatus.err{color:var(--danger);font-weight:600}
+.save.on{color:var(--danger);border-color:var(--danger)}
+.cfg-saved{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.cfg-saved-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.cfg-saved-h span{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.linkbtn{background:none;border:none;color:var(--brand);font-size:12px;font-weight:600;cursor:pointer;padding:0}
+.linkbtn:hover{text-decoration:underline}
+.cfg-saved-list{display:flex;flex-direction:column;gap:8px}
+.cfg-saved-item{display:flex;align-items:center;gap:8px}
+.cfg-restore{flex:1;text-align:left;border:1.5px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 12px;font-size:13px;cursor:pointer;color:var(--ink);font-family:var(--text)}
+.cfg-restore:hover{border-color:var(--accent-deep)}
+.cfg-rm{border:none;background:none;color:var(--muted);font-size:13px;cursor:pointer;padding:6px;line-height:1}
+.cfg-rm:hover{color:var(--danger)}
 /* pdp */
 .pdp{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;padding:14px 0 50px;align-items:start}
 .gallery .main{aspect-ratio:4/3;border-radius:var(--radius);background-size:cover;background-position:center;border:1px solid var(--line);background-color:var(--surface)}
