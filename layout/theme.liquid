@@ -21,5 +21,7 @@
   {% section 'header' %}
   <main id="main" role="main">{{ content_for_layout }}</main>
   {% section 'footer' %}
+  {% render 'cart-drawer' %}
+  <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
 </body>
 </html>

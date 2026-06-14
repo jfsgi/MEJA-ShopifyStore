@@ -150,8 +150,9 @@ if (form) {
       });
       if (res.ok) {
         await updateCartCount();
-        setStatus('Added ✓ Taking you to your cart…', 'ok');
-        window.location.href = '/cart';
+        setStatus('Added ✓', 'ok');
+        if (window.MejaCart) { window.MejaCart.open(); }
+        else { window.location.href = '/cart'; }
         return;
       }
       const err = await res.json().catch(() => ({}));

@@ -7,7 +7,7 @@
     <div class="viewer" {% if product.metafields.crm.render_4k %}style="background-image:url({{ product.metafields.crm.render_4k }})"{% endif %}>
       <div class="hud">&#8635; &#10530; AR</div><div class="rstate">&#9679; 4K render ready</div>
     </div>
-    {% form 'product', product %}
+    {% form 'product', product, class: 'product-form' %}
     {%- assign pl_variant = product.selected_or_first_available_variant | default: product.variants.first -%}
     <input type="hidden" name="id" value="{{ pl_variant.id }}">
     <div class="details">
