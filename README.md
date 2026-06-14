@@ -40,6 +40,21 @@ This reads the Markdown in `docs/` and writes styled `.docx` files into `word/`.
 
 ---
 
+## 👀 How to see what's happening
+
+| You want to… | Do this |
+|--------------|---------|
+| **Read the plan** (formatted, with diagrams) | Open the `docs/*.md` files **on GitHub** — Markdown + Mermaid render automatically. The `.docx` in `word/` are for Word (GitHub shows them blank — download them). |
+| **See the designs** (static) | The `assets/MEJA-*.pdf` files (sent in chat) — one page per mockup, nothing cut off. |
+| **Click the real, interactive mockups** | `git pull`, then open any file in **`mockups/`** in a browser — e.g. `mockups/configurator.html` (switch product, change options, watch the price/preview update), `mockups/home.html`, `mockups/index.html` (all 10 variants). No build step. |
+| **Review the code / progress** | **PR #1** on GitHub — the diff, the file tree, and the CI checks (`.github/workflows/ci.yml`). |
+| **Run the actual Shopify theme** | Needs a Shopify Partner account + dev store, then: `cd theme && shopify theme dev`. Upload the 4kGraphics `browser.js` to `theme/assets/` to light up the live configurator. |
+| **Track the integration work** | GitHub **issue #2** (the CRM handoff checklist). |
+
+> Quickest interactive look: `git pull && open mockups/configurator.html` (macOS) / `xdg-open` (Linux) / double-click (Windows).
+
+---
+
 ## 🔌 The four systems at a glance
 
 | System | Role | Connection |
