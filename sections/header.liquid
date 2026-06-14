@@ -18,12 +18,25 @@
     {%- endfor -%}
   </nav>
   <div class="icons">
-    <a href="{{ routes.search_url }}">Search</a>
+    <a class="searchtrig" id="search-trigger" href="{{ routes.search_url }}" role="button" aria-expanded="false" aria-controls="search-panel">Search</a>
     <a href="{{ routes.account_url }}">Account</a>
     <a href="{{ routes.cart_url }}">Cart <span class="cartdot">{{ cart.item_count }}</span></a>
   </div>
   <label class="burger" for="nav-toggle" aria-hidden="true"><span></span><span></span><span></span></label>
-</div></header>
+</div>
+<div class="searchpanel" id="search-panel" hidden>
+  <div class="wrap">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="searchpanel-form">
+      <input type="search" name="q" id="search-input" placeholder="Search drawer boxes, doors, shelves…" autocomplete="off" aria-label="Search">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button class="btn" type="submit">Search</button>
+      <button type="button" class="searchclose" id="search-close" aria-label="Close search">✕</button>
+    </form>
+    <div class="searchresults" id="search-results" aria-live="polite"></div>
+  </div>
+</div>
+</header>
+<script src="{{ 'search.js' | asset_url }}" defer></script>
 {% schema %}
 {
   "name": "Header",
