@@ -14,7 +14,7 @@ const form = document.getElementById('meja-form');
 const addBtn = document.getElementById('meja-add');
 const addStatus = document.getElementById('meja-add-status');
 const baseConnected = !!form?.querySelector('input[name="id"]')?.value;
-const CRM = (viewer?.dataset.renderService || '').replace(/\/+$/, ''); // MEJA-CRM engine base URL
+const CRM = (viewer?.dataset.crmService || '').replace(/\/+$/, ''); // MEJA-CRM pricing host (/v1/price, /v1/options)
 const priceModeEl = document.getElementById('meja-pmode');
 const optionsLoaded = {};
 
@@ -51,8 +51,12 @@ const DIM_FIELDS = {
 const in2mm = (v) => Math.round(Number(v) * 25.4);
 const fmtIn = (v) => String(parseFloat(Number(v).toFixed(2)));
 
+// Map our UI product keys to the 4kGraphics engine's FurnitureKind union
+// ('door' is the engine's cabinet-door kind; 'shelf' has no parametric kind yet).
+const ENGINE_KIND = { drawerbox: 'drawerbox', drawerunit: 'drawerunit', cabinetdoor: 'door', shelf: 'shelf' };
+
 function engineSpec() {
-  const d = { kind: product };
+  const d = { kind: ENGINE_KIND[product] || product };
   const f = DIM_FIELDS[product] || [];
   f.forEach(df => {
     const mm = in2mm(dims[df.key]);
@@ -327,13 +331,17 @@ document.querySelectorAll('#meja-lights button').forEach(b => b.addEventListener
 }));
 
 const dlBtn = document.getElementById('meja-download');
-if (dlBtn) dlBtn.addEventListener('click', () => {
+if (dlBtn) dlBtn.addEventListener('click', async () => {
   const eng = window.__mejaEngine;
   if (!eng || !eng.renderSnapshot) { setStatus('Preview engine still loading — try again in a moment.', 'err'); return; }
+  // The stub returns a data-URL string; the production engine returns Promise<Blob>.
+  const out = await Promise.resolve(eng.renderSnapshot({ width: 2000, height: 1500 }));
+  const href = (typeof Blob !== 'undefined' && out instanceof Blob) ? URL.createObjectURL(out) : out;
   const a = document.createElement('a');
-  a.href = eng.renderSnapshot({ width: 2000, height: 1500 });
+  a.href = href;
   a.download = (model[product]?.title || 'design').toLowerCase().replace(/\s+/g, '-') + '-preview.png';
   document.body.appendChild(a); a.click(); a.remove();
+  if (href !== out) setTimeout(() => URL.revokeObjectURL(href), 10000);
 });
 
 async function boot(){

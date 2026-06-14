@@ -48,7 +48,14 @@
       {
         "type": "url",
         "id": "render_service_url",
-        "label": "4kGraphics render service URL"
+        "label": "4kGraphics render service URL",
+        "info": "Host of the 4kGraphics server (/v1/render, /v1/buildplan). Used for server-side 4K renders."
+      },
+      {
+        "type": "url",
+        "id": "crm_api_url",
+        "label": "MEJA-CRM API URL (live pricing)",
+        "info": "Host of the CRM pricing engine. The configurator fetches the authoritative signed price (/v1/price) and live option model (/v1/options) from here. Leave blank to use the local estimate."
       },
       {
         "type": "header",

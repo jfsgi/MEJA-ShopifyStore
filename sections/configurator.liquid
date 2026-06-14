@@ -26,7 +26,7 @@
     <button type="button" data-prod="shelf" aria-pressed="false">Shelf</button>
   </div>
   <div class="cfg">
-    <div class="viewer" id="meja-viewer" data-engine="{{ '4kgraphics-engine.browser.js' | asset_url }}" data-render-service="{{ settings.render_service_url }}">
+    <div class="viewer" id="meja-viewer" data-engine="{{ '4kgraphics-engine.browser.js' | asset_url }}" data-render-service="{{ settings.render_service_url }}" data-crm-service="{{ settings.crm_api_url }}">
       <div class="hud"><span>&#8635; rotate</span><span>&#10530; zoom</span></div>
       <button type="button" class="vdl" id="meja-download" aria-label="Download preview image" title="Download preview image">&#10515;</button>
       <div class="vlights" id="meja-lights">
