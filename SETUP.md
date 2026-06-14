@@ -167,6 +167,12 @@ it with the real bundle from `jfsgi/4kGraphics` → `releases/4kgraphics-engine.
 The configurator already targets the real API: `kind` mapping (§3.1), and an async
 `renderSnapshot()` (`Promise<Blob>`) for the **Download preview** button.
 
+> **Not via npm/CDN.** `@4kgraphics/engine` is published to **GitHub Packages**
+> (`npm.pkg.github.com`, private, `UNLICENSED`) — it is **not on public npm** (verified 404),
+> and its `dist` build imports `three` as a bare peer dependency. So it can't be `npm i`-ed
+> from public npm or loaded from a public CDN. **Vendor the committed
+> `releases/4kgraphics-engine.browser.js` into `theme/assets/`** — that is the integration path.
+
 ### 4.6 Supporting content *(see `theme/DEPLOY.md` §5 for detail)*
 - Collections with handles `drawer-boxes`, `drawer-units`, `cabinet-doors`, `shelves`.
 - A page on the `page.configurator` template (handle `configurator`).
