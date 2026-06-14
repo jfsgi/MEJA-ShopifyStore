@@ -1,6 +1,4 @@
 <div class="wrap">
-  <div class="crumbs"><a href="{{ routes.root_url }}">Home</a> &rsaquo; <a href="{{ blog.url }}">{{ blog.title }}</a> &rsaquo; <span>{{ article.title }}</span></div>
-
   <article class="post">
     <header class="post-head">
       {%- if article.tags.size > 0 -%}<span class="kicker">{{ article.tags.first }}</span>{%- endif -%}

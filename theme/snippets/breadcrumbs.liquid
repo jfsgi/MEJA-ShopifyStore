@@ -1,0 +1,46 @@
+{%- comment -%} Contextual breadcrumbs, rendered globally at the top of <main>. {%- endcomment -%}
+{%- liquid
+  assign pt = request.page_type
+  assign skip = false
+  if pt == 'index' or pt == 'cart' or pt == 'password' or pt == 'gift_card'
+    assign skip = true
+  endif
+-%}
+{%- unless skip -%}
+<div class="wrap"><nav class="crumbs" aria-label="Breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a>
+  {%- case pt -%}
+    {%- when 'product' -%}
+      {%- if collection and collection.url -%}
+        &rsaquo; <a href="{{ collection.url }}">{{ collection.title }}</a>
+      {%- elsif product.collections.size > 0 -%}
+        &rsaquo; <a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a>
+      {%- endif -%}
+      &rsaquo; <span>{{ product.title }}</span>
+    {%- when 'collection' -%}
+      &rsaquo; <span>{{ collection.title }}</span>
+    {%- when 'list-collections' -%}
+      &rsaquo; <span>Shop</span>
+    {%- when 'blog' -%}
+      &rsaquo; <span>{{ blog.title }}</span>
+    {%- when 'article' -%}
+      &rsaquo; <a href="{{ blog.url }}">{{ blog.title }}</a> &rsaquo; <span>{{ article.title }}</span>
+    {%- when 'page' -%}
+      &rsaquo; <span>{{ page.title }}</span>
+    {%- when 'search' -%}
+      &rsaquo; <span>Search</span>
+    {%- when 'customers/account' -%}
+      &rsaquo; <span>Account</span>
+    {%- when 'customers/order' -%}
+      &rsaquo; <a href="{{ routes.account_url }}">Account</a> &rsaquo; <span>Order {{ order.name }}</span>
+    {%- when 'customers/addresses' -%}
+      &rsaquo; <a href="{{ routes.account_url }}">Account</a> &rsaquo; <span>Addresses</span>
+    {%- when 'customers/login' -%}
+      &rsaquo; <span>Sign in</span>
+    {%- when 'customers/register' -%}
+      &rsaquo; <span>Create account</span>
+    {%- else -%}
+      {%- if page_title != blank -%}&rsaquo; <span>{{ page_title | strip_html }}</span>{%- endif -%}
+  {%- endcase -%}
+</nav></div>
+{%- endunless -%}
