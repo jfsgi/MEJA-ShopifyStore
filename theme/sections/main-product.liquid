@@ -1,0 +1,41 @@
+<div class="wrap">
+  <div class="pdp">
+    <div class="gallery">
+      <div class="main" {% if product.featured_image %}style="background-image:url({{ product.featured_image | image_url: width: 1200 }})"{% endif %}></div>
+      <div class="thumbs">
+        {%- for image in product.images limit: 4 -%}<i style="background-image:url({{ image | image_url: width: 200 }})"></i>{%- endfor -%}
+      </div>
+    </div>
+    <div class="details">
+      <span class="eyebrow">{{ product.type }}</span>
+      <h1>{{ product.title }}</h1>
+      <a class="ratelink" href="#reviews"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating | default: '4.9' }}</a>
+      {%- form 'product', product -%}
+        <div class="price">{{ product.price | money }} <small>+ size · made to order</small></div>
+        <div class="custom-note">📐 Sold made-to-size. <a href="{{ pages['configurator'].url | default: '#' }}">Enter your dimensions in the configurator →</a></div>
+        {% render 'price-block' %}
+      {%- endform -%}
+      <div class="rte">{{ product.description }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="reviews">
+  {%- comment -%} Reviews app widget (Judge.me / Loox / Okendo) injects here as an app block. {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == '@app' -%}{% render block %}{%- endif -%}
+  {%- endfor -%}
+</div>
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

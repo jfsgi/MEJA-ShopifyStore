@@ -15,6 +15,11 @@ import json, glob, os, re, sys
 
 errors = []
 
+# 0. no empty section / template liquid files (a truncated file is "valid" to linters)
+for path in glob.glob("theme/sections/*.liquid") + glob.glob("theme/templates/**/*.liquid", recursive=True):
+    if not open(path, encoding="utf-8").read().strip():
+        errors.append(f"{path}: file is empty")
+
 # 1. schema JSON
 for path in glob.glob("theme/sections/*.liquid"):
     src = open(path, encoding="utf-8").read()

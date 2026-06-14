@@ -5,10 +5,14 @@
   </div>
   <div class="rev-cards">
     {%- for block in section.blocks -%}
-      <div class="rev-card" {{ block.shopify_attributes }}>
-        <div class="top"><div class="ph" {% if block.settings.photo %}style="background-image:url({{ block.settings.photo | image_url: width: 200 }})"{% endif %}></div><div><div class="who">{{ block.settings.name }}</div><div class="vb">✓ Verified buyer</div></div></div>
-        <div class="rstars">★★★★★</div><p>{{ block.settings.body }}</p>
-      </div>
+      {%- if block.type == '@app' -%}
+        {% render block %}
+      {%- else -%}
+        <div class="rev-card" {{ block.shopify_attributes }}>
+          <div class="top"><div class="ph" {% if block.settings.photo %}style="background-image:url({{ block.settings.photo | image_url: width: 200 }})"{% endif %}></div><div><div class="who">{{ block.settings.name }}</div><div class="vb">✓ Verified buyer</div></div></div>
+          <div class="rstars">★★★★★</div><p>{{ block.settings.body }}</p>
+        </div>
+      {%- endif -%}
     {%- endfor -%}
   </div>
 </section></div>
@@ -56,6 +60,9 @@
           "label": "Review"
         }
       ]
+    },
+    {
+      "type": "@app"
     }
   ],
   "presets": [

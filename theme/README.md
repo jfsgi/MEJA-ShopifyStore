@@ -44,3 +44,11 @@ Added the templates a valid OS 2.0 theme expects, each with a matching section:
 `page`, `search`, `404`, `list-collections`, and the customer pages
 (`customers/login`, `register`, `order`, `addresses`, `reset_password`, `activate_account`).
 `tools/theme_check.py` (run in CI) validates schema JSON, brace balance, and section/snippet refs.
+
+## Metafields & app blocks
+- `theme/metafields/definitions.json` lists the metafields the theme reads (`crm.*`,
+  `reviews.rating`, `custom.style`) — create them in Shopify (Settings > Custom data) or
+  via the Admin API. MEJA-CRM writes the values (docs/06-API-Contracts.md).
+- The product + reviews sections expose an **`@app` block** slot, so a reviews app
+  (Judge.me / Loox / Okendo) can inject its widget on the PDP (Decision D13).
+- `.theme-check.yml` pins the linter config; CI runs `theme-check` (0 offenses).

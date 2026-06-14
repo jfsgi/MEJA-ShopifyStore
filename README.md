@@ -1,5 +1,7 @@
 # MEJA Designs — Shopify WebStore Program
 
+[![CI](https://github.com/jfsgi/MEJA-ShopifyStore/actions/workflows/ci.yml/badge.svg)](https://github.com/jfsgi/MEJA-ShopifyStore/actions/workflows/ci.yml)
+
 > Planning & design package for the next-generation **mejadesigns.com** storefront, fed by the **MEJA‑CRM Quoting** platform, with **Atelier3d** custom design tooling and a **4K live‑rendering** engine.
 
 This repository contains the **approval-stage deliverables** for the new store. Nothing here is production code yet — these documents define *what* we are building, *how* it fits together, *how it should look*, and *how each product type flows* from discovery to fulfillment. They are written to be reviewed, marked up, and approved before engineering begins.
