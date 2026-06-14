@@ -1,18 +1,53 @@
 {
   "sections": {
     "hero": {
-      "type": "hero"
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Made to measure · Made by hand",
+        "heading": "Replacements that just fit.",
+        "subtext": "Custom drawer boxes, drawer units, cabinet doors & shelves — configured in 3D, previewed in 4K, built to your exact size.",
+        "button_label": "Configure a piece",
+        "button_url": "/pages/configurator",
+        "rating": "4.9",
+        "review_count": "312"
+      }
     },
     "categories": {
-      "type": "product-categories"
+      "type": "product-categories",
+      "settings": {
+        "eyebrow": "Configurable woodwork",
+        "heading": "Shop by product"
+      },
+      "blocks": {
+        "drawer_boxes": {
+          "type": "category",
+          "settings": { "title": "Drawer Boxes", "price": "from $39", "note": "★ 4.9 · dovetail / half-blind", "url": "/collections/drawer-boxes" }
+        },
+        "drawer_units": {
+          "type": "category",
+          "settings": { "title": "Drawer Units", "price": "from $389", "note": "★ 5.0 · 3–6 drawers", "url": "/collections/drawer-units" }
+        },
+        "cabinet_doors": {
+          "type": "category",
+          "settings": { "title": "Cabinet Doors", "price": "from $29", "note": "★ 4.8 · slab / shaker / raised", "url": "/collections/cabinet-doors" }
+        },
+        "shelves": {
+          "type": "category",
+          "settings": { "title": "Shelves", "price": "from $149", "note": "★ 4.9 · tile / art back", "url": "/collections/shelves" }
+        }
+      },
+      "block_order": ["drawer_boxes", "drawer_units", "cabinet_doors", "shelves"]
     },
     "reviews": {
-      "type": "reviews"
+      "type": "reviews",
+      "settings": { "score": "4.9", "count": "312", "recommend": "98%" },
+      "blocks": {
+        "r1": { "type": "review", "settings": { "name": "Dana R.", "body": "Perfect-fit replacement drawer boxes — the dovetails are flawless and the 4K preview matched exactly." } },
+        "r2": { "type": "review", "settings": { "name": "Marcus T.", "body": "Ordered shaker doors to match our kitchen. Beautiful walnut, arrived on time, hung perfectly." } },
+        "r3": { "type": "review", "settings": { "name": "Priya & Sam", "body": "The art-back shelf let us frame our own print. Genuinely special, and the fit was exact." } }
+      },
+      "block_order": ["r1", "r2", "r3"]
     }
   },
-  "order": [
-    "hero",
-    "categories",
-    "reviews"
-  ]
+  "order": ["hero", "categories", "reviews"]
 }

@@ -4,11 +4,15 @@
       "type": "main-product"
     },
     "reviews": {
-      "type": "reviews"
+      "type": "reviews",
+      "settings": { "score": "4.9", "count": "312", "recommend": "98%" },
+      "blocks": {
+        "r1": { "type": "review", "settings": { "name": "Dana R.", "body": "Perfect-fit replacement drawer boxes — dovetails flawless, and the 4K preview matched exactly." } },
+        "r2": { "type": "review", "settings": { "name": "Marcus T.", "body": "Measured my opening, ordered, done. Soft-close notches were spot on." } },
+        "r3": { "type": "review", "settings": { "name": "Priya & Sam", "body": "Beautiful walnut and solid build. Worth the short wait." } }
+      },
+      "block_order": ["r1", "r2", "r3"]
     }
   },
-  "order": [
-    "main",
-    "reviews"
-  ]
+  "order": ["main", "reviews"]
 }
