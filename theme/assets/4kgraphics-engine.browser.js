@@ -77,7 +77,7 @@ export class FurnitureEngine {
     this.azimuth = -0.7;
     this.elevation = 0.42;
     this.distance = 1;
-    this.autoRotate = true;
+    this.autoRotate = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     this._center = new THREE.Vector3(0, 0.2, 0);
     this._radius = 0.4;
     this._disposed = false;
