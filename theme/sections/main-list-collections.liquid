@@ -1,8 +1,24 @@
-<div class="wrap" style="padding:24px 0 56px">
-  <h1 style="font-size:30px;margin-bottom:20px">Shop by product</h1>
+<div class="wrap" style="padding:8px 0 56px">
+  <div class="crumbs"><a href="{{ routes.root_url }}">Home</a> &rsaquo; <span>Shop</span></div>
+  <div class="titlebar" style="border-bottom:1px solid var(--line);margin-bottom:24px">
+    <div>
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1>{{ section.settings.heading }}</h1>
+    </div>
+    <div class="meta">{{ collections.size }} {% if collections.size == 1 %}collection{% else %}collections{% endif %}</div>
+  </div>
   <div class="cats">
     {%- for collection in collections -%}
-      <a class="cat" href="{{ collection.url }}"><div class="img" {% if collection.featured_image %}style="background-image:url({{ collection.featured_image | image_url: width: 700 }})"{% endif %}></div><div class="b"><h3>{{ collection.title }}</h3><div class="rate">{{ collection.products_count }} products</div></div></a>
+      {%- assign cover = collection.featured_image | default: collection.products.first.featured_image -%}
+      <a class="cat" href="{{ collection.url }}">
+        <div class="img" {% if cover %}style="background-image:url({{ cover | image_url: width: 700 }})"{% endif %}></div>
+        <div class="b">
+          <h3>{{ collection.title }}</h3>
+          <div class="rate">{{ collection.products_count }} {% if collection.products_count == 1 %}product{% else %}products{% endif %}</div>
+        </div>
+      </a>
+    {%- else -%}
+      <p class="muted">No collections yet.</p>
     {%- endfor -%}
   </div>
 </div>
@@ -10,7 +26,18 @@
 {
   "name": "Collections list",
   "settings": [
-
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Made to order"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by product"
+    }
   ]
 }
 {% endschema %}
