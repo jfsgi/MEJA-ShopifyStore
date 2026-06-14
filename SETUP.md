@@ -171,12 +171,18 @@ The configurator already targets the real API: `kind` mapping (§3.1), and an as
 - Collections with handles `drawer-boxes`, `drawer-units`, `cabinet-doors`, `shelves`.
 - A page on the `page.configurator` template (handle `configurator`).
 
-### 4.7 AR — not available yet
+### 4.7 AR — theme pre-wired, dormant until 4kGraphics ships the endpoint
 Mobile AR (`<model-viewer>`) needs hosted **GLB** (Android) + **USDZ** (iOS) per
 configuration. The 4kGraphics engine currently **imports** glTF/GLB/OBJ/FBX/STL and renders
-**PNG only** — it has no GLB/USDZ *exporter*. Add `GLTFExporter`/`USDZExporter` (three.js
-addons) to the engine and serve the files (e.g. from `/v1/render`'s sibling), then the theme
-can drop in `<model-viewer>`. This is a **4kGraphics** task, not a theme one.
+**PNG only** — it has no GLB/USDZ *exporter*. Adding `GLTFExporter`/`USDZExporter` and a
+`POST /v1/ar` endpoint (`{ spec } → { glbUrl, usdzUrl, posterUrl }`) is a **4kGraphics** task.
+
+**The theme side is already built and dormant:** the configurator renders a "View in your
+room" button + a lazy-loaded `<model-viewer>` (custom element imported on click, not on page
+load) **only when** the Integrations setting **`ar_service_url`** is set. On click it POSTs the
+current `spec` to `{ar_service_url}/v1/ar`, then loads the returned `glbUrl`/`usdzUrl`/`posterUrl`
+into `<model-viewer ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed">`. So once the
+endpoint exists, enabling AR is a **one-setting switch** — no further theme work.
 
 ---
 

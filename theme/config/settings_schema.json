@@ -58,6 +58,12 @@
         "info": "Host of the CRM pricing engine. The configurator fetches the authoritative signed price (/v1/price) and live option model (/v1/options) from here. Leave blank to use the local estimate."
       },
       {
+        "type": "url",
+        "id": "ar_service_url",
+        "label": "AR service URL (View in your room)",
+        "info": "Host of the 4kGraphics AR endpoint (POST /v1/ar → glb/usdz/poster). Set once it exists to enable the 'View in your room' AR button on the configurator. Leave blank to hide it."
+      },
+      {
         "type": "header",
         "content": "The 4kGraphics engine browser.js is uploaded to theme assets and embedded on the configurator template."
       }
