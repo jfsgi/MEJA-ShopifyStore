@@ -1,8 +1,18 @@
 {
   "sections": {
-    "hero": { "type": "hero" },
-    "categories": { "type": "product-categories" },
-    "reviews": { "type": "reviews" }
+    "hero": {
+      "type": "hero"
+    },
+    "categories": {
+      "type": "product-categories"
+    },
+    "reviews": {
+      "type": "reviews"
+    }
   },
-  "order": ["hero", "categories", "reviews"]
+  "order": [
+    "hero",
+    "categories",
+    "reviews"
+  ]
 }

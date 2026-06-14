@@ -8,4 +8,11 @@
   {%- endform -%}
   <p style="margin-top:14px"><a href="{{ routes.account_register_url }}" style="color:var(--brand)">Create account</a> &middot; <a href="{{ routes.account_recover_url | default: '#recover' }}" style="color:var(--brand)">Forgot password?</a></p>
 </div>
-{% schema %}{ "name": "Login", "settings": [] }{% endschema %}
+{% schema %}
+{
+  "name": "Login",
+  "settings": [
+
+  ]
+}
+{% endschema %}

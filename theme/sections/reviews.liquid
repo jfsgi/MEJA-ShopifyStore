@@ -13,9 +13,55 @@
   </div>
 </section></div>
 {% schema %}
-{ "name": "Reviews",
-  "settings": [ { "type": "text", "id": "score", "label": "Score", "default": "4.9" }, { "type": "text", "id": "count", "label": "Count", "default": "312" }, { "type": "text", "id": "recommend", "label": "Recommend %", "default": "98%" } ],
-  "blocks": [ { "type": "review", "name": "Review", "settings": [ { "type": "image_picker", "id": "photo", "label": "Customer photo" }, { "type": "text", "id": "name", "label": "Name" }, { "type": "textarea", "id": "body", "label": "Review" } ] } ],
-  "presets": [ { "name": "Reviews" } ]
+{
+  "name": "Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "score",
+      "label": "Score",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "count",
+      "label": "Count",
+      "default": "312"
+    },
+    {
+      "type": "text",
+      "id": "recommend",
+      "label": "Recommend %",
+      "default": "98%"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Customer photo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews"
+    }
+  ]
 }
 {% endschema %}

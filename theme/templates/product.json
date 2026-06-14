@@ -1,1 +1,14 @@
-{ "sections": { "main": { "type": "main-product" }, "reviews": { "type": "reviews" } }, "order": ["main", "reviews"] }
+{
+  "sections": {
+    "main": {
+      "type": "main-product"
+    },
+    "reviews": {
+      "type": "reviews"
+    }
+  },
+  "order": [
+    "main",
+    "reviews"
+  ]
+}

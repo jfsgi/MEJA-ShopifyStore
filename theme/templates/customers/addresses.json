@@ -1,1 +1,10 @@
-{ "sections": { "main": { "type": "main-addresses" } }, "order": ["main"] }
+{
+  "sections": {
+    "main": {
+      "type": "main-addresses"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

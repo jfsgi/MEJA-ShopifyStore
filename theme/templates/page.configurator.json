@@ -1,1 +1,10 @@
-{ "sections": { "main": { "type": "configurator" } }, "order": ["main"] }
+{
+  "sections": {
+    "main": {
+      "type": "configurator"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,7 +1,7 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "MEJA \u2014 Scandi Light",
+    "theme_name": "MEJA — Scandi Light",
     "theme_version": "0.1.0",
     "theme_author": "MEJA Designs",
     "theme_documentation_url": "",
@@ -10,16 +10,38 @@
   {
     "name": "Brand",
     "settings": [
-      { "type": "color", "id": "color_brand", "label": "Brand accent", "default": "#5b6b73" },
-      { "type": "color", "id": "color_accent", "label": "Secondary accent", "default": "#9bb0a3" },
-      { "type": "color", "id": "color_ink", "label": "Text", "default": "#232826" }
+      {
+        "type": "color",
+        "id": "color_brand",
+        "label": "Brand accent",
+        "default": "#5b6b73"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Secondary accent",
+        "default": "#9bb0a3"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Text",
+        "default": "#232826"
+      }
     ]
   },
   {
     "name": "Integrations",
     "settings": [
-      { "type": "url", "id": "render_service_url", "label": "4kGraphics render service URL" },
-      { "type": "header", "content": "The 4kGraphics engine browser.js is uploaded to theme assets and embedded on the configurator template." }
+      {
+        "type": "url",
+        "id": "render_service_url",
+        "label": "4kGraphics render service URL"
+      },
+      {
+        "type": "header",
+        "content": "The 4kGraphics engine browser.js is uploaded to theme assets and embedded on the configurator template."
+      }
     ]
   }
 ]

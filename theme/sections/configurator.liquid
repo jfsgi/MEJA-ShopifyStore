@@ -20,6 +20,7 @@
       <input type="hidden" name="id" value="{{ section.settings.base_variant_id }}">
       <input type="hidden" name="properties[_configId]" id="meja-configId" value="">
       <input type="hidden" name="properties[_meja_unit_price]" id="meja-unit-price" value="">
+      <div id="meja-props" hidden></div>
       <span class="eyebrow">Configure &middot; made to order</span>
       <h1 id="meja-title">Drawer Box</h1>
       <p class="sub">Options &amp; live price come from the MEJA-CRM engine.</p>
@@ -53,5 +54,19 @@
 </script>
 <script type="module" src="{{ 'configurator.js' | asset_url }}"></script>
 {% schema %}
-{ "name": "Configurator", "settings": [ { "type": "text", "id": "base_variant_id", "label": "Base configurable variant ID" } ], "presets": [ { "name": "Configurator" } ] }
+{
+  "name": "Configurator",
+  "settings": [
+    {
+      "type": "text",
+      "id": "base_variant_id",
+      "label": "Base configurable variant ID"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Configurator"
+    }
+  ]
+}
 {% endschema %}

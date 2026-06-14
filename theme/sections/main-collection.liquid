@@ -1,11 +1,66 @@
 <div class="wrap">
-  <div class="titlebar"><div><span class="eyebrow">Made to your size</span><h1>{{ collection.title }}</h1><div class="meta">{{ collection.products_count }} products</div></div></div>
-  <div class="grid">
-    {%- for product in collection.products -%}
-      {% render 'product-card', card_product: product %}
-    {%- else -%}
-      <p class="muted">No products yet.</p>
-    {%- endfor -%}
+  <div class="titlebar">
+    <div><span class="eyebrow">Made to your size</span><h1>{{ collection.title }}</h1><div class="meta">{{ collection.products_count }} products</div></div>
+    <form method="get" class="sortform">
+      {%- comment -%} keep active filters when sorting {%- endcomment -%}
+      {%- for f in collection.filters -%}
+        {%- for v in f.active_values -%}<input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">{%- endfor -%}
+        {%- if f.type == 'price_range' -%}
+          {%- if f.min_value.value -%}<input type="hidden" name="{{ f.min_value.param_name }}" value="{{ f.min_value.value }}">{%- endif -%}
+          {%- if f.max_value.value -%}<input type="hidden" name="{{ f.max_value.param_name }}" value="{{ f.max_value.value }}">{%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+      <select name="sort_by" class="sort" aria-label="Sort" onchange="this.form.submit()">
+        {%- for o in collection.sort_options -%}<option value="{{ o.value }}" {% if o.value == collection.sort_by %}selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+      </select>
+    </form>
+  </div>
+
+  <div class="collection">
+    <form class="filters" method="get">
+      {%- for filter in collection.filters -%}
+        <div class="fgroup">
+          <h4>{{ filter.label }}</h4>
+          {%- case filter.type -%}
+            {%- when 'list', 'boolean' -%}
+              {%- for v in filter.values -%}
+                <label class="fopt {% if v.active %}on{% endif %}">
+                  <input type="checkbox" name="{{ v.param_name }}" value="{{ v.value }}" {% if v.active %}checked{% endif %} onchange="this.form.submit()" hidden>
+                  <span class="box"></span> {{ v.label }} <span class="c">{{ v.count }}</span>
+                </label>
+              {%- endfor -%}
+            {%- when 'price_range' -%}
+              <div class="frange">
+                <input type="number" name="{{ filter.min_value.param_name }}" placeholder="Min" value="{{ filter.min_value.value }}" onchange="this.form.submit()">
+                <input type="number" name="{{ filter.max_value.param_name }}" placeholder="Max" value="{{ filter.max_value.value }}" onchange="this.form.submit()">
+              </div>
+          {%- endcase -%}
+        </div>
+      {%- else -%}
+        <p class="muted" style="font-size:13px">Add filters in Shopify &rarr; Search &amp; Discovery.</p>
+      {%- endfor -%}
+      <noscript><button class="btn" type="submit">Apply filters</button></noscript>
+    </form>
+
+    <div>
+      {%- paginate collection.products by 24 -%}
+        <div class="grid">
+          {%- for product in collection.products -%}
+            {% render 'product-card', card_product: product %}
+          {%- else -%}
+            <p class="muted">No products match these filters.</p>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}<div class="pagination">{{ paginate | default_pagination }}</div>{%- endif -%}
+      {%- endpaginate -%}
+    </div>
   </div>
 </div>
-{% schema %}{ "name": "Collection", "settings": [] }{% endschema %}
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [
+
+  ]
+}
+{% endschema %}

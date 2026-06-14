@@ -56,3 +56,15 @@ jobs:
         run: |
           python -m pip install --quiet python-docx markdown
           python tools/build_docx.py
+
+  theme-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Install theme-check
+        run: gem install theme-check -v 1.15.0 --no-document
+      - name: Shopify theme-check
+        run: theme-check theme/

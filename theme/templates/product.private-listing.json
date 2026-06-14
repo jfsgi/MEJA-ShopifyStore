@@ -1,1 +1,10 @@
-{ "sections": { "main": { "type": "main-private-listing" } }, "order": ["main"] }
+{
+  "sections": {
+    "main": {
+      "type": "main-private-listing"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
