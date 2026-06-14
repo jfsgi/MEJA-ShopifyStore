@@ -11,6 +11,23 @@ const unitPriceEl = document.getElementById('meja-unit-price');
 const titleEl = document.getElementById('meja-title');
 const viewer = document.getElementById('meja-viewer');
 const form = document.getElementById('meja-form');
+const addBtn = document.getElementById('meja-add');
+const addStatus = document.getElementById('meja-add-status');
+
+function setStatus(msg, kind){
+  if (!addStatus) return;
+  addStatus.textContent = msg || '';
+  addStatus.className = 'addstatus' + (kind ? ' ' + kind : '');
+}
+
+async function updateCartCount(){
+  try {
+    const r = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
+    if (!r.ok) return;
+    const c = await r.json();
+    document.querySelectorAll('.cartdot').forEach(el => { el.textContent = c.item_count; });
+  } catch (e) { /* non-fatal */ }
+}
 let product = 'drawerbox';
 // selection[groupKey] = { groupLabel, value, optLabel, delta }
 const selection = {};
@@ -115,17 +132,35 @@ if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const baseId = form.querySelector('input[name="id"]')?.value;
+    if (!baseId) {
+      setStatus('This configurator isn’t connected to checkout yet — set a base product in the theme editor.', 'err');
+      return;
+    }
     const properties = { _configId: configIdEl?.value, _meja_unit_price: unitPriceEl?.value, Product: model[product]?.title };
     for (const k in selection) properties[selection[k].groupLabel] = selection[k].optLabel;
-    if (!baseId) { console.warn('[MEJA] set the base configurable variant ID in the section settings'); form.submit(); return; }
+
+    const restore = addBtn ? addBtn.textContent : '';
+    if (addBtn) { addBtn.disabled = true; addBtn.textContent = 'Adding…'; }
+    setStatus('');
     try {
       const res = await fetch('/cart/add.js', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ items: [{ id: Number(baseId), quantity: 1, properties }] })
       });
-      if (res.ok) { window.location.href = '/cart'; }
-      else { form.submit(); }   // fall back to a standard form POST
-    } catch (err) { form.submit(); }
+      if (res.ok) {
+        await updateCartCount();
+        setStatus('Added ✓ Taking you to your cart…', 'ok');
+        window.location.href = '/cart';
+        return;
+      }
+      const err = await res.json().catch(() => ({}));
+      setStatus(err.description || 'Could not add to cart. Please try again.', 'err');
+    } catch (err) {
+      setStatus('Network error — please try again.', 'err');
+    } finally {
+      if (addBtn) { addBtn.disabled = false; addBtn.textContent = restore; }
+    }
   });
 }
 
