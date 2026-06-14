@@ -38,3 +38,9 @@ See `../docs/06-API-Contracts.md` and `../api/openapi.yaml`.
   `crm.*` metafields.
 - **Account** (`sections/main-account.liquid` + `templates/customers/account.json`) and
   **My quotes** (`sections/main-quotes.liquid` + `templates/page.quotes.json`).
+
+## Standard templates (this pass)
+Added the templates a valid OS 2.0 theme expects, each with a matching section:
+`page`, `search`, `404`, `list-collections`, and the customer pages
+(`customers/login`, `register`, `order`, `addresses`, `reset_password`, `activate_account`).
+`tools/theme_check.py` (run in CI) validates schema JSON, brace balance, and section/snippet refs.

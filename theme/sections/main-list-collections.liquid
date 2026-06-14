@@ -1,0 +1,9 @@
+<div class="wrap" style="padding:24px 0 56px">
+  <h1 style="font-size:30px;margin-bottom:20px">Shop by product</h1>
+  <div class="cats">
+    {%- for collection in collections -%}
+      <a class="cat" href="{{ collection.url }}"><div class="img" {% if collection.featured_image %}style="background-image:url({{ collection.featured_image | image_url: width: 700 }})"{% endif %}></div><div class="b"><h3>{{ collection.title }}</h3><div class="rate">{{ collection.products_count }} products</div></div></a>
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}{ "name": "Collections list", "settings": [] }{% endschema %}

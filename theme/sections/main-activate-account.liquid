@@ -1,0 +1,10 @@
+<div class="wrap" style="max-width:420px;padding:44px 0">
+  <h1 style="font-size:28px;margin-bottom:16px">Activate account</h1>
+  {%- form 'activate_customer_password' -%}
+    {{ form.errors | default_errors }}
+    <div class="field"><label>Password</label><input type="password" name="customer[password]"></div>
+    <div class="field"><label>Confirm password</label><input type="password" name="customer[password_confirmation]"></div>
+    <button class="btn block" type="submit">Activate</button>
+  {%- endform -%}
+</div>
+{% schema %}{ "name": "Activate account", "settings": [] }{% endschema %}

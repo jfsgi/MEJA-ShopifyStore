@@ -1,0 +1,11 @@
+<div class="wrap" style="max-width:420px;padding:44px 0">
+  <h1 style="font-size:28px;margin-bottom:16px">Sign in</h1>
+  {%- form 'customer_login' -%}
+    {{ form.errors | default_errors }}
+    <div class="field"><label>Email</label><input type="email" name="customer[email]" autocomplete="email"></div>
+    <div class="field"><label>Password</label><input type="password" name="customer[password]" autocomplete="current-password"></div>
+    <button class="btn block" type="submit">Sign in</button>
+  {%- endform -%}
+  <p style="margin-top:14px"><a href="{{ routes.account_register_url }}" style="color:var(--brand)">Create account</a> &middot; <a href="{{ routes.account_recover_url | default: '#recover' }}" style="color:var(--brand)">Forgot password?</a></p>
+</div>
+{% schema %}{ "name": "Login", "settings": [] }{% endschema %}

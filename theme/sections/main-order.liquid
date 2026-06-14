@@ -1,0 +1,14 @@
+<div class="wrap" style="padding:30px 0 56px">
+  <h1 style="font-size:28px">Order {{ order.name }}</h1>
+  <p class="muted">Placed {{ order.created_at | date: '%b %-d, %Y' }} &middot; {{ order.financial_status_label }} &middot; {{ order.fulfillment_status_label }}</p>
+  <div style="margin-top:18px">
+    {%- for line in order.line_items -%}
+      <div class="line"><div class="thumb" {% if line.image %}style="background-image:url({{ line.image | image_url: width: 240 }})"{% endif %}></div>
+        <div><h3>{{ line.title }}</h3><div class="chips">{%- for p in line.properties -%}{%- unless p.last == blank -%}<span>{{ p.last }}</span>{%- endunless -%}{%- endfor -%}</div></div>
+        <div class="lineprice">{{ line.final_line_price | money }}</div>
+      </div>
+    {%- endfor -%}
+  </div>
+  <p style="margin-top:18px;font-family:var(--mono)">Total: {{ order.total_price | money }}</p>
+</div>
+{% schema %}{ "name": "Order", "settings": [] }{% endschema %}
