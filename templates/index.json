@@ -21,19 +21,19 @@
       "blocks": {
         "drawer_boxes": {
           "type": "category",
-          "settings": { "title": "Drawer Boxes", "price": "from $39", "note": "★ 4.9 · dovetail / half-blind", "url": "/collections/drawer-boxes" }
+          "settings": { "default_image": "cat-drawer-boxes.jpg", "title": "Drawer Boxes", "price": "from $39", "note": "★ 4.9 · dovetail / half-blind", "url": "/collections/drawer-boxes" }
         },
         "drawer_units": {
           "type": "category",
-          "settings": { "title": "Drawer Units", "price": "from $389", "note": "★ 5.0 · 3–6 drawers", "url": "/collections/drawer-units" }
+          "settings": { "default_image": "cat-drawer-units.jpg", "title": "Drawer Units", "price": "from $389", "note": "★ 5.0 · 3–6 drawers", "url": "/collections/drawer-units" }
         },
         "cabinet_doors": {
           "type": "category",
-          "settings": { "title": "Cabinet Doors", "price": "from $29", "note": "★ 4.8 · slab / shaker / raised", "url": "/collections/cabinet-doors" }
+          "settings": { "default_image": "cat-cabinet-doors.jpg", "title": "Cabinet Doors", "price": "from $29", "note": "★ 4.8 · slab / shaker / raised", "url": "/collections/cabinet-doors" }
         },
         "shelves": {
           "type": "category",
-          "settings": { "title": "Shelves", "price": "from $149", "note": "★ 4.9 · tile / art back", "url": "/collections/shelves" }
+          "settings": { "default_image": "cat-shelves.jpg", "title": "Shelves", "price": "from $149", "note": "★ 4.9 · tile / art back", "url": "/collections/shelves" }
         }
       },
       "block_order": ["drawer_boxes", "drawer_units", "cabinet_doors", "shelves"]

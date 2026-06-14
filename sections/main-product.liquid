@@ -1,7 +1,7 @@
 <div class="wrap">
   <div class="pdp">
     <div class="gallery">
-      <div class="main" {% if product.featured_image %}style="background-image:url({{ product.featured_image | image_url: width: 1200 }})"{% endif %}></div>
+      <div class="main" style="background-image:url({% if product.featured_image %}{{ product.featured_image | image_url: width: 1200 }}{% else %}{{ 'pdp-default.jpg' | asset_url }}{% endif %})"></div>
       <div class="thumbs">
         {%- for image in product.images limit: 4 -%}<i style="background-image:url({{ image | image_url: width: 200 }})"></i>{%- endfor -%}
       </div>
