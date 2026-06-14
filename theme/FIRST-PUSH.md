@@ -3,6 +3,26 @@
 Everything here creates an **unpublished** theme + temporary previews only. Your current
 live theme is never changed unless you explicitly run `shopify theme publish` / click Publish.
 
+---
+
+## Option A — Upload a ZIP (easiest, no terminal) ✅ recommended
+
+1. Get the theme zip: download `meja-scandi-theme.zip` (or rebuild it with
+   `python3 tools/build_theme_zip.py meja-scandi-theme.zip`). **Don't unzip it.**
+2. In your Shopify admin, left sidebar → **Online Store** → **Themes**.
+3. Scroll to the **Theme library** (below your current live theme).
+4. **Add theme** → **Upload zip file** → choose `meja-scandi-theme.zip` → **Upload file**.
+5. After ~10–30s a new **unpublished** theme appears in the library. Your live theme is untouched.
+6. Click its **⋯ (More actions)** → **Preview** (or **Customize** to edit).
+7. **Do not click _Publish_** — that is the only thing that makes it live.
+
+That's it for previewing. To make the configurator/pricing actually work, do the wiring in
+`DEPLOY.md` (engine asset, metafields, base products, Cart Transform, reviews app).
+
+---
+
+## Option B — Shopify CLI (for developers)
+
 ## 0. One-time setup
 ```sh
 # Install the Shopify CLI (includes theme commands)
