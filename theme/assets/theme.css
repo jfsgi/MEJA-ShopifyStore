@@ -62,6 +62,12 @@ section.block{padding:58px 0}
 .viewer .hud span{background:rgba(31,38,36,.6);color:#fff;font-size:11px;font-family:var(--mono);padding:5px 9px;border-radius:8px}
 .viewer .rstate{position:absolute;bottom:14px;right:14px;background:rgba(31,38,36,.78);color:#fff;font-size:11px;font-family:var(--mono);padding:6px 11px;border-radius:999px}
 .viewer .dot{display:inline-block;width:7px;height:7px;border-radius:999px;background:#8fd0a6;margin-right:6px}
+.viewer .vdl{position:absolute;top:14px;right:14px;z-index:3;width:34px;height:34px;border-radius:9px;border:none;background:rgba(31,38,36,.6);color:#fff;font-size:16px;cursor:pointer}
+.viewer .vdl:hover{background:rgba(31,38,36,.85)}
+.vlights{position:absolute;bottom:14px;left:14px;z-index:3;display:flex;gap:6px}
+.vlights button{background:rgba(31,38,36,.6);color:#fff;border:none;font-size:11px;font-family:var(--mono);padding:5px 9px;border-radius:8px;cursor:pointer}
+.vlights button:hover{background:rgba(31,38,36,.85)}
+.vlights button[aria-pressed="true"]{background:var(--brand)}
 .panel h1{font-size:28px}.panel .sub{color:var(--muted);font-size:14px;margin:3px 0 12px}
 .opt{padding:15px 0;border-top:1px solid var(--line)}
 .opt .l{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
