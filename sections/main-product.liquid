@@ -1,10 +1,14 @@
 <div class="wrap">
   <div class="pdp">
     <div class="gallery">
-      <div class="main" style="background-image:url({% if product.featured_image %}{{ product.featured_image | image_url: width: 1200 }}{% else %}{{ 'pdp-default.jpg' | asset_url }}{% endif %})"></div>
-      <div class="thumbs">
-        {%- for image in product.images limit: 4 -%}<i style="background-image:url({{ image | image_url: width: 200 }})"></i>{%- endfor -%}
-      </div>
+      <div class="main" id="pdp-main" style="background-image:url({% if product.featured_image %}{{ product.featured_image | image_url: width: 1200 }}{% else %}{{ 'pdp-default.jpg' | asset_url }}{% endif %})"></div>
+      {%- if product.images.size > 1 -%}
+        <div class="thumbs">
+          {%- for image in product.images limit: 6 -%}
+            <button type="button" class="thumb{% if image == product.featured_image %} on{% endif %}" data-full="{{ image | image_url: width: 1200 }}" style="background-image:url({{ image | image_url: width: 200 }})" aria-label="View image {{ forloop.index }} of {{ product.images.size }}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
     <div class="details">
       <span class="eyebrow">{{ product.type }}</span>
@@ -28,6 +32,22 @@
     {%- if block.type == '@app' -%}{% render block %}{%- endif -%}
   {%- endfor -%}
 </div>
+
+<script>
+  (function () {
+    var gallery = document.querySelector('.gallery');
+    if (!gallery) return;
+    var main = gallery.querySelector('#pdp-main');
+    var thumbs = gallery.querySelectorAll('.thumb');
+    thumbs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        if (t.dataset.full) main.style.backgroundImage = "url(" + t.dataset.full + ")";
+        thumbs.forEach(function (x) { x.classList.remove('on'); });
+        t.classList.add('on');
+      });
+    });
+  })();
+</script>
 {% schema %}
 {
   "name": "Product",
