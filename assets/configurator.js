@@ -14,6 +14,9 @@ const form = document.getElementById('meja-form');
 const addBtn = document.getElementById('meja-add');
 const addStatus = document.getElementById('meja-add-status');
 const baseConnected = !!form?.querySelector('input[name="id"]')?.value;
+const CRM = (viewer?.dataset.renderService || '').replace(/\/+$/, ''); // MEJA-CRM engine base URL
+const priceModeEl = document.getElementById('meja-pmode');
+const optionsLoaded = {};
 
 function setStatus(msg, kind){
   if (!addStatus) return;
@@ -155,6 +158,50 @@ function renderProduct(){
   optionsEl.appendChild(segGroup('wood', 'Wood', model.wood));
   optionsEl.appendChild(segGroup('finish', 'Finish', model.finish));
   recompute();
+  maybeLoadCrmOptions(product);
+}
+
+let priceSeq = 0, priceTimer;
+function setPriceMode(isLive){
+  if (!priceModeEl) return;
+  priceModeEl.hidden = false;
+  priceModeEl.textContent = isLive ? 'live price' : (CRM ? 'estimate' : 'estimate · price confirmed before build');
+  priceModeEl.classList.toggle('live', !!isLive);
+}
+
+// Ask the CRM pricing engine for the authoritative (signed) price; falls back to the local
+// estimate if no service is configured or the request fails (D4: the store never computes
+// the final price).
+function requestLivePrice(){
+  if (!CRM) return;
+  clearTimeout(priceTimer);
+  priceTimer = setTimeout(async () => {
+    const seq = ++priceSeq;
+    const body = JSON.stringify({ spec: engineSpec(), configId: configIdEl?.value });
+    try {
+      const r = await fetch(CRM + '/v1/price', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body });
+      if (!r.ok) return;
+      const data = await r.json();
+      if (seq !== priceSeq) return; // superseded by a newer change
+      if (priceEl) {
+        if (data.displayPrice) priceEl.textContent = data.displayPrice;
+        else if (typeof data.amount === 'number') priceEl.textContent = money(data.amount);
+      }
+      if (unitPriceEl && data.unitPrice != null) unitPriceEl.value = String(data.unitPrice); // signed CRM unit price
+      setPriceMode(true);
+    } catch (e) { /* keep local estimate */ }
+  }, 300);
+}
+
+// Optionally replace the local option model for a kind with the CRM's live option set.
+async function maybeLoadCrmOptions(kind){
+  if (!CRM || optionsLoaded[kind]) return;
+  try {
+    const r = await fetch(CRM + '/v1/options?kind=' + encodeURIComponent(kind), { headers: { 'Accept': 'application/json' } });
+    if (!r.ok) return;
+    const def = await r.json();
+    if (def && Array.isArray(def.groups)) { model[kind] = def; optionsLoaded[kind] = true; if (product === kind) renderProduct(); }
+  } catch (e) { /* keep local model */ }
 }
 
 function recompute(){
@@ -174,6 +221,8 @@ function recompute(){
     (DIM_FIELDS[product] || []).forEach(df => propsEl.appendChild(hidden('properties[' + df.label + ']', fmtIn(dims[df.key] || 0) + ' in')));
     for (const k in selection) propsEl.appendChild(hidden('properties[' + selection[k].groupLabel + ']', selection[k].optLabel));
   }
+  setPriceMode(false);
+  requestLivePrice();
   updatePreview();
   busy();
 }
