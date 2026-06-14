@@ -37,7 +37,7 @@ flowchart TD
     end
     subgraph Server [Server-side]
       CT[Cart Transform Function<br/>functions/cart-transform]
-      CRM[MEJA-CRM pricing engine<br/>render_service_url]
+      CRM[MEJA-CRM pricing engine<br/>crm_api_url]
       WO[Work order / cut_parts]
     end
 
@@ -52,7 +52,7 @@ flowchart TD
 
 **Principle (Decision D4):** the CRM pricing engine is the single source of truth — the
 store never computes the *final* price. The client shows an indicative estimate and, when
-`render_service_url` is set, replaces it with the CRM's signed price. The Cart Transform
+`crm_api_url` is set, replaces it with the CRM's signed price. The Cart Transform
 Function re-applies that signed price server-side at checkout, and it is reconciled again
 at `orders/create` (see `docs/06` C3).
 
@@ -84,11 +84,21 @@ When a configured item is added to the cart, `configurator.js` sends:
 
 `spec` sent to the CRM/engine (from `engineSpec()`):
 `{ kind, widthMm, depthMm, heightMm, stockThicknessMm, joinery?, drawers?, style? }`
-(`kind ∈ { drawerbox, drawerunit, cabinetdoor, shelf }`, dimensions in **millimetres**).
+— dimensions in **millimetres**, matching the engine's `FurnitureSpec`. The UI product keys
+map to the engine's `FurnitureKind` via `ENGINE_KIND`: `drawerbox`→`drawerbox`,
+`drawerunit`→`drawerunit`, `cabinetdoor`→**`door`**, `shelf`→`shelf` *(the engine has no
+parametric `shelf` kind yet, so a real bundle can't preview shelves — model it via CRM
+`shelf_templates`/parts, per `docs/05`)*.
 
-### 3.2 CRM endpoints the client calls (set `render_service_url` to the base host)
+> **Two distinct hosts.** Pricing/options come from the **MEJA-CRM** (`crm_api_url`); 4K
+> renders come from the **4kGraphics server** (`render_service_url`). They are *not* the same
+> service — the 4kGraphics server (`jfsgi/4kGraphics`, `packages/server`) exposes only
+> `GET /healthz`, `POST /v1/buildplan`, `POST /v1/models`, `GET /v1/models/:id`, and
+> `POST /v1/render`; it has **no** `/v1/price` or `/v1/options`.
 
-**`POST {render_service_url}/v1/price`** — body `{ spec, configId }` → returns:
+### 3.2 CRM endpoints the client calls (set `crm_api_url` to the CRM host)
+
+**`POST {crm_api_url}/v1/price`** — body `{ spec, configId }` → returns:
 ```json
 { "unitPrice": "48.00", "displayPrice": "$48.00", "amount": 4800, "currency": "USD" }
 ```
@@ -96,8 +106,8 @@ When a configured item is added to the cart, `configurator.js` sends:
 - `displayPrice` (formatted) or `amount` (cents) → shown as the live price.
 - Requests are debounced and stale-guarded. On any failure the local estimate stays.
 
-**`GET {render_service_url}/v1/options?kind={kind}`** *(optional)* → returns the option
-model for that kind, same shape as the embedded model:
+**`GET {crm_api_url}/v1/options?kind={kind}`** *(optional, proposed — not yet in any service)*
+→ returns the option model for that kind, same shape as the embedded model:
 ```json
 { "base": 4800, "title": "Drawer Box",
   "groups": [ { "key": "joinery", "label": "Joinery",
@@ -140,19 +150,33 @@ shopify app deploy
   (`docs/06` C3). Requires Shopify **Plus** (or use the **Draft Orders** path for
   CRM-pushed quotes — Decision D10).
 
-### 4.3 CRM pricing/options endpoints  *(makes the price live)*
-Stand up `POST /v1/price` (and optionally `GET /v1/options`) per §3.2, with CORS and a
-signed `unitPrice`. Then set the host in the theme:
+### 4.3 CRM pricing/options endpoint  *(makes the price live)*
+Stand up `POST /v1/price` (and optionally `GET /v1/options`) on the **CRM** per §3.2, with
+CORS and a signed `unitPrice`. (These do **not** exist on the 4kGraphics server today.)
 
-### 4.4 Theme setting
-Theme editor → **Brand → 4kGraphics / render service URL** (`settings.render_service_url`).
-This single base URL powers the live price/options fetch **and** the server-side `/v1/render`
-4K asset. Leave blank to run on the local estimate + embedded options.
+### 4.4 Theme settings (Integrations)
+- **MEJA-CRM API URL (live pricing)** (`settings.crm_api_url`) → powers the live
+  price/options fetch. Leave blank to run on the local estimate + embedded options.
+- **4kGraphics render service URL** (`settings.render_service_url`) → the 4kGraphics server
+  host for server-side `/v1/render` (and `/v1/buildplan`).
 
-### 4.5 Supporting content *(see `theme/DEPLOY.md` §5 for detail)*
+### 4.5 Production preview engine *(optional but recommended)*
+The bundled `theme/assets/4kgraphics-engine.browser.js` is an API-compatible **stub**. Replace
+it with the real bundle from `jfsgi/4kGraphics` → `releases/4kgraphics-engine.browser.js`
+(engine `@4kgraphics/engine` v0.13.x, ESM, exports `FurnitureEngine`) for true 4K previews.
+The configurator already targets the real API: `kind` mapping (§3.1), and an async
+`renderSnapshot()` (`Promise<Blob>`) for the **Download preview** button.
+
+### 4.6 Supporting content *(see `theme/DEPLOY.md` §5 for detail)*
 - Collections with handles `drawer-boxes`, `drawer-units`, `cabinet-doors`, `shelves`.
 - A page on the `page.configurator` template (handle `configurator`).
-- Upload the production `4kgraphics-engine.browser.js` if replacing the bundled preview.
+
+### 4.7 AR — not available yet
+Mobile AR (`<model-viewer>`) needs hosted **GLB** (Android) + **USDZ** (iOS) per
+configuration. The 4kGraphics engine currently **imports** glTF/GLB/OBJ/FBX/STL and renders
+**PNG only** — it has no GLB/USDZ *exporter*. Add `GLTFExporter`/`USDZExporter` (three.js
+addons) to the engine and serve the files (e.g. from `/v1/render`'s sibling), then the theme
+can drop in `<model-viewer>`. This is a **4kGraphics** task, not a theme one.
 
 ---
 
@@ -163,7 +187,7 @@ The configurator never hard-fails when a dependency is missing:
 | Missing | Behavior |
 | --- | --- |
 | Base product | Add-to-cart disabled with an inline "connect a base product" note |
-| `render_service_url` | Local price **estimate**; embedded option model; preview engine still runs |
+| `crm_api_url` | Local price **estimate**; embedded option model; preview engine still runs |
 | CRM `/v1/price` errors | Keeps the last good estimate (badge stays "estimate") |
 | 3D engine fails to load | Falls back to the static viewer; everything else works |
 | JavaScript off | Native form post to `/cart/add` with readable line-item properties |

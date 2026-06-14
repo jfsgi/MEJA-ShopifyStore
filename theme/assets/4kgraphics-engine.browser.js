@@ -203,6 +203,8 @@ export class FurnitureEngine {
     return g;
   }
 
+  _build_door(s) { return this._build_cabinetdoor(s); } // engine kind alias
+
   _build_cabinetdoor(s) {
     const W = s.widthMm || 380, H = s.heightMm || 700, t = s.stockThicknessMm || 19;
     const g = new THREE.Group();
