@@ -10,7 +10,9 @@
   {%- endif -%}
   <title>{{ page_title }}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
   {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
+  {% render 'meta-tags' %}
   {{ content_for_header }}
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
   {{ 'scandi.css' | asset_url | stylesheet_tag }}
   {{ 'theme.css' | asset_url | stylesheet_tag }}
   <style>:root{ --brand: {{ settings.color_brand }}; --accent: {{ settings.color_accent }}; --ink: {{ settings.color_ink }}; }</style>
