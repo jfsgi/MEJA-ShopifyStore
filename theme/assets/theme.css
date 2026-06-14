@@ -43,6 +43,14 @@ section.block{padding:58px 0}
 .cat .img{aspect-ratio:4/3;background-size:cover;background-position:center;background-color:var(--surface)}
 .cat .b{padding:16px}.cat h3{font-size:18px;margin-bottom:3px}.cat .price{font-family:var(--mono);font-size:12.5px}.cat .rate{font-size:12px;color:var(--muted);margin-top:5px}.cat .cfg{display:block;margin-top:10px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--brand);font-weight:700}
 .reviews .big{font-family:var(--display);font-size:48px;font-weight:700;line-height:.9}
+/* how it works */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.step{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px}
+.step .num{width:34px;height:34px;border-radius:999px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:15px;font-weight:700;margin-bottom:12px}
+.step h3{font-size:17px;margin-bottom:6px}
+.step p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.5}
+@media(max-width:880px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
 /* configurator */
 .ptabs{display:flex;gap:8px;flex-wrap:wrap;padding:14px 0}
 .ptabs button{border:1.5px solid var(--line);background:var(--surface-2);border-radius:999px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer}
