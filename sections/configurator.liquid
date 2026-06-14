@@ -3,6 +3,21 @@
   Option model + live price come from the MEJA-CRM engine; the configured line price is
   applied server-side by the Cart Transform Function (theme/functions/cart-transform).
 {%- endcomment -%}
+{%- liquid
+  assign base_id = ''
+  if section.settings.base_variant_id != blank
+    assign base_id = section.settings.base_variant_id
+  elsif section.settings.base_product != blank
+    assign base_variant = section.settings.base_product.selected_or_first_available_variant | default: section.settings.base_product.variants.first
+    if base_variant != blank
+      assign base_id = base_variant.id
+    endif
+  endif
+  assign base_ok = false
+  if base_id != blank
+    assign base_ok = true
+  endif
+-%}
 <div class="wrap">
   <div class="crumbs"><a href="{{ routes.root_url }}">Home</a> &rsaquo; <span>Configure</span></div>
   <div class="ptabs" id="ptabs">
@@ -17,7 +32,7 @@
       <div class="rstate"><span class="dot" id="meja-rdot"></span><span id="meja-rtext">4K render ready</span></div>
     </div>
     <form class="panel" id="meja-form" action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="{{ section.settings.base_variant_id }}">
+      <input type="hidden" name="id" value="{{ base_id }}">
       <input type="hidden" name="properties[_configId]" id="meja-configId" value="">
       <input type="hidden" name="properties[_meja_unit_price]" id="meja-unit-price" value="">
       <div id="meja-props" hidden></div>
@@ -25,7 +40,7 @@
       <h1 id="meja-title">Drawer Box</h1>
       <p class="sub">Options &amp; live price come from the MEJA-CRM engine.</p>
       <div id="meja-options"></div>
-      {% render 'price-block' %}
+      {% render 'price-block', purchasable: base_ok %}
     </form>
   </div>
 </div>
@@ -58,9 +73,16 @@
   "name": "Configurator",
   "settings": [
     {
+      "type": "product",
+      "id": "base_product",
+      "label": "Base configurable product",
+      "info": "The placeholder product that configured items are added to the cart as. Its price is overridden per-configuration by the Cart Transform Function."
+    },
+    {
       "type": "text",
       "id": "base_variant_id",
-      "label": "Base configurable variant ID"
+      "label": "Variant ID override (advanced)",
+      "info": "Optional. Paste a specific variant ID to use instead of the picked product's default variant."
     }
   ],
   "presets": [

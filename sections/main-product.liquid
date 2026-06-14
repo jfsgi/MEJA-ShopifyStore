@@ -11,6 +11,8 @@
       <h1>{{ product.title }}</h1>
       <a class="ratelink" href="#reviews"><span class="stars">★★★★★</span> {{ product.metafields.reviews.rating | default: '4.9' }}</a>
       {%- form 'product', product -%}
+        {%- assign pdp_variant = product.selected_or_first_available_variant | default: product.variants.first -%}
+        <input type="hidden" name="id" value="{{ pdp_variant.id }}">
         <div class="price">{{ product.price | money }} <small>+ size · made to order</small></div>
         <div class="custom-note">📐 Sold made-to-size. <a href="{{ pages['configurator'].url | default: '#' }}">Enter your dimensions in the configurator →</a></div>
         {% render 'price-block' %}

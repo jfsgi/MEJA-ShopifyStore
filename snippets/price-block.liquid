@@ -1,12 +1,21 @@
-{%- comment -%} Live price comes from the CRM engine via Cart Transform / Draft Orders (see docs/06) {%- endcomment -%}
+{%- comment -%}
+  Live price comes from the CRM engine via Cart Transform / Draft Orders (see docs/06).
+  params:
+    purchasable — pass `false` to disable Add (e.g. configurator with no base product set).
+                  Omit on the PDP; nil is treated as purchasable.
+{%- endcomment -%}
 <div class="pricecard">
   <div class="priceline">
     <div><div class="lbl">Made to order</div><div class="amt" id="meja-price" data-config-price>{{ product.price | money }}</div></div>
     <button class="toggle" type="button" aria-expanded="false">See breakdown ▾</button>
   </div>
   <div class="addrow">
-    <button class="addbtn" type="submit" name="add">{{ 'products.product.add_to_cart' | t }}</button>
+    <button class="addbtn" id="meja-add" type="submit" name="add"{% if purchasable == false %} disabled aria-disabled="true"{% endif %}>{{ 'products.product.add_to_cart' | t }}</button>
     <button class="save" type="button" aria-label="Save configuration">♡</button>
   </div>
+  {%- if purchasable == false -%}
+    <p class="addnote">Connect a base product in the theme editor (Configurator → Base configurable product) to enable checkout.</p>
+  {%- endif -%}
+  <div id="meja-add-status" class="addstatus" role="status" aria-live="polite"></div>
   {% render 'made-to-order' %}
 </div>

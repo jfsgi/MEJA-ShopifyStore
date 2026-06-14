@@ -8,6 +8,8 @@
       <div class="hud">&#8635; &#10530; AR</div><div class="rstate">&#9679; 4K render ready</div>
     </div>
     {% form 'product', product %}
+    {%- assign pl_variant = product.selected_or_first_available_variant | default: product.variants.first -%}
+    <input type="hidden" name="id" value="{{ pl_variant.id }}">
     <div class="details">
       <span class="eyebrow">Your custom quote &middot; hybrid</span>
       <h1>{{ product.title }}</h1>
