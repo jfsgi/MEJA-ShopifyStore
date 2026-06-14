@@ -1,5 +1,30 @@
 /* Theme layout styles ported from the approved Scandi Light mockups
    (page-level layouts that aren’t in the shared scandi.css component library). */
+
+/* mobile header menu (no-JS checkbox disclosure; ≤880px only) ----------------
+   The hidden checkbox stays in the DOM and remains keyboard-focusable; the
+   <label class="burger"> toggles it for pointer users. nav.main becomes a
+   full-width dropdown under the header when checked. */
+.nav-toggle-cb{position:absolute;width:1px;height:1px;opacity:0;margin:0;pointer-events:none}
+.burger{display:none}
+@media(max-width:880px){
+  .nav{gap:12px}
+  .icons{gap:13px;font-size:12.5px}
+  .logo img{max-height:38px}
+  .burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;flex:none;cursor:pointer}
+  .burger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  nav.main{display:flex;flex-direction:column;gap:0;position:absolute;left:0;right:0;top:100%;
+    background:#fff;border-bottom:1px solid var(--line);box-shadow:var(--shadow);
+    padding:4px 24px 12px;max-height:0;overflow:hidden;visibility:hidden;
+    transition:max-height .25s ease,visibility .25s ease}
+  nav.main a{padding:14px 2px;font-size:15.5px;color:var(--ink);border-bottom:1px solid var(--line)}
+  nav.main a:last-child{border-bottom:none}
+  .nav-toggle-cb:checked ~ nav.main{max-height:75vh;overflow:auto;visibility:visible}
+  .nav-toggle-cb:checked ~ .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav-toggle-cb:checked ~ .burger span:nth-child(2){opacity:0}
+  .nav-toggle-cb:checked ~ .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .nav-toggle-cb:focus-visible ~ .burger{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+}
 .hero{position:relative;border-radius:var(--radius);overflow:hidden;margin-top:24px;min-height:460px;display:flex;align-items:center}
 .hero .bg{position:absolute;inset:0;background-size:cover;background-position:center;background-color:var(--surface)}
 .hero .scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.6) 48%,rgba(255,255,255,0) 78%)}
