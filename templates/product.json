@@ -46,11 +46,20 @@
         "heading": "You might also like",
         "products_to_show": 4
       }
+    },
+    "recently_viewed": {
+      "type": "recently-viewed",
+      "settings": {
+        "eyebrow": "Pick up where you left off",
+        "heading": "Recently viewed",
+        "products_to_show": 4
+      }
     }
   },
   "order": [
     "main",
     "reviews",
-    "recommendations"
+    "recommendations",
+    "recently_viewed"
   ]
 }
