@@ -81,6 +81,19 @@ nav.main a:hover{color:var(--brand)}
 
 /* footer */
 footer.site{background:#1f2624;color:#b9c5c0;margin-top:56px;padding:46px 0 26px}
+.fnews{border-bottom:1px solid #34403c;margin:-46px 0 36px;padding:32px 0}
+.fnews-in{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.fnews h3{color:#fff;font-size:21px;margin:0 0 4px}
+.fnews p{color:#b9c5c0;font-size:13.5px;margin:0;max-width:44ch}
+.fnews-form{display:flex;gap:10px;flex-wrap:wrap}
+.fnews-form input{padding:12px 16px;border:1.5px solid #3c4a45;border-radius:999px;background:#283330;color:#fff;font-size:14px;min-width:240px;font-family:var(--text)}
+.fnews-form input::placeholder{color:#8a9893}
+.fnews-form input:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.fnews-ok{color:#bcd2c6;margin-top:10px;font-weight:600;font-size:13px}
+.fsocial{display:flex;align-items:center;gap:14px}
+.fsocial a{display:inline-flex;color:#b9c5c0}
+.fsocial a:hover{color:#fff}
+.fsocial svg{width:18px;height:18px}
 .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
 footer.site .logo{color:#fff}
 footer.site h4{font-family:var(--text);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
