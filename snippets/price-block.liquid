@@ -11,7 +11,7 @@
   </div>
   <div class="addrow">
     <button class="addbtn" id="meja-add" type="submit" name="add"{% if purchasable == false %} disabled aria-disabled="true"{% endif %}>{{ 'products.product.add_to_cart' | t }}</button>
-    <button class="save" type="button" aria-label="Save configuration">♡</button>
+    <button class="save" id="meja-save" type="button" aria-label="Save configuration">♡</button>
   </div>
   {%- if purchasable == false -%}
     <p class="addnote">Connect a base product in the theme editor (Configurator → Base configurable product) to enable checkout.</p>

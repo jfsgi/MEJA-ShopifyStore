@@ -40,6 +40,13 @@
       <p class="sub">Options &amp; live price come from the MEJA-CRM engine.</p>
       <div id="meja-options"></div>
       {% render 'price-block', purchasable: base_ok %}
+      <div class="cfg-saved" id="meja-saved" hidden>
+        <div class="cfg-saved-h">
+          <span>Saved configurations</span>
+          <button type="button" id="meja-share" class="linkbtn">Copy link to this design</button>
+        </div>
+        <div class="cfg-saved-list" id="meja-saved-list"></div>
+      </div>
     </form>
   </div>
 </div>
