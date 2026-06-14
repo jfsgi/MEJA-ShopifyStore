@@ -215,7 +215,7 @@ components:
         result: { type: object, additionalProperties: true }
         created_at: { type: string, format: date-time }
     ShopifyPushPayload:
-      description: "List on Shopify" producer — publish a CRM listing as a base product.
+      description: '"List on Shopify" producer — publish a CRM listing as a base product.'
       type: object
       required: [quoteId, listingKind, productType, price, options, customerScope]
       properties:
