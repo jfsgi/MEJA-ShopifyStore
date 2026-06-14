@@ -3,7 +3,7 @@
   <div class="cats">
     {%- for block in section.blocks -%}
       <a class="cat" href="{{ block.settings.url }}" {{ block.shopify_attributes }}>
-        <div class="img" {% if block.settings.image %}style="background-image:url({{ block.settings.image | image_url: width: 700 }})"{% endif %}></div>
+        <div class="img" style="background-image:url({% if block.settings.image %}{{ block.settings.image | image_url: width: 700 }}{% elsif block.settings.default_image != blank %}{{ block.settings.default_image | asset_url }}{% endif %})"></div>
         <div class="b"><h3>{{ block.settings.title }}</h3><div class="price">{{ block.settings.price }}</div><div class="rate">{{ block.settings.note }}</div><span class="cfg">Configure ›</span></div>
       </a>
     {%- endfor -%}
@@ -35,6 +35,11 @@
           "type": "image_picker",
           "id": "image",
           "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "default_image",
+          "label": "Default image asset (filename in /assets)"
         },
         {
           "type": "text",
