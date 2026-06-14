@@ -2,7 +2,24 @@
   <div class="fcols">
     <div><div class="logo">{{ shop.name | default: 'MEJA' }}</div><p style="font-size:13.5px;max-width:32ch;margin-top:10px">{{ section.settings.blurb }}</p></div>
     {%- for block in section.blocks -%}
-      <div><h4>{{ block.settings.title }}</h4><ul>{{ block.settings.links }}</ul></div>
+      <div {{ block.shopify_attributes }}><h4>{{ block.settings.title }}</h4><ul>{{ block.settings.links }}</ul></div>
+    {%- else -%}
+      <div><h4>Shop</h4><ul>
+        <li><a href="/collections/all">All products</a></li>
+        <li><a href="/collections/drawer-boxes">Drawer Boxes</a></li>
+        <li><a href="/collections/cabinet-doors">Cabinet Doors</a></li>
+        <li><a href="/collections/shelves">Shelves</a></li>
+      </ul></div>
+      <div><h4>Help</h4><ul>
+        <li><a href="/pages/contact">Contact</a></li>
+        <li><a href="/policies/refund-policy">Made-to-order policy</a></li>
+        <li><a href="/pages/faq">FAQ</a></li>
+      </ul></div>
+      <div><h4>Account</h4><ul>
+        <li><a href="{{ routes.account_url }}">Sign in</a></li>
+        <li><a href="{{ routes.account_url }}">My orders</a></li>
+        <li><a href="{{ routes.search_url }}">Search</a></li>
+      </ul></div>
     {%- endfor -%}
   </div>
   <div class="legal"><span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }} — made to order, no returns.</span><span>Privacy · Terms</span></div>

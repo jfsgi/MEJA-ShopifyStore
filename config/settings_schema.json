@@ -11,6 +11,12 @@
     "name": "Brand",
     "settings": [
       {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon (browser tab icon)",
+        "info": "Square image, 32×32 recommended (PNG)."
+      },
+      {
         "type": "color",
         "id": "color_brand",
         "label": "Brand accent",
