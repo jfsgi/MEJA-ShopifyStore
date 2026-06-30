@@ -1,11 +1,19 @@
 # Folding the storefront into the MEJA monorepo
 
 Runbook to fold this repo (the Shopify Online Store 2.0 theme) into the **MEJA monorepo**
-(`apps/crm`, `apps/atelier`, `packages/contract`) as **`apps/storefront`**.
+**`jfsgi/MEJA-CRM-OrderManagement`** (`apps/crm`, `apps/atelier`, `4kgraphics/`,
+`packages/contract`; npm workspaces + Turborepo; Vercel + Railway deploys) as
+**`apps/storefront`**.
 
-> Generated from the storefront side. Run the script **from the monorepo root**, not here.
-> Defaults below were chosen because an interactive prompt wasn't available; override any of
-> them with environment variables (see §2).
+> **Who runs this:** this session can't reach the monorepo (account-owned sessions disable
+> repo add/list). Run the script **from the monorepo root** yourself, or start a Claude Code
+> session **on `jfsgi/MEJA-CRM-OrderManagement`** and have it run the fold there (it can then
+> inspect that repo's `package.json`/`turbo.json`/CI and wire things precisely, and push a
+> branch). Defaults were chosen non-interactively; override with env vars (§2).
+
+> **Placement note:** `4kgraphics/` — the other non-Vercel, separately-deployed app — sits at
+> the **repo root**, not under `apps/`. So `PREFIX=storefront` (root) mirrors that precedent;
+> `apps/storefront` keeps all apps together. Both are fine — pick one via `PREFIX`.
 
 ---
 

@@ -6,18 +6,24 @@
 # See docs/FOLD-INTO-MONOREPO.md for the full runbook (incl. the Shopify reconnection step).
 set -euo pipefail
 
+# Target monorepo: jfsgi/MEJA-CRM-OrderManagement (apps/crm, apps/atelier, 4kgraphics/,
+# packages/contract). Note: 4kgraphics/ — the other non-Vercel app — lives at the repo ROOT,
+# so PREFIX=storefront (root) is also consistent; apps/storefront keeps all apps together.
 PREFIX="${PREFIX:-apps/storefront}"
 MODE="${MODE:-subtree}"                       # subtree (preserve history) | copy (clean)
 STOREFRONT_REMOTE="${STOREFRONT_REMOTE:-https://github.com/jfsgi/meja-shopifystore.git}"
 STOREFRONT_BRANCH="${STOREFRONT_BRANCH:-claude/awesome-cori-hk0m0c}"
 PUBLISH_BRANCH="${PUBLISH_BRANCH:-shopify-theme}"
+WORK_BRANCH="${WORK_BRANCH:-fold/storefront}" # never fold straight onto main
 
 # --- safety checks -----------------------------------------------------------
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 [ -z "$(git status --porcelain)" ] || { echo "✗ Working tree not clean — commit/stash first."; exit 1; }
 [ -e "$PREFIX" ] && { echo "✗ $PREFIX already exists — aborting."; exit 1; }
-echo "▸ Folding $STOREFRONT_REMOTE@$STOREFRONT_BRANCH -> $PREFIX (mode=$MODE)"
+# Work on a dedicated branch so main is never touched directly (review/merge after).
+git switch -c "$WORK_BRANCH" 2>/dev/null || { echo "✗ Branch $WORK_BRANCH exists — set WORK_BRANCH=…"; exit 1; }
+echo "▸ Folding $STOREFRONT_REMOTE@$STOREFRONT_BRANCH -> $PREFIX (mode=$MODE) on $WORK_BRANCH"
 
 # --- bring the storefront in -------------------------------------------------
 if [ "$MODE" = "subtree" ]; then
@@ -134,14 +140,15 @@ git commit -m "Wire apps/storefront into the monorepo (workspace, sync, CI)" || 
 
 cat <<DONE
 
-✓ Folded into $PREFIX.
+✓ Folded into $PREFIX on branch $WORK_BRANCH.
 
-Next (manual — see apps/storefront/docs/FOLD-INTO-MONOREPO.md §5):
-  1. Confirm root package.json workspaces include apps/* (or add apps/storefront).
-  2. Build + push the publish branch:
+Next (manual — see $PREFIX/docs/FOLD-INTO-MONOREPO.md §5):
+  1. Push the work branch & review/merge: git push -u origin $WORK_BRANCH
+  2. Confirm root package.json workspaces include apps/* (or add $PREFIX).
+  3. Build + push the publish branch:
        THEME_PREFIX=$PREFIX/theme bash $PREFIX/tools/sync_shopify_theme.sh
        git push -u origin $PUBLISH_BRANCH
-  3. Shopify admin: disconnect the old GitHub theme, reconnect to THIS monorepo's
+  4. Shopify admin: disconnect the old GitHub theme, reconnect to THIS monorepo's
      '$PUBLISH_BRANCH' branch.
-  4. Verify: theme-check $PREFIX/theme  → 0 offenses.
+  5. Verify: theme-check $PREFIX/theme  → 0 offenses.
 DONE
