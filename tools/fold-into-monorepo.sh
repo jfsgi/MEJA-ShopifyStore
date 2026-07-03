@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fold the MEJA storefront (Shopify theme repo) into the MEJA monorepo as apps/storefront.
+# Fold the MEJA storefront (Shopify theme repo) into the MEJA monorepo as storefront/.
 #
 #   RUN THIS FROM THE ROOT OF THE MONOREPO — not from the storefront repo.
 #
@@ -7,9 +7,9 @@
 set -euo pipefail
 
 # Target monorepo: jfsgi/MEJA-CRM-OrderManagement (apps/crm, apps/atelier, 4kgraphics/,
-# packages/contract). Note: 4kgraphics/ — the other non-Vercel app — lives at the repo ROOT,
-# so PREFIX=storefront (root) is also consistent; apps/storefront keeps all apps together.
-PREFIX="${PREFIX:-apps/storefront}"
+# packages/contract). Default PREFIX=storefront (repo ROOT) matches the 4kgraphics/ precedent
+# (the other non-Vercel, separately-deployed app). Set PREFIX=apps/storefront to nest it.
+PREFIX="${PREFIX:-storefront}"
 MODE="${MODE:-subtree}"                       # subtree (preserve history) | copy (clean)
 STOREFRONT_REMOTE="${STOREFRONT_REMOTE:-https://github.com/jfsgi/meja-shopifystore.git}"
 STOREFRONT_BRANCH="${STOREFRONT_BRANCH:-claude/awesome-cori-hk0m0c}"
@@ -51,10 +51,11 @@ if [ ! -f "$PREFIX/package.json" ]; then
   "description": "MEJA Shopify Online Store 2.0 theme. Deploys via the Shopify GitHub integration (the shopify-theme branch), NOT Vercel.",
   "scripts": {
     "check": "python3 tools/theme_check.py",
-    "sync:shopify": "THEME_PREFIX=apps/storefront/theme bash tools/sync_shopify_theme.sh"
+    "sync:shopify": "THEME_PREFIX=__PREFIX__/theme bash tools/sync_shopify_theme.sh"
   }
 }
 JSON
+  perl -pi -e "s#__PREFIX__#$PREFIX#g" "$PREFIX/package.json"
   echo "▸ wrote $PREFIX/package.json"
 fi
 
@@ -66,7 +67,7 @@ cat > "$PREFIX/tools/sync_shopify_theme.sh" <<'SYNC'
 # the theme dir, for Shopify's GitHub theme integration. Run from the MONOREPO ROOT.
 # Reverse-sync config/settings_data.json from origin/<publish> into the theme BEFORE running.
 set -euo pipefail
-THEME_PREFIX="${THEME_PREFIX:-apps/storefront/theme}"
+THEME_PREFIX="${THEME_PREFIX:-__PREFIX__/theme}"
 PUBLISH_BRANCH="${PUBLISH_BRANCH:-shopify-theme}"
 DIRS="assets config layout locales sections snippets templates"
 git fetch -q origin "$PUBLISH_BRANCH" || true
@@ -80,23 +81,24 @@ COMMIT="$(git commit-tree "$TREE" $PARENT -m "$MSG")"
 git update-ref "refs/heads/$PUBLISH_BRANCH" "$COMMIT"
 rm -f "$TMPIDX"; echo "$PUBLISH_BRANCH -> $COMMIT"
 SYNC
+perl -pi -e "s#__PREFIX__#$PREFIX#g" "$PREFIX/tools/sync_shopify_theme.sh"
 chmod +x "$PREFIX/tools/sync_shopify_theme.sh"
 echo "▸ wrote $PREFIX/tools/sync_shopify_theme.sh (THEME_PREFIX=$PREFIX/theme)"
 
-# --- root CI workflow (mirrors the storefront's CI, scoped to apps/storefront) ----
+# --- root CI workflow (mirrors the storefront's CI, scoped to $PREFIX) ----
 mkdir -p .github/workflows
 cat > .github/workflows/storefront.yml <<'YAML'
 name: storefront
 
 on:
   push:
-    paths: ["apps/storefront/**"]
+    paths: ["__PREFIX__/**"]
   pull_request:
-    paths: ["apps/storefront/**"]
+    paths: ["__PREFIX__/**"]
 
 defaults:
   run:
-    working-directory: apps/storefront
+    working-directory: __PREFIX__
 
 jobs:
   validate:
@@ -131,12 +133,13 @@ jobs:
           ruby-version: "3.3"
       - run: gem install theme-check -v 1.15.0 --no-document
       - run: theme-check theme/
-        working-directory: apps/storefront
+        working-directory: __PREFIX__
 YAML
+perl -pi -e "s#__PREFIX__#$PREFIX#g" .github/workflows/storefront.yml
 echo "▸ wrote .github/workflows/storefront.yml"
 
 git add "$PREFIX/package.json" "$PREFIX/tools/sync_shopify_theme.sh" .github/workflows/storefront.yml
-git commit -m "Wire apps/storefront into the monorepo (workspace, sync, CI)" || true
+git commit -m "Wire $PREFIX into the monorepo (workspace, sync, CI)" || true
 
 cat <<DONE
 
