@@ -7,17 +7,19 @@
     {%- comment -%}
       Hero image, in priority order: the CRM 4K render metafield (crm.render_4k), then the
       product's first gallery image (the publish worker now attaches representative door/drawer
-      renders), then nothing. The "4K render ready" badge only shows when a real 4K render backs
-      the viewer — otherwise it claimed a render that wasn't there.
+      renders), then nothing. NOTE crm.render_4k is a `url`-type metafield — read its `.value`
+      (the metafield OBJECT renders empty inside url(), which blanked the viewer). The "4K render
+      ready" badge only shows when a real 4K render backs the viewer.
     {%- endcomment -%}
-    {%- assign hero_src = product.metafields.crm.render_4k -%}
+    {%- assign render_url = product.metafields.crm.render_4k.value -%}
+    {%- assign hero_src = render_url -%}
     {%- if hero_src == blank and product.featured_image -%}
       {%- assign hero_src = product.featured_image | image_url: width: 1600 -%}
     {%- endif -%}
     <div class="pl-media">
-      <div class="viewer" id="pl-viewer" {% if hero_src != blank %}style="background-image:url({{ hero_src }})"{% endif %}>
+      <div class="viewer" id="pl-viewer" {% if hero_src != blank %}style="background-image:url('{{ hero_src }}')"{% endif %}>
         <div class="hud">&#8635; &#10530; AR</div>
-        {%- if product.metafields.crm.render_4k != blank -%}<div class="rstate">&#9679; 4K render ready</div>{%- endif -%}
+        {%- if render_url != blank -%}<div class="rstate">&#9679; 4K render ready</div>{%- endif -%}
       </div>
       {%- comment -%}
         Front thumbnails: the door/drawer-front renders the pipeline attaches as gallery images
