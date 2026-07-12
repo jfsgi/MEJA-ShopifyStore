@@ -3,7 +3,9 @@
     "name": "theme_info",
     "theme_name": "MEJA — Scandi Light",
     "theme_version": "0.1.0",
-    "theme_author": "MEJA Designs"
+    "theme_author": "MEJA Designs",
+    "theme_documentation_url": "https://github.com/jfsgi/MEJA-ShopifyStore",
+    "theme_support_url": "https://github.com/jfsgi/MEJA-ShopifyStore/issues"
   },
   {
     "name": "Brand",
@@ -53,7 +55,7 @@
         "type": "url",
         "id": "crm_api_url",
         "label": "MEJA-CRM API URL (live pricing)",
-        "info": "Host of the CRM pricing engine. The configurator fetches the authoritative signed price (/v1/price) and live option model (/v1/options) from here. Leave blank to use the local estimate."
+        "info": "Origin of the CRM pricing engine (e.g. https://crm.mejadesigns.com). The configurator loads its option model from GET /v1/options and the authoritative, signed price from POST /v1/price here — the same engine that quotes a job. While a price is in flight (and if the host is blank or unreachable) it shows the local ESTIMATE, then replaces it with the live price. Leave blank only for a static preview."
       },
       {
         "type": "url",
