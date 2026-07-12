@@ -3,7 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="canonical" href="{{ canonical_url }}">
+  {%- comment -%}
+    Private commissions publish UNLISTED: the product is `active` (so its direct link is
+    buyable) but must stay out of search + the storefront index. The product-code CRM push
+    keeps it out of collections; this keeps it out of crawlers. Keyed on the template suffix
+    the publish worker assigns (product.private-listing), so only one-off commissions noindex.
+  {%- endcomment -%}
+  {%- if template.suffix == 'private-listing' -%}
+    <meta name="robots" content="noindex, nofollow">
+  {%- else -%}
+    <link rel="canonical" href="{{ canonical_url }}">
+  {%- endif -%}
   {%- if settings.favicon != blank -%}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">

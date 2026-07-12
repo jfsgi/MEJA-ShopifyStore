@@ -4,14 +4,45 @@
     {%- if product.metafields.crm.expires_at -%}<div class="exp">Expires <b>{{ product.metafields.crm.expires_at | date: '%b %-d, %Y' }}</b></div>{%- endif -%}
   </div>
   <div class="pdp">
-    <div class="viewer" {% if product.metafields.crm.render_4k %}style="background-image:url({{ product.metafields.crm.render_4k }})"{% endif %}>
-      <div class="hud">&#8635; &#10530; AR</div><div class="rstate">&#9679; 4K render ready</div>
+    {%- comment -%}
+      Hero image, in priority order: the CRM 4K render metafield (crm.render_4k), then the
+      product's first gallery image (the publish worker now attaches representative door/drawer
+      renders), then nothing. The "4K render ready" badge only shows when a real 4K render backs
+      the viewer — otherwise it claimed a render that wasn't there.
+    {%- endcomment -%}
+    {%- assign hero_src = product.metafields.crm.render_4k -%}
+    {%- if hero_src == blank and product.featured_image -%}
+      {%- assign hero_src = product.featured_image | image_url: width: 1600 -%}
+    {%- endif -%}
+    <div class="pl-media">
+      <div class="viewer" id="pl-viewer" {% if hero_src != blank %}style="background-image:url({{ hero_src }})"{% endif %}>
+        <div class="hud">&#8635; &#10530; AR</div>
+        {%- if product.metafields.crm.render_4k != blank -%}<div class="rstate">&#9679; 4K render ready</div>{%- endif -%}
+      </div>
+      {%- comment -%}
+        Front thumbnails: the door/drawer-front renders the pipeline attaches as gallery images
+        (product.images) — plus the hero itself first, so the customer can flip back to it. Clicking
+        one swaps the viewer background (progressive enhancement; the hero still shows with JS off).
+      {%- endcomment -%}
+      {%- assign thumb_count = product.images | size -%}
+      {%- if thumb_count > 0 -%}
+        {%- comment -%} data-full carries the hi-res URL (attribute-escaped); the handler reads it —
+          so a CDN URL's ?v=…&width=… can't break out of the inline JS string. {%- endcomment -%}
+        <div class="pl-thumbs" onclick="if(event.target.dataset.full){document.getElementById('pl-viewer').style.backgroundImage=&quot;url('&quot;+event.target.dataset.full+&quot;')&quot;}">
+          {%- if hero_src != blank -%}
+            <button type="button" class="pl-thumb is-hero" data-full="{{ hero_src | escape }}" style="background-image:url({{ hero_src }})" aria-label="Show render"></button>
+          {%- endif -%}
+          {%- for image in product.images -%}
+            <button type="button" class="pl-thumb" data-full="{{ image | image_url: width: 1600 | escape }}" style="background-image:url({{ image | image_url: width: 240 }})" aria-label="{{ image.alt | default: 'Front detail' | escape }}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
     {% form 'product', product, class: 'product-form' %}
     {%- assign pl_variant = product.selected_or_first_available_variant | default: product.variants.first -%}
     <input type="hidden" name="id" value="{{ pl_variant.id }}">
     <div class="details">
-      <span class="eyebrow">Your custom quote &middot; hybrid</span>
+      <span class="eyebrow">Your custom quote</span>
       <h1>{{ product.title }}</h1>
       <div class="price">{{ product.price | money }} &middot; made to order</div>
 
@@ -25,13 +56,23 @@
         </div>
       </div>
 
-      {%- for grp in product.metafields.crm.editable_options.value -%}
-        <div class="opt"><label>{{ grp.label }} <span class="editable-tag">you can change</span></label>
-          <div class="seg">{%- for o in grp.options -%}<button type="button">{{ o }}</button>{%- endfor -%}</div>
-        </div>
-      {%- endfor -%}
+      {%- comment -%}
+        G-41: the "hybrid" editable-options block was removed. Every option on a private commission
+        is locked by the quote; the buyer-editable-options flow (with live Cart Transform re-pricing)
+        has no producing code yet, so rendering it shipped dead, non-functional controls. Restore this
+        block together with crm.editable_options (publish-worker.ts) when the hybrid flow is real.
+      {%- endcomment -%}
 
-      <div class="hint">Some options are fixed by your quote (&#128274;). You can still choose the ones marked <b>you can change</b> &mdash; the price updates automatically.</div>
+      {%- comment -%}
+        The quote's design details — door/drawer style, materials, panel grain orientation,
+        special notes — carried into the listing description by the publish pipeline. body_html
+        is CRM-built + escaped (listing-payload.ts descriptionHtml), safe to render as-is.
+      {%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="spec-details rte">{{ product.description }}</div>
+      {%- endif -%}
+
+      <div class="hint">Every option here is set by your quote (&#128274;). Review the details and check out &mdash; your price is locked in.</div>
       {% render 'price-block' %}
     </div>
     {% endform %}
