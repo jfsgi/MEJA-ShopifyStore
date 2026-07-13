@@ -56,7 +56,7 @@ section.block{padding:58px 0}
 .ptabs button{border:1.5px solid var(--line);background:var(--surface-2);border-radius:999px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer}
 .ptabs button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
 .cfg{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;padding:4px 0 56px;align-items:start}
-.viewer{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface);aspect-ratio:1/1;box-shadow:var(--shadow)}
+.viewer{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface);aspect-ratio:1/1;box-shadow:var(--shadow);background-size:contain;background-position:center;background-repeat:no-repeat}
 .viewer .hud{position:absolute;top:14px;left:14px;display:flex;gap:7px;z-index:2;pointer-events:none}
 .viewer .rstate{z-index:2;pointer-events:none}
 .viewer .hud span{background:rgba(31,38,36,.6);color:#fff;font-size:11px;font-family:var(--mono);padding:5px 9px;border-radius:8px}

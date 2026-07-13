@@ -24,7 +24,15 @@
 
   <div class="wrap">
     <div class="fcols">
-      <div><div class="logo">{{ shop.name | default: 'MEJA' }}</div><p style="font-size:13.5px;max-width:32ch;margin-top:10px">{{ section.settings.blurb }}</p></div>
+      <div>
+        {%- comment -%} Brand lockup — the bundled MEJA Designs logo, inverted to a clean white
+          silhouette so it reads on the dark footer (the store handle "meja-sandbox" used to show
+          here as raw text). {%- endcomment -%}
+        <img class="foot-logo" src="{{ 'meja-logo.png' | asset_url }}" alt="{{ shop.name | default: 'MEJA Designs' | escape }}"
+             width="803" height="868" loading="lazy"
+             style="height:52px;width:auto;display:block;filter:brightness(0) invert(1)">
+        <p style="font-size:13.5px;max-width:32ch;margin-top:10px">{{ section.settings.blurb }}</p>
+      </div>
       {%- for block in section.blocks -%}
         <div {{ block.shopify_attributes }}><h4>{{ block.settings.title }}</h4><ul>{{ block.settings.links }}</ul></div>
       {%- else -%}
