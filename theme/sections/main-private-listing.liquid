@@ -51,15 +51,14 @@
       <h1>{{ product.title }}</h1>
       <div class="price">{{ product.price | money }} &middot; made to order</div>
 
-      <div class="opt"><label>Set by your quote</label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          {%- for chip in product.metafields.crm.locked_options.value -%}
-            <span class="locked">&#128274; {{ chip }}</span>
-          {%- else -%}
-            <span class="locked">&#128274; (locked options from the quote)</span>
-          {%- endfor -%}
-        </div>
-      </div>
+      {%- comment -%}
+        The "Set by your quote" chips (crm.locked_options) were RETIRED: they restated the build a
+        second time and, for a multi-piece commission, exploded into the whole spec sheet — one chip
+        per joinery/thickness/dimension. The per-piece DESIGN DETAILS below (product.description) are
+        now the single spec area, and the "Prepared for you &#128274;" banner already signals that the
+        options are locked. Restore this block (and keep writing crm.locked_options in
+        publish-worker.ts) only if a SHORT, curated locked-summary is wanted alongside the details.
+      {%- endcomment -%}
 
       {%- comment -%}
         G-41: the "hybrid" editable-options block was removed. Every option on a private commission
