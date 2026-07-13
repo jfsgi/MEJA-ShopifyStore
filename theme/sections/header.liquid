@@ -7,7 +7,12 @@
            width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}"
            style="height:{{ section.settings.logo_height }}px;width:auto;max-width:100%;display:block">
     {%- else -%}
-      {{ shop.name | default: 'MEJA' }}
+      {%- comment -%} No logo set in the customizer → the bundled MEJA Designs lockup, so the brand
+        shows out of the box instead of the raw store handle ("meja-sandbox"). Upload a logo in
+        Theme settings → Header to override. {%- endcomment -%}
+      <img src="{{ 'meja-logo.png' | asset_url }}" alt="{{ shop.name | default: 'MEJA Designs' | escape }}"
+           loading="eager" fetchpriority="high" width="803" height="868"
+           style="height:{{ section.settings.logo_height }}px;width:auto;max-width:100%;display:block">
     {%- endif -%}
   </a>
   <nav class="main" aria-label="Primary">
