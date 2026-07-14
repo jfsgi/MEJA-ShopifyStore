@@ -61,11 +61,26 @@
       {%- endcomment -%}
 
       {%- comment -%}
-        G-41: the "hybrid" editable-options block was removed. Every option on a private commission
-        is locked by the quote; the buyer-editable-options flow (with live Cart Transform re-pricing)
-        has no producing code yet, so rendering it shipped dead, non-functional controls. Restore this
-        block together with crm.editable_options (publish-worker.ts) when the hybrid flow is real.
+        G-41 (built): buyer-selectable OPTIONS. When the quote curated add-ons (crm.editable_options)
+        and a CRM pricing service (settings.crm_api_url) are present, render the option controls + the
+        signed-claim hidden inputs. private-listing-options.js calls /v1/listing-price for a signed
+        price on each change and fills these inputs; the Cart Transform applies the signed unit price at
+        checkout; order ingest verifies + auto-promotes the picks. No metafield ⇒ block skipped ⇒ the
+        locked PDP renders exactly as before. The keys ride the native product form as line properties.
       {%- endcomment -%}
+      {%- if product.metafields.crm.editable_options != blank and settings.crm_api_url != blank -%}
+        <div id="pl-options" class="pl-options"
+             data-crm-service="{{ settings.crm_api_url }}"
+             data-listing-id="{{ product.metafields.crm.listing_id }}"
+             data-options="{{ product.metafields.crm.editable_options | escape }}"
+             data-base-cents="{{ product.price }}"></div>
+        <input type="hidden" name="properties[_meja_unit_price]" id="pl-unit-price">
+        <input type="hidden" name="properties[_meja_sig]" id="pl-sig">
+        <input type="hidden" name="properties[_meja_spec_hash]" id="pl-spec-hash">
+        <input type="hidden" name="properties[_meja_expires]" id="pl-expires">
+        <input type="hidden" name="properties[_meja_options]" id="pl-options-keys">
+        <script src="{{ 'private-listing-options.js' | asset_url }}" defer></script>
+      {%- endif -%}
 
       {%- comment -%}
         The quote's design details — door/drawer style, materials, panel grain orientation,

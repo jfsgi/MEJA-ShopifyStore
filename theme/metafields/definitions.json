@@ -38,6 +38,13 @@
     },
     {
       "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "listing_id",
+      "name": "CRM listing id",
+      "type": "single_line_text_field"
+    },
+    {
+      "ownerType": "PRODUCT",
       "namespace": "reviews",
       "key": "rating",
       "name": "Average rating",
