@@ -1,0 +1,72 @@
+<header class="site"><div class="wrap nav">
+  <input class="nav-toggle-cb" type="checkbox" id="nav-toggle" aria-label="Toggle navigation menu">
+  <a class="logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+    {%- if section.settings.logo != blank -%}
+      <img src="{{ section.settings.logo | image_url: width: 480 }}" alt="{{ shop.name | escape }}"
+           loading="eager" fetchpriority="high"
+           width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}"
+           style="height:{{ section.settings.logo_height }}px;width:auto;max-width:100%;display:block">
+    {%- else -%}
+      {%- comment -%} No logo set in the customizer → the bundled MEJA Designs lockup, so the brand
+        shows out of the box instead of the raw store handle ("meja-sandbox"). Upload a logo in
+        Theme settings → Header to override. {%- endcomment -%}
+      <img src="{{ 'meja-logo.png' | asset_url }}" alt="{{ shop.name | default: 'MEJA Designs' | escape }}"
+           loading="eager" fetchpriority="high" width="803" height="868"
+           style="height:{{ section.settings.logo_height }}px;width:auto;max-width:100%;display:block">
+    {%- endif -%}
+  </a>
+  <nav class="main" aria-label="Primary">
+    {%- for link in section.settings.menu.links -%}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {%- else -%}
+      <a href="#">Drawer Boxes</a><a href="#">Drawer Units</a><a href="#">Cabinet Doors</a><a href="#">Shelves</a><a href="#">Custom</a>
+    {%- endfor -%}
+  </nav>
+  <div class="icons">
+    <a class="searchtrig" id="search-trigger" href="{{ routes.search_url }}" role="button" aria-expanded="false" aria-controls="search-panel">Search</a>
+    <a href="{{ routes.account_url }}">Account</a>
+    <a href="{{ routes.cart_url }}" data-cart-trigger>Cart <span class="cartdot">{{ cart.item_count }}</span></a>
+  </div>
+  <label class="burger" for="nav-toggle" aria-hidden="true"><span></span><span></span><span></span></label>
+</div>
+<div class="searchpanel" id="search-panel" hidden>
+  <div class="wrap">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="searchpanel-form">
+      <input type="search" name="q" id="search-input" placeholder="Search drawer boxes, doors, shelves…" autocomplete="off" aria-label="Search">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button class="btn" type="submit">Search</button>
+      <button type="button" class="searchclose" id="search-close" aria-label="Close search">✕</button>
+    </form>
+    <div class="searchresults" id="search-results" aria-live="polite"></div>
+  </div>
+</div>
+</header>
+<script src="{{ 'search.js' | asset_url }}" defer></script>
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo height",
+      "default": 44
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

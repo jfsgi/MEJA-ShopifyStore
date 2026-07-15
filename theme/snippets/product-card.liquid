@@ -1,0 +1,12 @@
+{%- comment -%} params: card_product {%- endcomment -%}
+<a class="pcard" href="{{ card_product.url }}">
+  <div class="img" {% if card_product.featured_image %}style="background-image:url({{ card_product.featured_image | image_url: width: 600 }})"{% endif %}>
+    {%- if card_product.metafields.custom.style -%}<span class="tag">{{ card_product.metafields.custom.style }}</span>{%- endif -%}
+  </div>
+  <div class="b">
+    <h3>{{ card_product.title }}</h3>
+    <div class="price">from {{ card_product.price_min | money }}</div>
+    {%- if card_product.metafields.reviews.rating -%}<div class="rate"><span class="stars" aria-hidden="true">★</span> {{ card_product.metafields.reviews.rating }} <span class="sr-only">average rating</span></div>{%- endif -%}
+    <span class="cfg">Configure ›</span>
+  </div>
+</a>

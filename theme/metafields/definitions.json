@@ -1,0 +1,68 @@
+{
+  "_comment": "Metafield definitions the MEJA theme reads. Create via Shopify Admin (Settings > Custom data) or the Admin API metafieldDefinitionCreate. Values are written by MEJA-CRM (see docs/06-API-Contracts.md).",
+  "definitions": [
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "quote_no",
+      "name": "Quote number",
+      "type": "single_line_text_field"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "expires_at",
+      "name": "Quote expiry",
+      "type": "date"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "render_4k",
+      "name": "4K render URL",
+      "type": "url"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "locked_options",
+      "name": "Locked options",
+      "type": "list.single_line_text_field"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "editable_options",
+      "name": "Editable options",
+      "type": "json"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "crm",
+      "key": "listing_id",
+      "name": "CRM listing id",
+      "type": "single_line_text_field"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "reviews",
+      "key": "rating",
+      "name": "Average rating",
+      "type": "number_decimal"
+    },
+    {
+      "ownerType": "PRODUCT",
+      "namespace": "custom",
+      "key": "style",
+      "name": "Style tag",
+      "type": "single_line_text_field"
+    },
+    {
+      "ownerType": "CUSTOMER",
+      "namespace": "crm",
+      "key": "quotes",
+      "name": "Customer quotes",
+      "type": "json"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — Cart (Scandi Light) · mockup</title>
+<link rel="stylesheet" href="scandi.css" />
+<style>
+  .carttitle{font-size:30px;padding:8px 0 18px}
+  .cartwrap{display:grid;grid-template-columns:1.5fr .9fr;gap:34px;padding:6px 0 56px;align-items:start}
+  .line{display:grid;grid-template-columns:120px 1fr auto;gap:18px;padding:20px 0;border-top:1px solid var(--line)}
+  .line .thumb{width:120px;height:96px;border-radius:12px;background-size:cover;background-position:center;border:1px solid var(--line);position:relative}
+  .line .thumb .k{position:absolute;bottom:6px;left:6px;background:rgba(31,38,36,.78);color:#fff;font-size:9px;font-family:var(--mono);padding:2px 6px;border-radius:6px}
+  .line h3{font-size:17px;margin-bottom:5px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+  .chips span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11.5px;color:var(--ink)}
+  .lineactions{display:flex;gap:14px;font-size:12.5px;margin-top:6px}
+  .lineactions a{color:var(--brand);font-weight:600}
+  .lineactions a.rm{color:var(--muted)}
+  .qty{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;overflow:hidden}
+  .qty button{border:none;background:none;padding:6px 12px;cursor:pointer;font-size:15px;font-family:var(--text)}
+  .qty span{padding:0 6px;font-family:var(--mono);font-size:13px}
+  .lineprice{font-family:var(--mono);font-size:16px;text-align:right;white-space:nowrap}
+  .summary{position:sticky;top:84px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .summary h3{font-size:18px;margin-bottom:14px}
+  .srow{display:flex;justify-content:space-between;font-size:14px;padding:7px 0}
+  .srow.total{border-top:1px solid var(--line);margin-top:8px;padding-top:14px;font-size:18px;font-weight:600}
+  .srow .mono{font-family:var(--mono)}
+  .checkout{margin-top:16px}
+  .trustline{font-size:11.5px;color:var(--muted);margin-top:12px;display:flex;gap:7px}
+  @media(max-width:880px){.cartwrap{grid-template-columns:1fr}.summary{position:static}.line{grid-template-columns:90px 1fr}.line .thumb{width:90px;height:74px}.lineprice{grid-column:2;text-align:left}}
+</style>
+</head>
+<body>
+<div class="anno">MOCKUP FOR APPROVAL · Cart · Direction <b>#5 Scandi Light</b> · config snapshot + render per line · checkout = Shopify-native</div>
+<header class="site"><div class="wrap nav"><div class="logo">MEJA</div><nav class="main"><a href="home.html">Drawer Boxes</a><a href="home.html">Drawer Units</a><a href="home.html">Cabinet Doors</a><a href="home.html">Shelves</a><a href="configurator.html">Custom</a></nav><div class="icons"><span>Search</span><span>Account</span><span>Cart</span><span class="cartdot">3</span></div></div></header>
+
+<div class="wrap">
+  <h1 class="carttitle">Your cart</h1>
+  <div class="cartwrap">
+    <div class="lines">
+      <div class="line">
+        <div class="thumb" style="background-image:url(stock/drawerunit.jpg)"><span class="k">4K render</span></div>
+        <div>
+          <h3>Custom Drawer Box</h3>
+          <div class="chips"><span>Dovetail</span><span>Walnut</span><span>21 × 21 × 4″</span><span>Undermount</span><span>Matte</span></div>
+          <div class="lineactions"><div class="qty"><button>−</button><span>2</span><button>+</button></div><a href="configurator.html">Edit configuration</a><a class="rm" href="#">Remove</a></div>
+        </div>
+        <div class="lineprice">$148<br><span style="font-size:11px;color:var(--muted)">$74 ea</span></div>
+      </div>
+
+      <div class="line">
+        <div class="thumb" style="background-image:url(stock/cabinetdoor.jpg)"><span class="k">4K render</span></div>
+        <div>
+          <h3>Cabinet Door</h3>
+          <div class="chips"><span>Shaker</span><span>White Oak</span><span>Roundover edge</span><span>Hinge-bored</span></div>
+          <div class="lineactions"><div class="qty"><button>−</button><span>1</span><button>+</button></div><a href="configurator.html">Edit configuration</a><a class="rm" href="#">Remove</a></div>
+        </div>
+        <div class="lineprice">$44</div>
+      </div>
+
+      <div class="line" style="border-bottom:1px solid var(--line)">
+        <div class="thumb" style="background-image:url(stock/shelf-styled.jpg)"><span class="k">4K render</span></div>
+        <div>
+          <h3>Art Back Shelf</h3>
+          <div class="chips"><span>Art Back · Botanical</span><span>Ash</span><span>36″</span><span>Natural oil</span></div>
+          <div class="lineactions"><div class="qty"><button>−</button><span>1</span><button>+</button></div><a href="configurator.html">Edit configuration</a><a class="rm" href="#">Remove</a></div>
+        </div>
+        <div class="lineprice">$269</div>
+      </div>
+    </div>
+
+    <aside class="summary">
+      <h3>Order summary</h3>
+      <div class="srow"><span>Subtotal (4 items)</span><span class="mono">$461</span></div>
+      <div class="srow"><span>Shipping</span><span class="mono">Calculated at checkout</span></div>
+      <div class="srow"><span>Made-to-order lead time</span><span>1–3 weeks</span></div>
+      <div class="srow total"><span>Estimated total</span><span class="mono">$461</span></div>
+      <button class="btn block checkout">Proceed to checkout →</button>
+      <div class="trustline">🔒 Secure checkout by Shopify · 4K render &amp; build plan attached to each item.</div>
+      <div class="trustline">🛈 Every piece is made to order — <b>no returns or exchanges</b>.</div>
+    </aside>
+  </div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div class="fcols">
+    <div><div class="logo">MEJA</div><p style="font-size:13.5px;max-width:32ch;margin-top:10px">Custom drawer boxes, doors, units &amp; shelves — made to order.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="#">Drawer Boxes</a></li><li><a href="#">Drawer Units</a></li><li><a href="#">Cabinet Doors</a></li><li><a href="#">Shelves</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="#">Measuring guide</a></li><li><a href="#">Made-to-order policy</a></li><li><a href="#">Shipping</a></li><li><a href="#">FAQ</a></li></ul></div>
+    <div><h4>Studio</h4><ul><li><a href="#">Our craft</a></li><li><a href="#">Trade</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 MEJA Designs — made to order, no returns.</span><span>Privacy · Terms</span></div>
+</div></footer>
+</body>
+</html>

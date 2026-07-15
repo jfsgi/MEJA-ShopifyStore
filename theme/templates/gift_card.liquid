@@ -1,0 +1,21 @@
+{%- comment -%} Gift card template (standalone; rendered outside the main layout). {%- endcomment -%}
+{%- layout none -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ shop.name }} gift card</title>
+  {{ content_for_header }}
+  {{ 'scandi.css' | asset_url | stylesheet_tag }}
+</head>
+<body>
+  <div class="wrap" style="max-width:520px;padding:48px 0;text-align:center">
+    <h1 style="font-size:30px;margin-bottom:8px">{{ shop.name }} gift card</h1>
+    <p style="font-size:38px;font-weight:700;color:var(--brand);font-family:var(--mono)">{{ gift_card.balance | money }}</p>
+    <p class="muted" style="text-transform:uppercase;letter-spacing:1px;font-size:11px;margin-top:18px">Gift card code</p>
+    <p style="font-size:20px;font-family:var(--mono);letter-spacing:1px">{{ gift_card.code | format_code }}</p>
+    <p style="margin-top:24px"><a class="btn" href="{{ shop.url }}">Shop {{ shop.name }}</a></p>
+  </div>
+</body>
+</html>

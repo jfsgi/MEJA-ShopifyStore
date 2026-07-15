@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — Configurator (Scandi Light) · mockup for approval</title>
+<style>
+  :root{
+    --bg:#ffffff; --surface:#f3f5f4; --surface-2:#fafbfb; --ink:#232826; --muted:#71807c;
+    --line:#e4e8e6; --brand:#5b6b73; --brand-ink:#ffffff; --accent:#9bb0a3; --accent-deep:#6f8a78;
+    --radius:16px; --radius-sm:10px;
+    --display:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    --text:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --shadow:0 14px 34px rgba(35,40,38,.10);
+    --view:url(stock/drawerunit.jpg);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3,h4{font-family:var(--display);font-weight:600;margin:0;line-height:1.12;letter-spacing:-.2px}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--brand);font-weight:700}
+
+  .anno{background:#1f2624;color:#dfe7e3;font-size:12.5px;padding:9px 24px;text-align:center;font-family:var(--mono)}
+  .anno b{color:#bcd2c6}
+
+  header.site{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:26px;height:66px}
+  .logo{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:2px}
+  nav.main{display:flex;gap:20px;font-size:13px;color:var(--muted)}
+  nav.main a:hover{color:var(--brand)}
+  .icons{margin-left:auto;display:flex;gap:16px;align-items:center;font-size:13px;color:var(--muted)}
+  .cartdot{background:var(--brand);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-family:var(--mono)}
+  .crumbs{font-size:12.5px;color:var(--muted);padding:16px 0 4px}
+  .crumbs a:hover{color:var(--brand)}
+
+  /* product tabs */
+  .ptabs{display:flex;gap:8px;flex-wrap:wrap;padding:6px 0 14px}
+  .ptabs button{border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:999px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--text)}
+  .ptabs button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .ptabs button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+  .cfg{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;padding:4px 0 56px;align-items:start}
+  .viewer{position:sticky;top:84px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--view) center/cover no-repeat;aspect-ratio:1/1;box-shadow:var(--shadow)}
+  .viewer .hud{position:absolute;top:14px;left:14px;display:flex;gap:7px}
+  .viewer .hud span{background:rgba(31,38,36,.6);color:#fff;font-size:11px;font-family:var(--mono);padding:5px 9px;border-radius:8px}
+  .viewer .engine{position:absolute;bottom:14px;left:14px;font-size:10.5px;font-family:var(--mono);color:#fff;background:rgba(31,38,36,.5);padding:4px 8px;border-radius:6px}
+  .viewer .rstate{position:absolute;bottom:14px;right:14px;background:rgba(31,38,36,.78);color:#fff;font-size:11px;font-family:var(--mono);padding:6px 11px;border-radius:999px;display:flex;gap:7px;align-items:center}
+  .dot{width:7px;height:7px;border-radius:999px;background:#8fd0a6}
+  .dot.busy{background:#e0b15b;animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .panel h1{font-size:28px}
+  .panel .sub{color:var(--muted);font-size:14px;margin:3px 0 6px}
+  .panel .reviewlink{font-size:13px;color:var(--brand);font-weight:600;display:inline-flex;gap:6px;align-items:center;margin-bottom:8px}
+  .opt{padding:15px 0;border-top:1px solid var(--line)}
+  .opt .l{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .opt label{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .opt .val{font-size:13px;font-family:var(--mono)}
+  .seg{display:flex;gap:8px;flex-wrap:wrap}
+  .seg button{border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:10px;padding:9px 14px;font-size:13px;cursor:pointer;font-family:var(--text)}
+  .seg button:hover{border-color:var(--accent-deep)}
+  .seg button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .seg button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .swatches{display:flex;gap:10px;flex-wrap:wrap}
+  .sw{width:38px;height:38px;border-radius:999px;border:2px solid var(--line);cursor:pointer}
+  .sw[aria-pressed="true"]{outline:2px solid var(--brand);outline-offset:2px;border-color:#fff}
+  .sw:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .toggle{display:flex;align-items:center;gap:10px}
+  .toggle button{width:46px;height:26px;border-radius:999px;border:none;background:var(--line);position:relative;cursor:pointer}
+  .toggle button[aria-pressed="true"]{background:var(--brand)}
+  .toggle button i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:999px;background:#fff;transition:left .15s}
+  .toggle button[aria-pressed="true"] i{left:23px}
+  .toggle span{font-size:13px}
+
+  /* product-specific groups */
+  .grp{display:none}
+  body.prod-drawerbox .grp.drawerbox{display:block}
+  body.prod-drawerunit .grp.drawerunit{display:block}
+  body.prod-cabinetdoor .grp.cabinetdoor{display:block}
+  body.prod-shelf .grp.shelf{display:block}
+  body.prod-drawerbox{--view:url(stock/drawerunit.jpg)}
+  body.prod-drawerunit{--view:url(stock/drawerunit.jpg)}
+  body.prod-cabinetdoor{--view:url(stock/cabinetdoor.jpg)}
+  body.prod-shelf{--view:url(stock/shelf-dark.jpg)}
+
+  .pricecard{margin-top:16px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+  .priceline{display:flex;justify-content:space-between;align-items:center}
+  .priceline .lbl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  .priceline .amt{font-family:var(--mono);font-size:30px;font-weight:700}
+  .addrow{display:flex;gap:12px;align-items:center;margin-top:14px}
+  .addbtn{flex:1;background:var(--brand);color:#fff;border:none;border-radius:999px;padding:15px;font-size:15px;font-weight:600;cursor:pointer}
+  .addbtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .save{background:none;border:1.5px solid var(--line);border-radius:999px;padding:13px 16px;cursor:pointer;font-size:13px;font-family:var(--text)}
+  .mto{font-size:11.5px;color:var(--muted);margin-top:12px;display:flex;gap:7px}
+
+  @media(max-width:920px){
+    nav.main,.icons span{display:none}
+    .cfg{grid-template-columns:1fr;gap:18px}
+    .viewer{position:relative;top:0;aspect-ratio:4/3}
+    .pricecard{position:fixed;left:0;right:0;bottom:0;border-radius:16px 16px 0 0;margin:0;z-index:40}
+    .panel{padding-bottom:150px}
+  }
+</style>
+</head>
+<body class="prod-drawerbox">
+
+<div class="anno">MOCKUP FOR APPROVAL · Configurator · Direction <b>#5 Scandi Light</b> · viewer = <b>embedded 4kGraphics engine</b> · price = <b>CRM engine</b> · switch product type above</div>
+
+<header class="site"><div class="wrap nav">
+  <div class="logo">MEJA</div>
+  <nav class="main" aria-label="Primary"><a href="home.html">Drawer Boxes</a><a href="home.html">Drawer Units</a><a href="home.html">Cabinet Doors</a><a href="home.html">Shelves</a><a href="#">Custom</a></nav>
+  <div class="icons"><span>Search</span><span>Account</span><span>Cart</span><span class="cartdot">0</span></div>
+</div></header>
+
+<div class="wrap">
+  <div class="crumbs"><a href="home.html">Home</a> › <span>Configure</span></div>
+
+  <!-- product type tabs -->
+  <div class="ptabs" id="ptabs">
+    <button data-prod="drawerbox" data-base="48" aria-pressed="true">Drawer Box</button>
+    <button data-prod="drawerunit" data-base="429" aria-pressed="false">Drawer Unit</button>
+    <button data-prod="cabinetdoor" data-base="44" aria-pressed="false">Cabinet Door</button>
+    <button data-prod="shelf" data-base="229" aria-pressed="false">Shelf</button>
+  </div>
+
+  <div class="cfg">
+    <!-- VIEWER -->
+    <div class="viewer" role="img" aria-label="Live 3D preview of your configured piece">
+      <div class="hud"><span>↻ rotate</span><span>⤢ zoom</span><span>▦ wireframe</span><span>AR</span></div>
+      <div class="engine">embedded 4kGraphics engine · WebGL preview</div>
+      <div class="rstate"><span class="dot" id="rdot"></span><span id="rtext">4K render ready</span></div>
+    </div>
+
+    <!-- PANEL -->
+    <div class="panel">
+      <span class="eyebrow">Configure · solid hardwood · made to order</span>
+      <h1 id="title">Drawer Box</h1>
+      <p class="sub" id="subtitle">Perfect-fit replacement drawer boxes, built to your exact opening size.</p>
+      <a class="reviewlink" href="#">★ 4.9 · 312 verified reviews</a>
+
+      <!-- DRAWER BOX -->
+      <div class="grp drawerbox">
+        <div class="opt"><div class="l"><label>Joinery</label></div><div class="seg"><button class="on" data-add="0" aria-pressed="true">Dovetail</button><button data-add="-6" aria-pressed="false">Half-blind</button><button data-add="-4" aria-pressed="false">Box joint</button></div></div>
+        <div class="opt"><div class="l"><label>Width</label><span class="val" id="db-w">21″</span></div><div class="seg" data-shows="db-w"><button data-add="0" aria-pressed="false">15″</button><button class="on" data-add="6" aria-pressed="true">21″</button><button data-add="10" aria-pressed="false">24″</button><button data-add="18" aria-pressed="false">30″</button></div></div>
+        <div class="opt"><div class="l"><label>Bottom</label></div><div class="seg"><button class="on" data-add="0" aria-pressed="true">¼″ Plywood</button><button data-add="9" aria-pressed="false">½″ Solid</button></div></div>
+        <div class="opt"><div class="l"><label>Undermount notches</label></div><div class="toggle"><button data-add="0" aria-pressed="false"><i></i></button><span>For soft-close undermount slides</span></div></div>
+      </div>
+
+      <!-- DRAWER UNIT -->
+      <div class="grp drawerunit">
+        <div class="opt"><div class="l"><label>Drawers</label></div><div class="seg"><button data-add="0" aria-pressed="false">3</button><button class="on" data-add="40" aria-pressed="true">4</button><button data-add="80" aria-pressed="false">5</button><button data-add="120" aria-pressed="false">6</button></div></div>
+        <div class="opt"><div class="l"><label>Front style</label></div><div class="seg"><button data-add="0" aria-pressed="false">Slab</button><button class="on" data-add="0" aria-pressed="true">Shaker</button><button data-add="36" aria-pressed="false">Raised</button></div></div>
+        <div class="opt"><div class="l"><label>Slides</label></div><div class="seg"><button data-add="0" aria-pressed="false">Side-mount</button><button class="on" data-add="48" aria-pressed="true">Undermount soft-close</button></div></div>
+      </div>
+
+      <!-- CABINET DOOR -->
+      <div class="grp cabinetdoor">
+        <div class="opt"><div class="l"><label>Style</label></div><div class="seg"><button data-add="0" aria-pressed="false">Slab</button><button class="on" data-add="0" aria-pressed="true">Shaker</button><button data-add="14" aria-pressed="false">Raised panel</button></div></div>
+        <div class="opt"><div class="l"><label>Edge profile</label></div><div class="seg"><button data-add="0" aria-pressed="false">Square</button><button class="on" data-add="0" aria-pressed="true">Roundover</button><button data-add="6" aria-pressed="false">Ogee</button></div></div>
+        <div class="opt"><div class="l"><label>Hinge boring</label></div><div class="toggle"><button class="on" data-add="4" aria-pressed="true"><i></i></button><span>35mm cups bored &amp; ready to hang</span></div></div>
+      </div>
+
+      <!-- SHELF -->
+      <div class="grp shelf">
+        <div class="opt"><div class="l"><label>Style</label></div><div class="seg"><button data-add="0" aria-pressed="false">Tile</button><button class="on" data-add="0" aria-pressed="true">Art Back</button><button data-add="40" aria-pressed="false">Live edge</button></div></div>
+        <div class="opt"><div class="l"><label>Back art</label></div><div class="seg"><button class="on" data-add="0" aria-pressed="true">Botanical</button><button data-add="0" aria-pressed="false">Floral</button><button data-add="35" aria-pressed="false">Upload yours</button></div></div>
+        <div class="opt"><div class="l"><label>Hooks</label></div><div class="seg"><button class="on" data-add="0" aria-pressed="true">None</button><button data-add="18" aria-pressed="false">3 · Brass</button><button data-add="26" aria-pressed="false">5 · Brass</button></div></div>
+      </div>
+
+      <!-- SHARED: WOOD + FINISH -->
+      <div class="opt"><div class="l"><label>Wood</label><span class="val" id="woodname">Walnut</span></div>
+        <div class="swatches" data-group="wood"><button class="sw" aria-pressed="true" data-name="Walnut" data-add="20" style="background:#5c3a21" aria-label="Walnut"></button><button class="sw" aria-pressed="false" data-name="White Oak" data-add="10" style="background:#c7a877" aria-label="White Oak"></button><button class="sw" aria-pressed="false" data-name="Cherry" data-add="15" style="background:#7a3b25" aria-label="Cherry"></button><button class="sw" aria-pressed="false" data-name="Maple" data-add="0" style="background:#e0cda4" aria-label="Maple"></button><button class="sw" aria-pressed="false" data-name="Ash" data-add="0" style="background:#c9b89a" aria-label="Ash"></button></div>
+      </div>
+      <div class="opt"><div class="l"><label>Finish</label></div><div class="seg"><button class="on" data-add="0" aria-pressed="true">Matte</button><button data-add="6" aria-pressed="false">Satin</button><button data-add="12" aria-pressed="false">Hand-oiled</button></div></div>
+
+      <!-- PRICE -->
+      <div class="pricecard">
+        <div class="priceline"><div><div class="lbl">Live price · made to order</div><div class="amt" id="price">$48</div></div><a class="reviewlink" href="#" style="margin:0">See breakdown ▾</a></div>
+        <div class="addrow"><button class="addbtn" type="button">Add to cart</button><button class="save" type="button" title="Save configuration">♡ Save</button></div>
+        <div class="mto">🛈 Made to order · no returns or exchanges · 4K render &amp; build plan attached to your order.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const body=document.body, priceEl=document.getElementById('price');
+  const titles={drawerbox:['Drawer Box','Perfect-fit replacement drawer boxes, built to your exact opening size.'],
+    drawerunit:['Drawer Unit','A full bank of soft-close drawers, sized and finished to match your space.'],
+    cabinetdoor:['Cabinet Door','Solid-wood doors in your style, bored and ready to hang.'],
+    shelf:['Shelf','Wall shelves with a tile or art-back face — or your own artwork.']};
+  let base=48, woodAdd=20;
+
+  function activeGroups(){
+    const prod=[...document.querySelectorAll('#ptabs button')].find(b=>b.getAttribute('aria-pressed')==='true').dataset.prod;
+    return ['.grp.'+prod, '[data-group="wood"]', '.grp.'+prod+' ~ .opt'];
+  }
+  function recompute(){
+    let add=0;
+    // sum selected option buttons in the visible product group + shared seg groups
+    document.querySelectorAll('.grp').forEach(g=>{
+      if(getComputedStyle(g).display==='none') return;
+      g.querySelectorAll('.seg button[aria-pressed="true"], .toggle button[aria-pressed="true"]').forEach(b=>add+=parseInt(b.dataset.add||'0',10));
+    });
+    // shared wood + finish (the two .opt after the groups)
+    document.querySelectorAll('.panel > .opt .seg button[aria-pressed="true"]').forEach(b=>add+=parseInt(b.dataset.add||'0',10));
+    add+=woodAdd;
+    priceEl.textContent='$'+(base+add);
+    busy();
+  }
+  let t; function busy(){const d=document.getElementById('rdot'),x=document.getElementById('rtext');d.classList.add('busy');x.textContent='rendering 4K…';clearTimeout(t);t=setTimeout(()=>{d.classList.remove('busy');x.textContent='4K render ready';},850);}
+
+  // product tabs
+  document.querySelectorAll('#ptabs button').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('#ptabs button').forEach(b=>b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    const p=btn.dataset.prod; base=parseInt(btn.dataset.base,10);
+    body.className='prod-'+p;
+    document.getElementById('title').textContent=titles[p][0];
+    document.getElementById('subtitle').textContent=titles[p][1];
+    recompute();
+  }));
+
+  // single-select segmented groups
+  document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    if(g.dataset.shows){const el=document.getElementById(g.dataset.shows); if(el) el.textContent=b.textContent;}
+    recompute();
+  }));
+  // wood swatches
+  document.querySelector('[data-group="wood"]').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    document.querySelectorAll('[data-group="wood"] button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); woodAdd=parseInt(b.dataset.add||'0',10);
+    document.getElementById('woodname').textContent=b.dataset.name; recompute();
+  });
+  // toggles
+  document.querySelectorAll('.toggle button').forEach(b=>b.addEventListener('click',()=>{b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true'); recompute();}));
+
+  recompute();
+</script>
+</body>
+</html>

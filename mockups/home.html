@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — Home (Scandi Light) · mockup for approval</title>
+<style>
+  /* MEJA WebStore · HOME · Approved direction: #5 "Scandi Light" · self-contained mockup */
+  :root{
+    --bg:#ffffff; --surface:#f3f5f4; --surface-2:#fafbfb; --ink:#232826; --muted:#71807c;
+    --line:#e4e8e6; --brand:#5b6b73; --brand-ink:#ffffff; --accent:#9bb0a3; --accent-deep:#6f8a78;
+    --radius:16px; --radius-sm:10px;
+    --display:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    --text:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --shadow:0 14px 34px rgba(35,40,38,.10); --shadow-sm:0 6px 16px rgba(35,40,38,.07);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);line-height:1.55;font-weight:400}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;margin:0;letter-spacing:-.2px}
+  .eyebrow{font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--brand);font-weight:700}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;letter-spacing:.2px;padding:13px 24px;border-radius:999px;background:var(--brand);color:var(--brand-ink);font-family:var(--text)}
+  .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+  .btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+  .anno{background:#1f2624;color:#dfe7e3;font-size:12.5px;padding:9px 24px;text-align:center;font-family:var(--mono)}
+  .anno b{color:#bcd2c6}
+  .topbar{background:var(--surface);color:var(--muted);text-align:center;font-size:12.5px;padding:9px;letter-spacing:.3px;border-bottom:1px solid var(--line)}
+
+  header.site{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.9);backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:26px;height:72px}
+  .logo{font-family:var(--display);font-size:23px;font-weight:700;letter-spacing:2px}
+  nav.main{display:flex;gap:22px;font-size:13px;letter-spacing:.5px;color:var(--muted)}
+  nav.main a:hover{color:var(--brand)}
+  .icons{margin-left:auto;display:flex;gap:18px;align-items:center;color:var(--muted)}
+  .icons button{background:none;border:none;cursor:pointer;color:inherit;display:flex;gap:6px;align-items:center;font-size:13px;font-family:var(--text)}
+  .cartdot{background:var(--brand);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-family:var(--mono)}
+
+  /* hero */
+  .hero{position:relative;border-radius:var(--radius);overflow:hidden;margin-top:24px;min-height:460px;display:flex;align-items:center}
+  .hero .bg{position:absolute;inset:0;background:url(stock/room-bright.jpg) center/cover no-repeat}
+  .hero .scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.6) 48%,rgba(255,255,255,0) 78%)}
+  .hero .in{position:relative;padding:48px 52px;max-width:56%}
+  .hero h1{font-size:clamp(34px,4.6vw,52px);margin:12px 0 14px}
+  .hero p.lead{font-size:18px;color:var(--muted);max-width:42ch;margin:0 0 22px}
+  .hero .ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .hero .rate{font-size:13px;color:var(--ink);font-weight:600;display:inline-flex;gap:6px;align-items:center;margin-left:4px}
+  .hero .rate b{color:var(--brand)}
+  .hero .chip{position:absolute;bottom:16px;right:16px;background:rgba(31,38,36,.78);color:#fff;font-size:11px;font-family:var(--mono);padding:6px 11px;border-radius:999px;display:flex;gap:7px;align-items:center}
+  .pulse{width:7px;height:7px;border-radius:999px;background:#8fd0a6}
+
+  /* trust */
+  .trust{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:22px 0 6px}
+  .trust .t{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--ink)}
+  .trust svg{flex:none;color:var(--accent-deep)}
+
+  section.block{padding:58px 0}
+  .head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+  .head h2{font-size:clamp(26px,3.2vw,36px)}
+  .head a.more{font-size:13px;color:var(--brand);border-bottom:1px solid var(--brand);padding-bottom:2px}
+
+  /* category cards */
+  .cats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .cat{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .2s}
+  .cat:hover{transform:translateY(-4px)}
+  .cat .img{aspect-ratio:4/3;background-size:cover;background-position:center}
+  .cat .b{padding:16px 16px 18px}
+  .cat h3{font-size:18px;margin-bottom:3px}
+  .cat .price{font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+  .cat .rate{font-size:12px;color:var(--muted);margin-top:5px}
+  .cat .cfg{display:block;margin-top:10px;font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--brand);font-weight:700}
+
+  /* how it works */
+  .how{background:var(--surface);border-radius:var(--radius)}
+  .how .inn{padding:46px 40px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:24px}
+  .step{display:flex;flex-direction:column;gap:9px}
+  .step .n{width:40px;height:40px;border-radius:999px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:15px}
+  .step h3{font-size:19px}
+  .step p{font-size:14px;color:var(--muted);margin:0}
+
+  /* measure band */
+  .measure{display:grid;grid-template-columns:1.1fr .9fr;gap:0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+  .measure .copy{padding:42px 40px;display:flex;flex-direction:column;justify-content:center;gap:14px;background:var(--surface-2)}
+  .measure h2{font-size:30px}
+  .measure p{color:var(--muted);font-size:14.5px;margin:0;max-width:44ch}
+  .measure .img{min-height:320px;background:url(stock/drawerunit.jpg) center/cover no-repeat}
+
+  /* reviews (no histogram) */
+  .reviews .rev-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .rev-summary{display:flex;align-items:center;gap:16px}
+  .rev-summary .big{font-family:var(--display);font-size:52px;font-weight:700;line-height:.9}
+  .rev-summary .stars{color:var(--brand);font-size:18px;letter-spacing:2px}
+  .rev-summary .count{font-size:13px;color:var(--muted)}
+  .rev-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .rev-card{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .rev-card .top{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+  .rev-card .ph{width:52px;height:52px;border-radius:10px;background-size:cover;background-position:center;flex:none}
+  .rev-card .who{font-size:13.5px;font-weight:600}
+  .rev-card .vb{font-size:11px;color:var(--accent-deep);font-weight:600}
+  .rev-card .rstars{color:var(--brand);font-size:13px;letter-spacing:1px}
+  .rev-card p{font-size:13.5px;color:var(--ink);margin:6px 0 0}
+
+  /* made to order + newsletter */
+  .mto{background:var(--surface);border-radius:var(--radius);padding:26px 28px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .mto .ico{width:46px;height:46px;flex:none;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+  .mto h3{font-size:19px;margin-bottom:4px}
+  .mto p{font-size:13.5px;color:var(--muted);margin:0;max-width:64ch}
+  .news{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+  .news input{flex:0 1 320px;padding:13px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:14px;font-family:var(--text)}
+  .news input:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+
+  footer.site{background:#1f2624;color:#b9c5c0;margin-top:56px;padding:48px 0 26px}
+  .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+  footer .logo{color:#fff}
+  footer h4{font-family:var(--text);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+  footer .legal{border-top:1px solid #34403c;margin-top:30px;padding-top:18px;font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* mobile preview */
+  .mobile-demo{padding:48px 0 80px;background:var(--surface);border-radius:var(--radius);margin-top:8px;text-align:center}
+  .phone{width:330px;margin:22px auto 0;border:10px solid #1f2624;border-radius:34px;overflow:hidden;box-shadow:var(--shadow);text-align:left;background:#fff}
+  .phone .ph-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .phone .ph-head .logo{font-size:17px}
+  .phone .burger{margin-left:auto;width:22px;height:14px;display:flex;flex-direction:column;justify-content:space-between}
+  .phone .burger i{height:2px;background:var(--ink);display:block}
+  .phone .ph-hero{height:190px;background:url(stock/room-bright.jpg) center/cover;position:relative;display:flex;align-items:flex-end}
+  .phone .ph-hero .s{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.85))}
+  .phone .ph-hero .t{position:relative;padding:14px 16px}
+  .phone .ph-hero h3{font-size:22px;margin:0}
+  .phone .ph-sticky{position:sticky;bottom:0;display:flex;gap:10px;align-items:center;padding:12px 14px;background:#fff;border-top:1px solid var(--line)}
+  .phone .ph-sticky .pr{font-family:var(--mono);font-weight:700}
+  .phone .ph-sticky .btn{flex:1;justify-content:center;padding:11px}
+
+  @media(max-width:880px){
+    nav.main,.icons button span{display:none}
+    .hero .in{max-width:82%}
+    .cats{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr}.rev-cards{grid-template-columns:1fr}
+    .measure{grid-template-columns:1fr}.measure .img{min-height:220px}
+    .fcols{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="anno">MOCKUP FOR APPROVAL · Home · Approved direction <b>#5 Scandi Light</b> · real Adobe Stock photography · production embeds the live 4kGraphics engine</div>
+<div class="topbar">Handmade to order · Free design help · Live 4K preview before we build · Ships in 1–3 weeks</div>
+
+<header class="site"><div class="wrap nav">
+  <div class="logo">MEJA</div>
+  <nav class="main" aria-label="Primary"><a href="#cats">Drawer Boxes</a><a href="#cats">Drawer Units</a><a href="#cats">Cabinet Doors</a><a href="#cats">Shelves</a><a href="configurator.html">Custom</a></nav>
+  <div class="icons">
+    <button aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><span>Search</span></button>
+    <button aria-label="Account"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span>Account</span></button>
+    <button aria-label="Cart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg><span class="cartdot">0</span></button>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="bg"></div><div class="scrim"></div>
+    <div class="in">
+      <span class="eyebrow">Made to measure · Made by hand</span>
+      <h1>Replacements that just fit.</h1>
+      <p class="lead">Custom drawer boxes, drawer units, cabinet doors &amp; shelves — configured in 3D, previewed in true 4K, built to your exact size.</p>
+      <div class="ctas">
+        <a class="btn" href="configurator.html">Configure a piece →</a>
+        <a class="btn ghost" href="#cats">Browse the catalog</a>
+        <span class="rate">★ <b>4.9</b> · 312 reviews</span>
+      </div>
+    </div>
+    <div class="chip"><span class="pulse"></span> 4K render · live</div>
+  </section>
+
+  <!-- TRUST -->
+  <div class="trust">
+    <div class="t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 21l-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg> Handmade craftsmanship</div>
+    <div class="t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg> Made to order, to the 1/16″</div>
+    <div class="t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l5-5 4 4 7-8"/></svg> See it in 4K first</div>
+    <div class="t"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Ships in 1–3 weeks</div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="wrap"><section class="block" id="cats">
+  <div class="head"><div><span class="eyebrow">Configurable woodwork</span><h2>Shop by product</h2></div><a class="more" href="configurator.html">Start a custom piece →</a></div>
+  <div class="cats">
+    <article class="cat"><div class="img" style="background-image:url(stock/drawerbox.jpg);background-position:center 40%"></div><div class="b"><h3>Drawer Boxes</h3><div class="price">from $39</div><div class="rate">★ 4.9 · dovetail / half-blind</div><a class="cfg" href="configurator.html">Configure ›</a></div></article>
+    <article class="cat"><div class="img" style="background-image:url(stock/drawerunit.jpg)"></div><div class="b"><h3>Drawer Units</h3><div class="price">from $389</div><div class="rate">★ 5.0 · 3–6 drawers</div><a class="cfg" href="configurator.html">Configure ›</a></div></article>
+    <article class="cat"><div class="img" style="background-image:url(stock/cabinetdoor.jpg)"></div><div class="b"><h3>Cabinet Doors</h3><div class="price">from $29</div><div class="rate">★ 4.8 · slab / shaker / raised</div><a class="cfg" href="configurator.html">Configure ›</a></div></article>
+    <article class="cat"><div class="img" style="background-image:url(stock/shelf-styled.jpg)"></div><div class="b"><h3>Shelves</h3><div class="price">from $149</div><div class="rate">★ 4.9 · tile / art back</div><a class="cfg" href="configurator.html">Configure ›</a></div></article>
+  </div>
+</section></div>
+
+<!-- HOW IT WORKS -->
+<div class="wrap"><section class="block" style="padding-top:0"><div class="how"><div class="inn">
+  <span class="eyebrow">How custom works</span>
+  <h2 style="font-size:30px;margin-top:6px">Three steps to a piece that fits.</h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>Configure</h3><p>Enter your sizes and pick joinery, wood, finish &amp; hardware. Everything updates live.</p></div>
+    <div class="step"><div class="n">2</div><h3>Preview in 4K</h3><p>See a photoreal 4K render of your exact piece, true to scale, before you buy.</p></div>
+    <div class="step"><div class="n">3</div><h3>We build it</h3><p>Your design goes straight to our shop as a cut-list &amp; build plan, hand-made to order.</p></div>
+  </div>
+</div></div></section></div>
+
+<!-- MEASURE BAND -->
+<div class="wrap"><section class="block" style="padding-top:0"><div class="measure">
+  <div class="copy">
+    <span class="eyebrow">Cabinet replacements</span>
+    <h2>Measure once. We do the rest.</h2>
+    <p>Most of our drawer boxes and doors replace worn or wrong-sized cabinet parts. Enter your opening size and we build a perfect-fit piece — undermount notches, soft-close, and dovetail joinery included.</p>
+    <a class="btn" href="configurator.html" style="align-self:flex-start">Configure a drawer box →</a>
+  </div>
+  <div class="img" role="img" aria-label="Walnut drawers in a contemporary kitchen"></div>
+</div></section></div>
+
+<!-- REVIEWS (no histogram) -->
+<div class="wrap"><section class="block reviews" style="padding-top:0">
+  <div class="rev-top">
+    <div class="rev-summary"><div class="big">4.9</div><div><div class="stars">★★★★★</div><div class="count">312 verified reviews · 98% would recommend</div></div></div>
+    <a class="more" href="#" style="font-size:13px;color:var(--brand);border-bottom:1px solid var(--brand);padding-bottom:2px">See all 312 reviews →</a>
+  </div>
+  <div class="rev-cards">
+    <div class="rev-card"><div class="top"><div class="ph" style="background-image:url(stock/drawerunit.jpg)"></div><div><div class="who">Dana R.</div><div class="vb">✓ Verified buyer</div></div></div><div class="rstars">★★★★★</div><p>"Perfect-fit replacement drawer boxes — the dovetails are flawless and the 4K preview matched exactly."</p></div>
+    <div class="rev-card"><div class="top"><div class="ph" style="background-image:url(stock/cabinetdoor.jpg)"></div><div><div class="who">Marcus T.</div><div class="vb">✓ Verified buyer</div></div></div><div class="rstars">★★★★★</div><p>"Ordered shaker doors to match our kitchen. Beautiful walnut, arrived on time, hung perfectly."</p></div>
+    <div class="rev-card"><div class="top"><div class="ph" style="background-image:url(stock/shelf-styled.jpg)"></div><div><div class="who">Priya &amp; Sam</div><div class="vb">✓ Verified buyers</div></div></div><div class="rstars">★★★★★</div><p>"The art-back shelf let us frame our own print. Genuinely special, and the fit was exact."</p></div>
+  </div>
+</section></div>
+
+<!-- MADE TO ORDER + NEWSLETTER -->
+<div class="wrap"><section class="block" style="padding-top:0">
+  <div class="mto">
+    <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1f2624" stroke-width="2"><path d="M3 12l4-7h10l4 7-9 9z"/></svg></div>
+    <div><h3>Every piece is made to order</h3>
+      <p>Because each piece is custom-built by hand for you, all sales are final — <strong>no returns or exchanges</strong>. If anything arrives not as your approved 4K render, we’ll repair, rework, or remake it. <a href="#" style="color:var(--brand);border-bottom:1px solid var(--brand)">Read our made-to-order policy →</a></p>
+    </div>
+  </div>
+  <div style="margin-top:36px;text-align:center">
+    <span class="eyebrow">Stay in touch</span>
+    <h2 style="font-size:28px;margin:6px 0 4px">Design tips &amp; new options</h2>
+    <p style="color:var(--muted);margin:0">No spam — just craft.</p>
+    <form class="news" onsubmit="return false"><input type="email" placeholder="you@example.com" aria-label="Email address" /><button class="btn" type="submit">Subscribe</button></form>
+  </div>
+</section></div>
+
+<footer class="site"><div class="wrap">
+  <div class="fcols">
+    <div><div class="logo" style="font-family:var(--display);font-size:22px;letter-spacing:2px;font-weight:700">MEJA</div>
+      <p style="font-size:13.5px;max-width:32ch;margin-top:10px">Custom drawer boxes, doors, units &amp; shelves — designed with you and made to order.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="#">Drawer Boxes</a></li><li><a href="#">Drawer Units</a></li><li><a href="#">Cabinet Doors</a></li><li><a href="#">Shelves</a></li><li><a href="configurator.html">Design custom</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="#">FAQ</a></li><li><a href="#">Made-to-order policy</a></li><li><a href="#">Measuring guide</a></li><li><a href="#">Shipping</a></li></ul></div>
+    <div><h4>Studio</h4><ul><li><a href="#">Our craft</a></li><li><a href="#">Trade / wholesale</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 MEJA Designs — made to order, no returns.</span><span>Privacy · Terms</span></div>
+</div></footer>
+
+<!-- MOBILE PREVIEW -->
+<div class="wrap"><div class="mobile-demo">
+  <span class="eyebrow">Responsive</span><h2 style="font-size:24px;margin:6px 0 0">Mobile view</h2>
+  <div class="phone">
+    <div class="ph-head"><div class="logo">MEJA</div><div class="burger"><i></i><i></i><i></i></div></div>
+    <div class="ph-hero"><div class="s"></div><div class="t"><span class="eyebrow">Made to measure</span><h3>Replacements that just fit.</h3></div></div>
+    <div style="padding:14px 16px;font-size:13px;color:var(--muted)">Drawer boxes, doors, units &amp; shelves — configured in 3D, made to order.</div>
+    <div class="ph-sticky"><span class="pr">from $39</span><a class="btn" href="configurator.html">Configure</a></div>
+  </div>
+</div></div>
+
+</body>
+</html>

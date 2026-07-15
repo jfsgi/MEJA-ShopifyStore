@@ -1,7 +1,7 @@
 # MEJA Designs WebStore — Product Workflows
 
 **Document type:** End-to-end workflows for every product type (for approval)
-**Version:** 0.1 (Draft)
+**Version:** 0.2 (Draft — reconciled with the real CRM job-queue / pricing / listings contracts)
 **Date:** 2026-06-13
 **Companion:** [`01-Master-Plan.md`](01-Master-Plan.md) (architecture & API), [`02-UI-Design-Standard.md`](02-UI-Design-Standard.md) (UI).
 **Status:** 🟡 Draft — awaiting workflow approval.
@@ -18,7 +18,9 @@ This document specifies, for **every product type**, the journey from entry → 
 4. **Hybrid Listing** (CRM-seeded but customer-editable)
 5. **Custom Build-Out** (Atelier3d + live 4K render)
 
-Plus three cross-cutting flows: **CRM quote push**, **live 4K rendering**, and **order → fulfillment**.
+Plus four cross-cutting flows: **CRM quote push**, **live 4K rendering**, **order → fulfillment**, and **customer reviews (post-purchase UGC)**.
+
+Workflows A–H below cover the **customer & system** path. **§12 adds the operational (back-of-house) workflow** the production/ops team follows to fulfill each product type — intake, spec verification, sourcing, build, QA, pack, ship, and close-out.
 
 ---
 
@@ -27,12 +29,14 @@ Plus three cross-cutting flows: **CRM quote push**, **live 4K rendering**, and *
 | Actor | Meaning |
 |-------|---------|
 | **Customer** | Shopper / account holder |
-| **Storefront** | Custom storefront (reads Storefront API, hosts configurator/viewer) |
-| **IL** | Integration Layer (middleware, mapping, pricing, orchestration) |
-| **Shopify** | Commerce system of record (catalog, cart, checkout, orders) |
-| **CRM** | MEJA‑CRM Quoting platform |
-| **Atelier3d** | 3D configurator service |
-| **Render** | 4K rendering engine |
+| **Storefront** | **Shopify Online Store 2.0 theme** (Liquid) with the **4kGraphics engine embedded**; hosts the configurator/viewer |
+| **CRM** | **MEJA‑CRM** (Next.js + Supabase) — **system of record + integration hub**: catalog, pricing engine, quotes, listings, work orders, and the `integration_jobs` queue |
+| **IL** | In these diagrams, **IL = the CRM's integration hub / job queue** (`integration_jobs`) — not a separate middleware. See [`05-Integration-Context.md`](05-Integration-Context.md). |
+| **Shopify** | Storefront + checkout + orders/payments (commerce); listings published from the CRM |
+| **Atelier3D** | Parametric design studio (React + Three.js + NestJS) — `atelier_import` worker |
+| **Render** | **4kGraphics** — embeddable engine (preview + client 4K) + headless `/v1/render` · `/v1/buildplan` (`render_4k` worker) |
+
+> **Integration = the CRM's typed job queue** (`integration_jobs`: enqueue → claim → complete → requeue ≤3× → reap). **Pricing = the CRM engine only** (golden-tested). The store never computes price.
 
 **Shared option states:** `editable` · `locked` (read-only) · `invalid` (fails a constraint). **Shared listing visibility:** `public` · `private`.
 
@@ -75,7 +79,7 @@ sequenceDiagram
 sequenceDiagram
     actor C as Customer
     participant CRM as MEJA-CRM
-    participant IL as Integration Layer
+    participant IL as MEJA-CRM (hub)
     participant SH as Shopify
     participant ST as Storefront
     CRM->>IL: Push quote (options locked, price, customerScope=private)
@@ -109,7 +113,7 @@ sequenceDiagram
     actor C as Customer
     participant ST as Storefront
     participant A3 as Atelier3d
-    participant IL as Integration Layer
+    participant IL as MEJA-CRM (hub)
     participant R as Render
     participant SH as Shopify
     C->>ST: Open /configure/shelf (choose style: Tile / Art Back / …)
@@ -118,7 +122,7 @@ sequenceDiagram
     loop Each change (size, wood, finish, tiles, back art, mount)
         C->>ST: Change option
         ST->>A3: Update scene → instant WebGL preview
-        ST->>IL: Validate + price (rules engine)
+        ST->>IL: Validate + price (CRM engine)
         IL-->>ST: price + validity
         ST->>IL: (debounced) request 4K render
         IL->>R: submit job
@@ -126,7 +130,7 @@ sequenceDiagram
     end
     C->>ST: Add to cart
     ST->>IL: Freeze configuration → BOM + price + render URLs
-    IL->>SH: Ensure variant/line maps to config (line-item properties/metafields)
+    IL->>SH: Custom-priced line via Cart Transform/Draft Order + configId + option properties
     C->>SH: Native checkout → pay
     SH-->>IL: orders/paid (config snapshot on line)
 ```
@@ -135,7 +139,7 @@ sequenceDiagram
 1. Enter configurator; pick **style** (Tile, Art Back, or another configured style — *styles are data*).
 2. Adjust options: dimensions (steppers), wood (swatches), finish, **tile count/layout** (Tile) or **back art asset** (Art Back), mounting.
 3. **Constraints** enforced live (e.g., tile grid must fit dimensions; certain finishes only on certain woods).
-4. **Price** recomputes via the Rules Engine on each valid change; breakdown expandable.
+4. **Price** recomputes via the **CRM pricing engine** on each valid change; breakdown expandable.
 5. **Visualization:** instant WebGL preview; async 4K for hero/PDP/order.
 6. Add to cart → config **frozen** (BOM, price, render URLs snapshotted) → native checkout.
 
@@ -151,7 +155,7 @@ sequenceDiagram
 sequenceDiagram
     actor C as Customer
     participant CRM as MEJA-CRM
-    participant IL as Integration Layer
+    participant IL as MEJA-CRM (hub)
     participant ST as Storefront
     participant R as Render
     participant SH as Shopify
@@ -162,7 +166,7 @@ sequenceDiagram
     ST-->>C: "Prepared for you" + seeded config; locked=read-only, editable=interactive
     loop Customer edits an UNLOCKED option
         C->>ST: Change editable option
-        ST->>IL: Validate + price delta (rules engine), respecting locked baseline
+        ST->>IL: Validate + price (CRM engine), respecting locked baseline
         IL-->>ST: new price + validity
         ST->>R: (debounced) re-render 4K
         R-->>ST: updated render
@@ -188,7 +192,7 @@ sequenceDiagram
     actor C as Customer
     participant ST as Storefront
     participant A3 as Atelier3d
-    participant IL as Integration Layer
+    participant IL as MEJA-CRM (hub)
     participant R as Render
     participant CRM as MEJA-CRM
     participant SH as Shopify
@@ -197,7 +201,7 @@ sequenceDiagram
     loop Design
         C->>A3: Build/modify piece in 3D
         A3-->>ST: live WebGL preview + running BOM
-        ST->>IL: price(BOM) via rules engine
+        ST->>IL: price(BOM) via CRM engine
         IL-->>ST: live price + feasibility flags
         ST->>R: (debounced) 4K hero render
         R-->>ST: 4K asset
@@ -228,18 +232,19 @@ The mechanism behind Workflows B & D, and the review outcome of E.
 
 ```mermaid
 flowchart TD
-    Q[CRM authors quote] --> P{Push to store}
-    P --> V[IL validates against option model]
-    V -->|valid| M[IL creates/updates Shopify product<br/>idempotent on quoteId]
-    V -->|invalid| X[Reject + report errors to CRM]
+    Q[CRM: accept quote → 'List on Shopify'] --> P{listing kind:<br/>private / shelf_template}
+    P --> V[CRM validates options + prices via its engine]
+    V -->|valid| M[CRM Admin-API: create/update base product<br/>idempotent on quoteId · no variants]
+    V -->|invalid| X[Flag attention in CRM quote builder]
     M --> S[Set visibility, locks, metafields,<br/>signed access token, expiry]
-    S --> L[Return privateUrl + productId to CRM]
-    L --> N[CRM notifies customer]
+    S --> L[Store listing↔quote↔product link]
+    L --> N[CRM notifies customer with private URL]
     M -. update existing .-> M
 ```
 
-- **Idempotent** on `quoteId` (re-push updates, never duplicates).
-- **Validation** rejects quotes that violate the option model and reports back.
+- **CRM-native:** this is the CRM's "List on Shopify" producer on an accepted quote (`listings` row, kind `private`/`shelf_template`); private listings **require a quote**.
+- **Idempotent** on `quoteId` (re-push updates the listing, never duplicates).
+- **Pricing** comes from the CRM engine; the store never recomputes.
 - **Lifecycle:** active → expired → (refresh/re-issue) → won (order paid) / lost.
 
 ---
@@ -250,25 +255,25 @@ Shared by Workflows C, D, E.
 
 ```mermaid
 sequenceDiagram
-    participant ST as Storefront/Viewer
-    participant IL as Integration Layer
-    participant R as Render
-    participant CDN as CDN
-    ST->>ST: Instant WebGL preview (client) on every change
-    ST->>IL: Debounced render4k(config, camera, lighting)
-    IL->>IL: Hash config → cache check
+    participant ENG as 4kGraphics engine (in theme)
+    participant CRM as MEJA-CRM (render_4k job)
+    participant R as 4kGraphics /v1/render
+    participant CDN as Drive / CDN
+    ENG->>ENG: Instant WebGL preview + renderSnapshot() (client 4K) on every change
+    ENG->>CRM: enqueue render_4k(spec, material, lighting) [debounced]
+    CRM->>CRM: hash config → cache check
     alt cache hit
-        IL-->>ST: cached 4K URL
+        CRM-->>ENG: cached 4K URL
     else cache miss
-        IL->>R: submit job
-        R->>CDN: upload on completion
-        R-->>IL: callback { url }
-        IL-->>ST: push 4K URL (websocket)
+        CRM->>R: claim → POST /v1/render
+        R->>CDN: upload → drive_files (tagged)
+        R-->>CRM: { url }
+        CRM-->>ENG: push 4K URL (websocket)
     end
-    ST->>CDN: progressive load 4K
+    ENG->>CDN: progressive load 4K
 ```
 
-**Principles:** never block interaction on 4K; cache by config hash; attach final 4K URL to the order line.
+**Principles:** never block interaction on 4K (the embedded engine gives instant preview + client 4K); cache by config hash; **BOM/cut list = `getBuildPlan()` / `/v1/buildplan`** (same part layout as the render); attach final 4K URL + build plan to the order line.
 
 ---
 
@@ -277,18 +282,48 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant SH as Shopify
-    participant IL as Integration Layer
-    participant CRM as MEJA-CRM
+    participant CRM as MEJA-CRM (store_orders)
+    participant WO as Work order / cut_parts
     participant OPS as Production/Fulfillment
-    SH-->>IL: orders/paid (line items + config snapshots + 4K + BOM)
-    IL->>CRM: update quote status (won) where applicable
-    IL->>OPS: production packet (specs, BOM, 4K render, customer)
-    OPS-->>SH: fulfillment update / tracking
-    SH-->>IL: orders/fulfilled
-    IL->>CRM: close-out / post-sale record
+    SH-->>CRM: order webhook → store_orders + order_lines (configId, 4K, build plan)
+    CRM->>CRM: mark quote won (if quote-linked); buyer w/o quote → auto-create customer
+    CRM->>WO: generate work order → freeze flattened cut list (cut_parts)
+    WO->>OPS: shop cut-ticket (specs, BOM, 4K render, customer)
+    OPS-->>SH: fulfillment update / tracking (shipments)
+    SH-->>CRM: orders/fulfilled → close-out / post-sale
 ```
 
-**Notes:** the **production packet** is the single artifact the workshop builds from — it must contain the exact configuration, BOM, dimensions, materials, and the 4K render the customer approved.
+**Notes:** Shopify orders are ingested into the CRM's **`store_orders`/`order_lines`**, generate a **work order** with a frozen **`cut_parts`** cut list, and print a **shop cut-ticket** — the single artifact the workshop builds from (exact configuration, BOM, dimensions, materials, and the approved 4K render).
+
+---
+
+## 9b. Workflow I — Customer Reviews (post-purchase UGC, cross-cutting)
+
+**Goal:** collect and display **verified-buyer reviews** (rating + text + photos) after a piece is delivered. Reviews are the **trust mechanism in place of returns** for a made-to-order brand.
+
+```mermaid
+sequenceDiagram
+    participant SH as Shopify
+    participant CRM as MEJA-CRM
+    participant RV as Reviews app
+    participant C as Customer (verified buyer)
+    participant CS as CS / moderation
+    SH-->>CRM: orders/fulfilled
+    CRM->>CRM: enqueue review_request (after delivery window)
+    CRM->>C: review invite (email/SMS · deep link)
+    C->>RV: submit rating + text + photos
+    RV->>CS: queue (auto spam/profanity + photo screen) → manual review
+    CS-->>RV: approve / reject / request edit
+    RV-->>SH: publish to PDP (family-level) · update aggregate rating · SEO schema
+    RV-->>CRM: ingest review (Ad Studio / lead score)
+```
+
+**Rules**
+- **Verified-buyer only:** invites fire **after fulfillment**; only fulfilled-order buyers can review.
+- **Family-level:** reviews attach to the **product family / `product_type`**, so configurable and **private/one-off** purchases still contribute to the family PDP; private listing pages themselves show no public reviews.
+- **Moderation gate:** auto-filter + **CS approval** before publish; photos screened for PII/inappropriate content; brand may **respond publicly**.
+- **SEO:** published reviews emit `AggregateRating`/`Review` structured data; collection cards show star badges.
+- **Approach:** Decision **D13** — reviews app + CRM-triggered requests.
 
 ---
 
@@ -298,10 +333,11 @@ sequenceDiagram
 |----------|---------------------------------------------|
 | B Private | D5 access model (signed URL + account) |
 | C Configurable | D8 launch styles beyond Tile/Art Back; D7 render fallback |
-| D Hybrid | D4 pricing authority (hybrid per-option) |
+| D Hybrid | D4 pricing authority (CRM engine is sole authority) |
 | E Custom | self-serve threshold vs. forced CRM review (propose: feasibility flags decide) |
 | F Push | idempotency + expiry policy |
 | G Render | D7 WebGL-first, 4K async |
+| I Reviews | D13 reviews approach + CRM-triggered, verified-buyer requests |
 
 **Open workflow question (E):** what defines "needs human review" vs "buyable now"? Proposed: a feasibility ruleset (max size, allowed materials, joinery complexity). **Please confirm.**
 
@@ -314,10 +350,163 @@ sequenceDiagram
 | Render engine down | Stay on WebGL preview; mark 4K "pending"; allow checkout with preview; backfill 4K to order. |
 | Invalid configuration | Block add-to-cart; inline explain the failing constraint; suggest nearest valid. |
 | Expired private link | Friendly expiry page; one-click "request refreshed quote" → CRM. |
-| Price mismatch (CRM vs rules) | Locked options win from CRM; reconciliation job flags drift for ops. |
+| Price mismatch (store display vs CRM) | CRM pricing engine is sole authority; store re-fetches the CRM price; reconciliation flags drift at order ingest. |
 | Out-of-stock component (BOM) | Surface lead-time/feasibility; offer alternates. |
 | Customer not logged in for private listing | Token grants scoped access; prompt login to save/track. |
+| Abusive / fake review | Held by moderation; verified-buyer only; reject + takedown path. |
+| Review photo with PII / inappropriate content | Auto-flag + manual screen before publish; photos never auto-publish. |
 
 ---
 
-_End of Product Workflows (Draft v0.1). Please approve the flows and the open question in §10._
+## 12. Operational workflows (back-of-house) — per product type
+
+Workflows A–H describe the **customer & system** journey. This part describes what the **operations / production team** does once an order is placed, for each product type. The shared starting point is the **production packet** from Workflow H (configuration + BOM + the approved 4K render + customer details). **The approved 4K render is the visual spec of record** — QA builds and checks against it.
+
+**Operational role codes:**
+
+| Code | Role |
+|------|------|
+| **CS** | Sales / Customer Service |
+| **OPS** | Production scheduler / Ops lead |
+| **MK** | Maker / craftsperson (incl. finishing) |
+| **QA** | Quality control |
+| **SHIP** | Fulfillment / shipping |
+| **SYS** | CRM job queue / integrations (automated) |
+
+---
+
+### 12.1 Ready-Made — operations
+
+```mermaid
+flowchart LR
+    O[Order paid] --> S{In stock?}
+    S -->|Yes| P[Pick from inventory]
+    S -->|No| B[Build to standard spec / backorder comms]
+    P --> Q[QA spot-check]
+    B --> Q
+    Q --> PK[Pack]
+    PK --> SH[Ship + tracking]
+    SH --> CL[Close order · restock if reorder point hit]
+```
+
+- **Owner:** SHIP (stocked) or MK→SHIP (made-to-order); OPS accountable.
+- **Lead time / SLA:** in-stock ship in 1–2 business days; made-to-order standard 1–2 weeks.
+- **Exceptions:** out of stock → backorder comms + ETA (CS); failed spot-check → pull + replace.
+
+### 12.2 Private / Unlisted (locked) — operations
+
+```mermaid
+flowchart LR
+    O[Order paid · locked spec] --> V[Verify spec vs CRM quote]
+    V --> SRC[Source materials per BOM]
+    SRC --> MK[Build to locked spec]
+    MK --> QA[QA vs approved 4K render]
+    QA -->|pass| PK[Pack with approval proof]
+    QA -->|fail| RW[Rework]
+    RW --> QA
+    PK --> SH[Ship]
+    SH --> CL[CRM close-out · quote won]
+```
+
+- **Owner:** OPS (verify) → MK (build) → QA → SHIP; CS consulted on any ambiguity.
+- **Lead time / SLA:** per quote (set in CRM); confirm at intake.
+- **Exceptions:** spec ambiguity → **CS confirms with customer before build** (locked spec is authoritative, never silently changed); material substitution requires CS sign-off.
+
+### 12.3 Configurable shelves (Tile / Art Back / others) — operations
+
+```mermaid
+flowchart TD
+    O[Order paid · config + BOM] --> J{Style}
+    J -->|Tile| T[Cut blank · layout tiles per count/pattern · set · seal]
+    J -->|Art Back| A[Prep back panel · mount art asset · assemble]
+    J -->|Other| X[Style-specific build routine]
+    T --> F[Finish]
+    A --> F
+    X --> F
+    F --> QA[QA vs render]
+    QA --> PK[Pack]
+    PK --> SH[Ship]
+    SH --> CL[Close]
+```
+
+- **Owner:** MK (build per style jig/template) → QA → SHIP; OPS schedules by style queue.
+- **Style notes:** *Tile* uses a layout jig keyed to tile count/pattern; *Art Back* keys to the selected back-art asset; new styles add a build routine, **no process rewrite**.
+- **Lead time / SLA:** typically 1–3 weeks depending on size/finish.
+- **Exceptions:** component shortage → substitute (within rules) or CS comms; render mismatch at QA → rework before pack.
+
+### 12.4 Hybrid (CRM-seeded, customer-edited) — operations
+
+```mermaid
+flowchart LR
+    O[Order paid] --> R["Reconcile FINAL config:<br/>locked baseline + customer edits vs CRM"]
+    R --> D{Edits change BOM or lead time?}
+    D -->|Yes| C[CS confirm with customer + reschedule]
+    D -->|No| MK[Build FINAL config]
+    C --> MK
+    MK --> QA[QA vs render]
+    QA --> PK[Pack]
+    PK --> SH[Ship]
+    SH --> CL[CRM reconcile + close]
+```
+
+- **Owner:** OPS (reconcile) → MK → QA → SHIP; SYS reconciles final config back to the CRM quote.
+- **Critical rule:** ops builds the **final purchased configuration** (locked baseline **plus** customer edits) — *not* the original quote. Always confirm which BOM is authoritative at intake.
+- **Lead time / SLA:** as configurable; recompute if edits change the BOM.
+- **Exceptions:** customer edits push past capacity/lead time → CS reschedule + confirm.
+
+### 12.5 Custom build-out (Atelier3d) — operations
+
+```mermaid
+flowchart TD
+    O[Order or deposit · config + BOM + 4K] --> FR[Feasibility confirm + shop drawing / cut list]
+    FR --> SRC[Source materials incl. specialty]
+    SRC --> MK[Build with in-process QA checkpoints]
+    MK --> AP{Customer approval milestone?}
+    AP -->|needed| CSF[CS shares progress photos to approve]
+    AP -->|no| FIN[Finish]
+    CSF --> FIN
+    FIN --> QA[Final QA vs 4K render]
+    QA -->|pass| PK[White-glove pack]
+    QA -->|fail| RW[Rework]
+    RW --> QA
+    PK --> SH[Ship / delivery]
+    SH --> CL[CRM close + post-sale]
+```
+
+- **Owner:** OPS + MK (highest-touch); CS owns customer approval milestones; QA accountable for final sign-off vs render.
+- **Lead time / SLA:** longest; quoted per piece (often via CRM deposit path before build).
+- **Exceptions:** post-order feasibility fail (rare) → CS + redesign/remake (refund **only** if MEJA cannot fulfill — there are no customer-initiated returns, see §12.6); specialty material delay → ETA comms; milestone rejection → revise before continuing.
+
+### 12.6 Cross-cutting operational flows
+
+| Flow | What it does |
+|------|--------------|
+| **Materials & inventory** | BOM → stock check → reorder; maintain safety stock for common woods/tiles/finishes; flag long-lead specialty items at intake. |
+| **QA — render vs build** | The approved **4K render is the spec of record**; QA verifies the built piece matches it (dimensions, wood, finish, layout) before pack. |
+| **No returns — all items custom-made · rework / remake** | **Every product is made to order, so there are no returns or exchanges.** This is stated clearly on the PDP, in the cart, at checkout, and in CS comms. If an item arrives **defective or not matching the approved 4K render**, MEJA repairs, reworks, or remakes it; such cases are logged to CRM. Refunds occur **only** where MEJA cannot fulfill an order it accepted. |
+| **Capacity & scheduling** | OPS queues by product type; WIP limits per maker; lead-time SLAs published to CS so quotes/PDP show realistic ship dates. |
+| **Reviews & UGC moderation** | CS works the review queue within SLA, screens photos, approves/responds, and flags ≤3★ reviews for service follow-up (Workflow I). |
+
+### 12.7 Operational RACI (by stage)
+
+| Operational stage | R (does it) | A (owns outcome) | C / I |
+|-------------------|-------------|------------------|-------|
+| Intake / packet receipt | SYS → OPS | OPS | CS |
+| Spec verify & feasibility | OPS | OPS | CS, MK (custom) |
+| Source materials (BOM) | OPS | OPS | MK |
+| Build | MK | OPS | QA |
+| QA vs approved render | QA | OPS | MK |
+| Pack & ship | SHIP | OPS | CS |
+| Close-out / CRM reconcile | SYS | OPS | CS |
+
+### 12.8 Operational metrics (feed the KPIs in Master Plan §14)
+
+- **On-time-ship rate** vs. promised lead time, per product type.
+- **First-pass QA yield** (built right the first time; render-match rate).
+- **Rework rate** and average rework time.
+- **Production cycle time** per type (intake → ship).
+- **Material stockout incidents** affecting promised dates.
+
+---
+
+_End of Product Workflows (Draft v0.1). Please approve the flows — customer/system (§2–9) and operational (§12) — and the open question in §10._

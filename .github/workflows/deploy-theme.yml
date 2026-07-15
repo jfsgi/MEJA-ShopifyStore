@@ -1,0 +1,79 @@
+name: Deploy theme (Shopify)
+
+# Manual deploy of the theme/ dir to the Shopify store via the Shopify CLI. Runs on a GitHub
+# runner (unrestricted egress), NOT locally — the CRM sandbox can't reach *.myshopify.com.
+# Default is a NEW UNPUBLISHED theme (a preview; the live theme is untouched) so a deploy can be
+# reviewed before publishing. Set publish=true to push straight to the live theme instead.
+#
+# Requires one repo secret: SHOPIFY_CLI_THEME_TOKEN — a Theme Access password (shptka_…) or a
+# custom-app Admin API token (shpat_…) with read_themes + write_themes. Store domain is an input.
+on:
+  workflow_dispatch:
+    inputs:
+      store:
+        description: "Store domain (e.g. meja-sandbox.myshopify.com)"
+        required: true
+        default: "meja-sandbox.myshopify.com"
+      theme_name:
+        description: "Name for the pushed theme"
+        required: true
+        default: "private-listing-preview"
+      publish:
+        description: "Push to the LIVE theme instead of a new unpublished one"
+        type: boolean
+        required: true
+        default: false
+
+concurrency:
+  group: deploy-theme-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env:
+      SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+      SHOPIFY_FLAG_STORE: ${{ github.event.inputs.store }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Guard — secret present
+        run: |
+          if [ -z "$SHOPIFY_CLI_THEME_TOKEN" ]; then
+            echo "::error::Repo secret SHOPIFY_CLI_THEME_TOKEN is not set. Add it in Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli @shopify/theme
+      - name: Theme check (lint before deploy)
+        run: shopify theme check --path theme || echo "::warning::theme-check reported offenses (not blocking the deploy)"
+      - name: Push theme
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event.inputs.publish }}" = "true" ]; then
+            echo "Pushing to the LIVE theme…"
+            shopify theme push --path theme --live --allow-live --json | tee push.json
+          else
+            echo "Pushing to a new UNPUBLISHED theme '${{ github.event.inputs.theme_name }}'…"
+            shopify theme push --path theme --unpublished --theme "${{ github.event.inputs.theme_name }}" --json | tee push.json
+          fi
+      - name: Report preview URL
+        if: always()
+        run: |
+          if [ -f push.json ]; then
+            node -e '
+              const fs = require("fs");
+              try {
+                const j = JSON.parse(fs.readFileSync("push.json","utf8"));
+                const t = j.theme || j;
+                const id = t.id; const store = process.env.SHOPIFY_FLAG_STORE;
+                if (id) {
+                  console.log("Theme id:", id, "role:", t.role || "(unpublished)");
+                  console.log("Preview:  https://" + store + "/?preview_theme_id=" + id);
+                  console.log("Editor:   https://" + store + "/admin/themes/" + id + "/editor");
+                }
+              } catch (e) { console.log("Could not parse push.json:", e.message); }
+            '
+          fi

@@ -37,6 +37,8 @@ SOURCES = [
     ("01-Master-Plan.md", "Master Plan"),
     ("02-UI-Design-Standard.md", "UI Design Standard (incl. 10 iterations)"),
     ("03-Product-Workflows.md", "Product Workflows"),
+    ("05-Integration-Context.md", "Integration Context (sibling apps)"),
+    ("06-API-Contracts.md", "API & Job-Queue Contracts"),
 ]
 
 MONO = "Consolas"

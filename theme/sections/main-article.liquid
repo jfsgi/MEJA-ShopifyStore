@@ -1,0 +1,70 @@
+<div class="wrap">
+  <article class="post">
+    <header class="post-head">
+      {%- if article.tags.size > 0 -%}<span class="kicker">{{ article.tags.first }}</span>{%- endif -%}
+      <h1>{{ article.title }}</h1>
+      <div class="byline">{% if section.settings.show_author and article.author != blank %}{{ article.author }} &middot; {% endif %}{{ article.published_at | date: '%B %-d, %Y' }}</div>
+    </header>
+
+    {%- if article.image -%}
+      <div class="post-hero" style="background-image:url({{ article.image | image_url: width: 1600 }})" role="img" aria-label="{{ article.image.alt | escape | default: article.title }}"></div>
+    {%- endif -%}
+
+    <div class="rte post-body">{{ article.content }}</div>
+
+    <div class="post-nav">
+      <a href="{{ blog.url }}">&larr; Back to {{ blog.title }}</a>
+      {%- if article.tags.size > 0 -%}<span class="muted">Filed under {{ article.tags.first }}</span>{%- endif -%}
+    </div>
+  </article>
+
+  {%- if blog.comments_enabled? -%}
+    <section class="comments" id="comments">
+      <h2>{{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}</h2>
+
+      {%- paginate article.comments by 20 -%}
+        {%- for comment in article.comments -%}
+          <div class="comment" id="comment-{{ comment.id }}">
+            <div class="who">{{ comment.author }}<span class="m">{{ comment.created_at | date: '%b %-d, %Y' }}</span></div>
+            <div class="rte">{{ comment.content }}</div>
+          </div>
+        {%- endfor -%}
+        {%- if paginate.pages > 1 -%}
+          <div class="pagination">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}<span class="current">{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+
+      {%- form 'new_comment', article -%}
+        {%- if form.errors -%}
+          <div class="callout">Please complete every field with a valid email and try again.</div>
+        {%- elsif form.posted_successfully? -%}
+          <div class="callout">Thanks — your comment was posted{% if blog.moderated? %} and is awaiting moderation{% endif %}.</div>
+        {%- endif -%}
+        <h3 style="font-size:18px;margin:22px 0 12px">Leave a comment</h3>
+        <div class="field"><label for="c-author">Name</label><input id="c-author" type="text" name="comment[author]" required></div>
+        <div class="field"><label for="c-email">Email</label><input id="c-email" type="email" name="comment[email]" required></div>
+        <div class="field"><label for="c-body">Comment</label><textarea id="c-body" name="comment[body]" rows="4" required></textarea></div>
+        {% if blog.moderated? %}<p class="muted" style="font-size:12.5px;margin:0 0 12px">Comments are reviewed before they appear.</p>{% endif %}
+        <button class="btn" type="submit">Post comment</button>
+      {%- endform -%}
+    </section>
+  {%- endif -%}
+</div>
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author name",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

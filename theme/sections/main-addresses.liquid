@@ -1,0 +1,48 @@
+<div class="wrap" style="padding:30px 0 56px;max-width:760px">
+  <h1 style="font-size:28px;margin-bottom:16px">Addresses</h1>
+
+  <details class="addrbox"{% if form.errors %} open{% endif %}>
+    <summary>+ Add a new address</summary>
+    <div style="margin-top:14px">
+      {%- form 'customer_address', customer.new_address -%}
+        {{ form.errors | default_errors }}
+        {% render 'address-fields', address: customer.new_address, idp: 'new', is_default: false %}
+        <button class="btn" type="submit">Add address</button>
+      {%- endform -%}
+    </div>
+  </details>
+
+  {%- for address in customer.addresses -%}
+    {%- assign is_default = false -%}
+    {%- if customer.default_address.id == address.id -%}{%- assign is_default = true -%}{%- endif -%}
+    <div class="addr-card">
+      <div class="fa">{{ address | format_address }}{% if is_default %}<span class="addr-badge">Default</span>{% endif %}</div>
+      <div class="addr-actions">
+        <details>
+          <summary>Edit</summary>
+          <div style="margin-top:12px">
+            {%- form 'customer_address', address -%}
+              {{ form.errors | default_errors }}
+              {% render 'address-fields', address: address, idp: address.id, is_default: is_default %}
+              <button class="btn" type="submit">Update address</button>
+            {%- endform -%}
+          </div>
+        </details>
+        {%- form 'customer_address', address -%}
+          <input type="hidden" name="_method" value="delete">
+          <button class="linkbtn" type="submit" onclick="return confirm('Delete this address?')">Delete</button>
+        {%- endform -%}
+      </div>
+    </div>
+  {%- else -%}
+    <p class="muted">No saved addresses yet.</p>
+  {%- endfor -%}
+</div>
+{% schema %}
+{
+  "name": "Addresses",
+  "settings": [
+
+  ]
+}
+{% endschema %}

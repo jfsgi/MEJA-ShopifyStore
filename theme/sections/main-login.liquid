@@ -1,0 +1,31 @@
+<div class="wrap" style="max-width:430px;padding:44px 0">
+  <h1 style="font-size:28px;margin-bottom:16px">Sign in</h1>
+  {%- form 'customer_login' -%}
+    {{ form.errors | default_errors }}
+    <div class="field"><label for="login-email">Email</label><input id="login-email" type="email" name="customer[email]" autocomplete="email" required></div>
+    <div class="field"><label for="login-pass">Password</label><input id="login-pass" type="password" name="customer[password]" autocomplete="current-password" required></div>
+    <button class="btn block" type="submit">Sign in</button>
+  {%- endform -%}
+  <p style="margin-top:14px;font-size:13.5px">New to MEJA? <a href="{{ routes.account_register_url }}" style="color:var(--brand);font-weight:600">Create an account</a></p>
+
+  <hr style="border:none;border-top:1px solid var(--line);margin:26px 0 22px">
+
+  <h2 style="font-size:19px;margin-bottom:6px">Forgot your password?</h2>
+  <p class="muted" style="font-size:13.5px;margin-bottom:12px">Enter your email and we’ll send a reset link.</p>
+  {%- form 'recover_customer_password' -%}
+    {%- if form.posted_successfully? -%}
+      <div class="callout">If an account exists for that email, a reset link is on its way.</div>
+    {%- endif -%}
+    {{ form.errors | default_errors }}
+    <div class="field"><label for="recover-email">Email</label><input id="recover-email" type="email" name="email" autocomplete="email" required></div>
+    <button class="btn ghost block" type="submit">Send reset link</button>
+  {%- endform -%}
+</div>
+{% schema %}
+{
+  "name": "Login",
+  "settings": [
+
+  ]
+}
+{% endschema %}

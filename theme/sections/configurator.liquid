@@ -1,0 +1,110 @@
+{%- comment -%}
+  Configurator template. Embeds the 4kGraphics engine for live WebGL preview + 4K.
+  Option model + live price come from the MEJA-CRM engine; the configured line price is
+  applied server-side by the Cart Transform Function (theme/functions/cart-transform).
+{%- endcomment -%}
+{%- liquid
+  assign base_id = ''
+  if section.settings.base_variant_id != blank
+    assign base_id = section.settings.base_variant_id
+  elsif section.settings.base_product != blank
+    assign base_variant = section.settings.base_product.selected_or_first_available_variant | default: section.settings.base_product.variants.first
+    if base_variant != blank
+      assign base_id = base_variant.id
+    endif
+  endif
+  assign base_ok = false
+  if base_id != blank
+    assign base_ok = true
+  endif
+-%}
+<div class="wrap">
+  <div class="ptabs" id="ptabs">
+    <button type="button" data-prod="drawerbox" aria-pressed="true">Drawer Box</button>
+    <button type="button" data-prod="drawerunit" aria-pressed="false">Drawer Unit</button>
+    <button type="button" data-prod="cabinetdoor" aria-pressed="false">Cabinet Door</button>
+    <button type="button" data-prod="shelf" aria-pressed="false">Shelf</button>
+  </div>
+  <div class="cfg">
+    <div class="viewer" id="meja-viewer" data-engine="{{ '4kgraphics-engine.browser.js' | asset_url }}" data-render-service="{{ settings.render_service_url }}" data-crm-service="{{ settings.crm_api_url }}" data-ar-service="{{ settings.ar_service_url }}">
+      <div class="hud"><span>&#8635; rotate</span><span>&#10530; zoom</span></div>
+      <button type="button" class="vdl" id="meja-download" aria-label="Download preview image" title="Download preview image">&#10515;</button>
+      <div class="vlights" id="meja-lights">
+        <button type="button" data-light="studio" aria-pressed="true">Studio</button>
+        <button type="button" data-light="showroom" aria-pressed="false">Showroom</button>
+        <button type="button" data-light="daylight" aria-pressed="false">Daylight</button>
+      </div>
+      <div class="rstate"><span class="dot" id="meja-rdot"></span><span id="meja-rtext">4K render ready</span></div>
+      {%- if settings.ar_service_url != blank -%}
+        <button type="button" class="varbtn" id="meja-ar">View in your room ›</button>
+        <model-viewer id="meja-mv" class="mv" hidden ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" camera-controls shadow-intensity="1" alt="3D model of your configured piece"></model-viewer>
+        <button type="button" class="mv-close" id="meja-mv-close" hidden aria-label="Close 3D model">&#10005;</button>
+      {%- endif -%}
+    </div>
+    <form class="panel" id="meja-form" action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="id" value="{{ base_id }}">
+      <input type="hidden" name="properties[_configId]" id="meja-configId" value="">
+      <input type="hidden" name="properties[_meja_unit_price]" id="meja-unit-price" value="">
+      <div id="meja-props" hidden></div>
+      <span class="eyebrow">Configure &middot; made to order</span>
+      <h1 id="meja-title">Drawer Box</h1>
+      <p class="sub">Options &amp; live price come from the MEJA-CRM engine.</p>
+      <div id="meja-options"></div>
+      {% render 'price-block', purchasable: base_ok, breakdown: true %}
+      <div class="cfg-saved" id="meja-saved" hidden>
+        <div class="cfg-saved-h">
+          <span>Saved configurations</span>
+          <button type="button" id="meja-share" class="linkbtn">Copy link to this design</button>
+        </div>
+        <div class="cfg-saved-list" id="meja-saved-list"></div>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="application/json" id="meja-option-model">
+{
+  "drawerbox": { "base": 4800, "title": "Drawer Box", "groups": [
+    {"key":"joinery","label":"Joinery","options":[{"label":"Dovetail","value":"dovetail","delta":0},{"label":"Half-blind","value":"halfblind","delta":-600},{"label":"Box joint","value":"boxjoint","delta":-400}]},
+    {"key":"bottom","label":"Bottom","options":[{"label":"1/4\u2033 Plywood","value":"ply","delta":0},{"label":"1/2\u2033 Solid","value":"solid","delta":900}]}
+  ]},
+  "drawerunit": { "base": 42900, "title": "Drawer Unit", "groups": [
+    {"key":"drawers","label":"Drawers","options":[{"label":"3","value":"3","delta":0},{"label":"4","value":"4","delta":4000},{"label":"5","value":"5","delta":8000},{"label":"6","value":"6","delta":12000}]},
+    {"key":"front","label":"Front style","options":[{"label":"Slab","value":"slab","delta":0},{"label":"Shaker","value":"shaker","delta":0},{"label":"Raised","value":"raised","delta":3600}]},
+    {"key":"slides","label":"Slides","options":[{"label":"Side-mount","value":"side","delta":0},{"label":"Undermount soft-close","value":"under","delta":4800}]}
+  ]},
+  "cabinetdoor": { "base": 4400, "title": "Cabinet Door", "groups": [
+    {"key":"style","label":"Style","options":[{"label":"Slab","value":"slab","delta":0},{"label":"Shaker","value":"shaker","delta":0},{"label":"Raised panel","value":"raised","delta":1400}]},
+    {"key":"edge","label":"Edge profile","options":[{"label":"Square","value":"square","delta":0},{"label":"Roundover","value":"roundover","delta":0},{"label":"Ogee","value":"ogee","delta":600}]}
+  ]},
+  "shelf": { "base":22900, "title":"Shelf", "groups":[
+    {"key":"style","label":"Style","options":[{"label":"Tile","value":"tile","delta":0},{"label":"Art Back","value":"artback","delta":0},{"label":"Live edge","value":"liveedge","delta":4000}]}
+  ]},
+  "wood": [{"label":"Walnut","value":"walnut","delta":2000,"swatch":"#5c3a21"},{"label":"White Oak","value":"whiteoak","delta":1000,"swatch":"#c7a877"},{"label":"Cherry","value":"cherry","delta":1500,"swatch":"#7a3b25"},{"label":"Maple","value":"maple","delta":0,"swatch":"#e0cda4"},{"label":"Ash","value":"ash","delta":0,"swatch":"#c9b89a"}],
+  "finish": [{"label":"Matte","value":"matte","delta":0},{"label":"Satin","value":"satin","delta":600},{"label":"Hand-oiled","value":"oiled","delta":1200}]
+}
+</script>
+<script type="module" src="{{ 'configurator.js' | asset_url }}"></script>
+{% schema %}
+{
+  "name": "Configurator",
+  "settings": [
+    {
+      "type": "product",
+      "id": "base_product",
+      "label": "Base configurable product",
+      "info": "The placeholder product that configured items are added to the cart as. Its price is overridden per-configuration by the Cart Transform Function."
+    },
+    {
+      "type": "text",
+      "id": "base_variant_id",
+      "label": "Variant ID override (advanced)",
+      "info": "Optional. Paste a specific variant ID to use instead of the picked product's default variant."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Configurator"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,25 @@
+<div class="wrap" style="padding:60px 0;text-align:center">
+  <div class="empty" style="margin:0 auto;max-width:480px"><div class="ic">&#129717;</div>
+    <h1 style="font-size:28px;margin:10px 0 6px">Page not found</h1>
+    <p class="muted" style="margin-bottom:18px">That page doesn&rsquo;t exist or may have moved. Try a search, or pick up where you left off.</p>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="searchbar" style="justify-content:center;margin-bottom:18px">
+      <input type="search" name="q" placeholder="Search products…" aria-label="Search">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button class="btn" type="submit">Search</button>
+    </form>
+    <div class="q404">
+      <a href="{{ routes.all_products_collection_url }}">All products</a>
+      <a href="/collections/drawer-boxes">Drawer Boxes</a>
+      <a href="/collections/cabinet-doors">Cabinet Doors</a>
+      <a href="/collections/shelves">Shelves</a>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "404",
+  "settings": [
+
+  ]
+}
+{% endschema %}

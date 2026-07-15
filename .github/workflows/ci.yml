@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [ "claude/**" ]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate theme JSON (templates / config / locales)
+        run: |
+          python - <<'PY'
+          import json, glob, sys
+          # settings_data.json is Shopify-managed and legitimately contains /* */ comments
+          # (JSON-with-comments); the official theme-check job validates it. Skip it here.
+          skip = {'theme/config/settings_data.json'}
+          files = [f for f in glob.glob('theme/**/*.json', recursive=True) if f not in skip]
+          bad = 0
+          for f in files:
+              try:
+                  json.load(open(f, encoding='utf-8'))
+              except Exception as e:
+                  print('BAD', f, e); bad += 1
+          print(f'checked {len(files)} JSON files; {bad} invalid')
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Theme sanity (schema JSON, brace balance, section/snippet refs)
+        run: python tools/theme_check.py
+
+      - name: Validate OpenAPI spec (YAML)
+        run: |
+          python -m pip install --quiet pyyaml
+          python -c "import yaml; yaml.safe_load(open('api/openapi.yaml')); print('api/openapi.yaml parses OK')"
+
+      - name: Check mockups reference existing stock images
+        run: |
+          python - <<'PY'
+          import re, glob, os, sys
+          missing = 0
+          for f in glob.glob('mockups/*.html'):
+              html = open(f, encoding='utf-8').read()
+              for ref in set(re.findall(r'stock/[A-Za-z0-9_\-.]+', html)):
+                  if not os.path.exists(os.path.join('mockups', ref)):
+                      print('MISSING', f, '->', ref); missing += 1
+          print('stock image references checked')
+          sys.exit(1 if missing else 0)
+          PY
+
+      - name: Word docs build (smoke)
+        run: |
+          python -m pip install --quiet python-docx markdown
+          python tools/build_docx.py
+
+  theme-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Install theme-check
+        run: gem install theme-check -v 1.15.0 --no-document
+      - name: Shopify theme-check
+        run: theme-check theme/

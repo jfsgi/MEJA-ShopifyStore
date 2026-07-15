@@ -1,0 +1,31 @@
+<div class="wrap"><div class="acct">
+  <nav class="anav" aria-label="Account">
+    <a class="on" href="{{ routes.account_url }}">Orders</a>
+    <a href="{{ routes.account_url }}">Saved designs</a>
+    <a href="{{ pages['quotes'].url | default: '#' }}">My quotes</a>
+    <a href="{{ routes.account_addresses_url }}">Addresses</a>
+    <a href="{{ routes.account_logout_url }}">Sign out</a>
+  </nav>
+  <div>
+    <h1 style="font-size:30px">Hi, {{ customer.first_name | default: 'there' }}</h1>
+    <div class="sub" style="color:var(--muted);margin-bottom:24px">Your orders, saved designs, and private quotes.</div>
+    <h2 style="font-size:19px;margin-bottom:14px">Recent orders</h2>
+    {%- for order in customer.orders -%}
+      <div class="order">
+        <div class="th"></div>
+        <div class="meta"><b>{{ order.name }}</b> &middot; {{ order.created_at | date: '%b %-d, %Y' }}<div class="m">{{ order.item_count }} item(s)</div><span class="badge prod">{{ order.fulfillment_status_label | default: 'In production' }}</span></div>
+        <div class="right"><div class="pr">{{ order.total_price | money }}</div><a href="{{ order.customer_url }}">View order &rsaquo;</a></div>
+      </div>
+    {%- else -%}
+      <div class="empty"><div class="ic">&#129717;</div><h3 style="font-size:17px;margin:8px 0 4px">No orders yet</h3><p class="muted" style="font-size:13px">Configure a piece to get started.</p><a class="btn" href="{{ pages['configurator'].url | default: '/' }}">Open configurator</a></div>
+    {%- endfor -%}
+  </div>
+</div></div>
+{% schema %}
+{
+  "name": "Account",
+  "settings": [
+
+  ]
+}
+{% endschema %}

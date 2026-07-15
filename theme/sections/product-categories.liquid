@@ -1,0 +1,89 @@
+<div class="wrap"><section class="block" id="cats">
+  <div class="head"><div><span class="eyebrow">{{ section.settings.eyebrow }}</span><h2>{{ section.settings.heading }}</h2></div></div>
+  <div class="cats">
+    {%- for block in section.blocks -%}
+      <a class="cat" href="{{ block.settings.url }}" {{ block.shopify_attributes }}>
+        <div class="img" style="background-image:url({% if block.settings.image %}{{ block.settings.image | image_url: width: 700 }}{% elsif block.settings.default_image != blank %}{{ block.settings.default_image | asset_url }}{% endif %})"></div>
+        <div class="b"><h3>{{ block.settings.title }}</h3><div class="price">{{ block.settings.price }}</div><div class="rate">{{ block.settings.note }}</div><span class="cfg">Configure ›</span></div>
+      </a>
+    {%- endfor -%}
+  </div>
+</section></div>
+{% schema %}
+{
+  "name": "Product categories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Configurable woodwork"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by product"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "default_image",
+          "label": "Default image asset (filename in /assets)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "from $39"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Product categories",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

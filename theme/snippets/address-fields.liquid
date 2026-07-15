@@ -1,0 +1,19 @@
+{%- comment -%} params: address, idp (unique id prefix), is_default (bool) {%- endcomment -%}
+<div class="field2">
+  <div class="field"><label for="af-fn-{{ idp }}">First name</label><input id="af-fn-{{ idp }}" type="text" name="address[first_name]" value="{{ address.first_name }}" autocomplete="given-name"></div>
+  <div class="field"><label for="af-ln-{{ idp }}">Last name</label><input id="af-ln-{{ idp }}" type="text" name="address[last_name]" value="{{ address.last_name }}" autocomplete="family-name"></div>
+</div>
+<div class="field"><label for="af-co-{{ idp }}">Company (optional)</label><input id="af-co-{{ idp }}" type="text" name="address[company]" value="{{ address.company }}" autocomplete="organization"></div>
+<div class="field"><label for="af-a1-{{ idp }}">Address</label><input id="af-a1-{{ idp }}" type="text" name="address[address1]" value="{{ address.address1 }}" autocomplete="address-line1"></div>
+<div class="field"><label for="af-a2-{{ idp }}">Apartment, suite, etc. (optional)</label><input id="af-a2-{{ idp }}" type="text" name="address[address2]" value="{{ address.address2 }}" autocomplete="address-line2"></div>
+<div class="field2">
+  <div class="field"><label for="af-ci-{{ idp }}">City</label><input id="af-ci-{{ idp }}" type="text" name="address[city]" value="{{ address.city }}" autocomplete="address-level2"></div>
+  <div class="field"><label for="af-zi-{{ idp }}">ZIP / Postal</label><input id="af-zi-{{ idp }}" type="text" name="address[zip]" value="{{ address.zip }}" autocomplete="postal-code"></div>
+</div>
+<div class="field2">
+  <div class="field"><label for="af-cn-{{ idp }}">Country / region</label><select id="af-cn-{{ idp }}" name="address[country]">{{ all_country_option_tags }}</select></div>
+  <div class="field"><label for="af-pr-{{ idp }}">State / Province</label><input id="af-pr-{{ idp }}" type="text" name="address[province]" value="{{ address.province }}" autocomplete="address-level1"></div>
+</div>
+<div class="field"><label for="af-ph-{{ idp }}">Phone (optional)</label><input id="af-ph-{{ idp }}" type="tel" name="address[phone]" value="{{ address.phone }}" autocomplete="tel"></div>
+<label class="checkrow"><input type="checkbox" name="address[default]" value="1"{% if is_default %} checked{% endif %}> Set as default address</label>
+{%- if address.country != blank -%}<script>document.getElementById("af-cn-{{ idp }}").value={{ address.country | json }};</script>{%- endif -%}

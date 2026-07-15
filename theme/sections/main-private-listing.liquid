@@ -1,0 +1,109 @@
+<div class="wrap">
+  <div class="quote-banner">
+    <div class="qi">&#128274; <b>Prepared for {{ customer.first_name | default: 'you' }}</b> &middot; Quote {{ product.metafields.crm.quote_no | default: '#Q' }} &middot; private listing.</div>
+    {%- if product.metafields.crm.expires_at -%}<div class="exp">Expires <b>{{ product.metafields.crm.expires_at | date: '%b %-d, %Y' }}</b></div>{%- endif -%}
+  </div>
+  <div class="pdp">
+    {%- comment -%}
+      Hero image, in priority order: the product's featured image (the publish worker attaches the
+      door render as the first product image, so Shopify HOSTS it — reliable, always paints), then
+      the CRM 4K render metafield URL (crm.render_4k, browser-fetched from Supabase — a fallback for
+      products published before the render was hosted). NOTE crm.render_4k is a `url`-type metafield —
+      read its `.value` (the metafield OBJECT renders empty inside url(), which blanks the viewer).
+      The "4K render ready" badge shows whenever a render backs the viewer.
+    {%- endcomment -%}
+    {%- assign render_url = product.metafields.crm.render_4k.value -%}
+    {%- if product.featured_image -%}
+      {%- assign hero_src = product.featured_image | image_url: width: 1600 -%}
+    {%- else -%}
+      {%- assign hero_src = render_url -%}
+    {%- endif -%}
+    <div class="pl-media">
+      <div class="viewer" id="pl-viewer" {% if hero_src != blank %}style="background-image:url('{{ hero_src }}')"{% endif %}>
+        <div class="hud">&#8635; &#10530; AR</div>
+        {%- if hero_src != blank -%}<div class="rstate">&#9679; 4K render ready</div>{%- endif -%}
+      </div>
+      {%- comment -%}
+        Front thumbnails: the door/drawer-front renders the pipeline attaches as product images
+        (product.images — the door render leads, so it's also the hero above). Clicking one swaps the
+        viewer background (progressive enhancement; the hero still shows with JS off). Only when the
+        hero came from the metafield URL instead (no product images) do we add a standalone hero thumb.
+      {%- endcomment -%}
+      {%- assign thumb_count = product.images | size -%}
+      {%- if thumb_count > 0 or hero_src != blank -%}
+        {%- comment -%} data-full carries the hi-res URL (attribute-escaped); the handler reads it —
+          so a CDN URL's ?v=…&width=… can't break out of the inline JS string. {%- endcomment -%}
+        <div class="pl-thumbs" onclick="if(event.target.dataset.full){document.getElementById('pl-viewer').style.backgroundImage=&quot;url('&quot;+event.target.dataset.full+&quot;')&quot;}">
+          {%- if thumb_count == 0 and hero_src != blank -%}
+            <button type="button" class="pl-thumb is-hero" data-full="{{ hero_src | escape }}" style="background-image:url({{ hero_src }})" aria-label="Show render"></button>
+          {%- endif -%}
+          {%- for image in product.images -%}
+            <button type="button" class="pl-thumb" data-full="{{ image | image_url: width: 1600 | escape }}" style="background-image:url({{ image | image_url: width: 240 }})" aria-label="{{ image.alt | default: 'Front detail' | escape }}"></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+    {% form 'product', product, class: 'product-form' %}
+    {%- assign pl_variant = product.selected_or_first_available_variant | default: product.variants.first -%}
+    <input type="hidden" name="id" value="{{ pl_variant.id }}">
+    <div class="details">
+      <span class="eyebrow">Your custom quote</span>
+      <h1>{{ product.title }}</h1>
+      <div class="price"><span data-pl-price>{{ product.price | money }}</span> &middot; made to order</div>
+
+      {%- comment -%}
+        The "Set by your quote" chips (crm.locked_options) were RETIRED: they restated the build a
+        second time and, for a multi-piece commission, exploded into the whole spec sheet — one chip
+        per joinery/thickness/dimension. The per-piece DESIGN DETAILS below (product.description) are
+        now the single spec area, and the "Prepared for you &#128274;" banner already signals that the
+        options are locked. Restore this block (and keep writing crm.locked_options in
+        publish-worker.ts) only if a SHORT, curated locked-summary is wanted alongside the details.
+      {%- endcomment -%}
+
+      {%- comment -%}
+        The quote's design details — door/drawer style, materials, panel grain orientation,
+        special notes — carried into the listing description by the publish pipeline. body_html
+        is CRM-built + escaped (listing-payload.ts descriptionHtml), safe to render as-is.
+      {%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="spec-details rte">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- comment -%}
+        G-41 (built): buyer-selectable OPTIONS, rendered at the BOTTOM by the buy box so the buyer
+        reads the whole build first, then makes their add-on picks right above the price + Add button.
+        When the quote curated add-ons (crm.editable_options) and a CRM pricing service
+        (settings.crm_api_url) are present, render the option controls + the signed-claim hidden
+        inputs. private-listing-options.js calls /v1/listing-price for a signed price on each change
+        and fills these inputs; the Cart Transform applies the signed unit price at checkout; order
+        ingest verifies + auto-promotes the picks. No metafield ⇒ block skipped ⇒ the locked PDP
+        renders exactly as before. The keys ride the native product form as line properties.
+      {%- endcomment -%}
+      {%- if product.metafields.crm.editable_options != blank and settings.crm_api_url != blank -%}
+        <div id="pl-options" class="pl-options"
+             data-crm-service="{{ settings.crm_api_url }}"
+             data-listing-id="{{ product.metafields.crm.listing_id }}"
+             data-options="{{ product.metafields.crm.editable_options | escape }}"
+             data-base-cents="{{ product.price }}"></div>
+        <input type="hidden" name="properties[_meja_unit_price]" id="pl-unit-price">
+        <input type="hidden" name="properties[_meja_sig]" id="pl-sig">
+        <input type="hidden" name="properties[_meja_spec_hash]" id="pl-spec-hash">
+        <input type="hidden" name="properties[_meja_expires]" id="pl-expires">
+        <input type="hidden" name="properties[_meja_options]" id="pl-options-keys">
+        <script src="{{ 'private-listing-options.js' | asset_url }}" defer></script>
+      {%- endif -%}
+
+      <div class="hint">Every option here is set by your quote (&#128274;). Review the details and check out &mdash; your price is locked in.</div>
+      {% render 'price-block' %}
+    </div>
+    {% endform %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Private listing",
+  "settings": [
+
+  ]
+}
+{% endschema %}

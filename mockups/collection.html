@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MEJA — Collection (Scandi Light) · mockup</title>
+<link rel="stylesheet" href="scandi.css" />
+<style>
+  .titlebar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding:6px 0 22px;border-bottom:1px solid var(--line)}
+  .titlebar h1{font-size:32px}
+  .titlebar .meta{font-size:13px;color:var(--muted)}
+  .sort{border:1.5px solid var(--line);background:var(--surface-2);border-radius:999px;padding:9px 16px;font-size:13px;font-family:var(--text);color:var(--ink)}
+  .collection{display:grid;grid-template-columns:240px 1fr;gap:34px;padding:26px 0 56px}
+  .filters{position:sticky;top:84px;align-self:start;font-size:13.5px}
+  .fgroup{padding:16px 0;border-bottom:1px solid var(--line)}
+  .fgroup:first-child{padding-top:0}
+  .fgroup h4{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted);margin:0 0 11px;font-family:var(--text);font-weight:700}
+  .fopt{display:flex;align-items:center;gap:9px;margin:8px 0;color:var(--ink);cursor:pointer}
+  .fopt .box{width:17px;height:17px;border:1.5px solid var(--line);border-radius:5px;flex:none}
+  .fopt.on .box{background:var(--brand);border-color:var(--brand);position:relative}
+  .fopt.on .box::after{content:"✓";color:#fff;font-size:11px;position:absolute;top:-2px;left:2px}
+  .fopt .c{margin-left:auto;color:var(--muted);font-size:12px}
+  .swrow{display:flex;gap:8px;flex-wrap:wrap}
+  .swrow i{width:24px;height:24px;border-radius:999px;border:2px solid var(--line);display:inline-block}
+  .swrow i.on{outline:2px solid var(--brand);outline-offset:2px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media(max-width:880px){.collection{grid-template-columns:1fr}.filters{position:static}.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="anno">MOCKUP FOR APPROVAL · Collection · Direction <b>#5 Scandi Light</b></div>
+<header class="site"><div class="wrap nav"><div class="logo">MEJA</div><nav class="main"><a href="home.html">Drawer Boxes</a><a href="home.html">Drawer Units</a><a href="home.html">Cabinet Doors</a><a href="home.html">Shelves</a><a href="configurator.html">Custom</a></nav><div class="icons"><span>Search</span><span>Account</span><span>Cart</span><span class="cartdot">1</span></div></div></header>
+
+<div class="wrap">
+  <div class="crumbs"><a href="home.html">Home</a> › <span>Drawer Boxes</span></div>
+  <div class="titlebar">
+    <div><span class="eyebrow">Made to your size</span><h1>Drawer Boxes</h1><div class="meta">Dovetailed solid-wood boxes — built to your exact opening. 24 products</div></div>
+    <select class="sort" aria-label="Sort"><option>Sort: Featured</option><option>Price: low to high</option><option>Top rated</option><option>Newest</option></select>
+  </div>
+
+  <div class="collection">
+    <aside class="filters" aria-label="Filters">
+      <div class="fgroup"><h4>Type</h4>
+        <div class="fopt on"><span class="box"></span> Standard box <span class="c">12</span></div>
+        <div class="fopt"><span class="box"></span> Deep / pots <span class="c">6</span></div>
+        <div class="fopt"><span class="box"></span> Cutlery / insert <span class="c">4</span></div>
+        <div class="fopt"><span class="box"></span> Spice <span class="c">2</span></div>
+      </div>
+      <div class="fgroup"><h4>Joinery</h4>
+        <div class="fopt on"><span class="box"></span> Dovetail <span class="c">18</span></div>
+        <div class="fopt"><span class="box"></span> Half-blind <span class="c">10</span></div>
+        <div class="fopt"><span class="box"></span> Box joint <span class="c">6</span></div>
+      </div>
+      <div class="fgroup"><h4>Wood</h4>
+        <div class="swrow"><i class="on" style="background:#5c3a21" title="Walnut"></i><i style="background:#c7a877" title="White Oak"></i><i style="background:#7a3b25" title="Cherry"></i><i style="background:#e0cda4" title="Maple"></i><i style="background:#c9b89a" title="Ash"></i></div>
+      </div>
+      <div class="fgroup"><h4>Width</h4>
+        <div class="fopt"><span class="box"></span> Under 18″ <span class="c">8</span></div>
+        <div class="fopt on"><span class="box"></span> 18″–24″ <span class="c">12</span></div>
+        <div class="fopt"><span class="box"></span> Over 24″ <span class="c">4</span></div>
+      </div>
+      <div class="fgroup"><h4>Price</h4>
+        <div class="fopt"><span class="box"></span> Under $50 <span class="c">14</span></div>
+        <div class="fopt"><span class="box"></span> $50–$80 <span class="c">7</span></div>
+        <div class="fopt"><span class="box"></span> $80+ <span class="c">3</span></div>
+      </div>
+    </aside>
+
+    <div class="grid">
+      <a class="pcard" href="product.html"><div class="img" style="background-image:url(stock/drawerunit.jpg)"><span class="tag">Dovetail</span></div><div class="b"><h3>Standard Drawer Box</h3><div class="price">from $39</div><div class="rate"><span class="stars">★</span> 4.9 · made to size</div><span class="cfg">Configure ›</span></div></a>
+      <a class="pcard" href="product.html"><div class="img" style="background-image:url(stock/drawerbox.jpg);background-position:center 40%"><span class="tag">Dovetail</span></div><div class="b"><h3>Deep Pots &amp; Pans Box</h3><div class="price">from $54</div><div class="rate"><span class="stars">★</span> 5.0 · made to size</div><span class="cfg">Configure ›</span></div></a>
+      <a class="pcard" href="product.html"><div class="img" style="background-image:url(stock/drawerunit.jpg);background-position:left center"><span class="tag">Half-blind</span></div><div class="b"><h3>Cutlery Drawer + Insert</h3><div class="price">from $62</div><div class="rate"><span class="stars">★</span> 4.8 · made to size</div><span class="cfg">Configure ›</span></div></a>
+      <a class="pcard" href="product.html"><div class="img" style="background-image:url(stock/drawerbox.jpg)"><span class="tag">Box joint</span></div><div class="b"><h3>Spice Drawer Box</h3><div class="price">from $34</div><div class="rate"><span class="stars">★</span> 4.9 · made to size</div><span class="cfg">Configure ›</span></div></a>
+      <a class="pcard" href="product.html"><div class="img" style="background-image:url(stock/drawerunit.jpg);background-position:right center"><span class="tag">Dovetail</span></div><div class="b"><h3>Undermount Drawer Box</h3><div class="price">from $48</div><div class="rate"><span class="stars">★</span> 5.0 · soft-close ready</div><span class="cfg">Configure ›</span></div></a>
+      <a class="pcard" href="configurator.html"><div class="img" style="background-image:url(stock/workshop.jpg)"><span class="tag">Custom</span></div><div class="b"><h3>Design your own</h3><div class="price">configure</div><div class="rate"><span class="stars">★</span> 4.9 · any size</div><span class="cfg">Open configurator ›</span></div></a>
+    </div>
+  </div>
+</div>
+
+<footer class="site"><div class="wrap">
+  <div class="fcols">
+    <div><div class="logo">MEJA</div><p style="font-size:13.5px;max-width:32ch;margin-top:10px">Custom drawer boxes, doors, units &amp; shelves — made to order.</p></div>
+    <div><h4>Shop</h4><ul><li><a href="#">Drawer Boxes</a></li><li><a href="#">Drawer Units</a></li><li><a href="#">Cabinet Doors</a></li><li><a href="#">Shelves</a></li></ul></div>
+    <div><h4>Help</h4><ul><li><a href="#">Measuring guide</a></li><li><a href="#">Made-to-order policy</a></li><li><a href="#">Shipping</a></li><li><a href="#">FAQ</a></li></ul></div>
+    <div><h4>Studio</h4><ul><li><a href="#">Our craft</a></li><li><a href="#">Trade</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 MEJA Designs — made to order, no returns.</span><span>Privacy · Terms</span></div>
+</div></footer>
+</body>
+</html>
