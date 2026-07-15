@@ -12,6 +12,7 @@
     "color_brand": "#5b6b73",
     "color_accent": "#9bb0a3",
     "color_ink": "#232826",
+    "crm_api_url": "https://www.meja-crm.com",
     "sections": {
       "header": {
         "type": "header",

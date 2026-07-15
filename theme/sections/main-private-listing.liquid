@@ -61,12 +61,23 @@
       {%- endcomment -%}
 
       {%- comment -%}
-        G-41 (built): buyer-selectable OPTIONS. When the quote curated add-ons (crm.editable_options)
-        and a CRM pricing service (settings.crm_api_url) are present, render the option controls + the
-        signed-claim hidden inputs. private-listing-options.js calls /v1/listing-price for a signed
-        price on each change and fills these inputs; the Cart Transform applies the signed unit price at
-        checkout; order ingest verifies + auto-promotes the picks. No metafield ⇒ block skipped ⇒ the
-        locked PDP renders exactly as before. The keys ride the native product form as line properties.
+        The quote's design details — door/drawer style, materials, panel grain orientation,
+        special notes — carried into the listing description by the publish pipeline. body_html
+        is CRM-built + escaped (listing-payload.ts descriptionHtml), safe to render as-is.
+      {%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="spec-details rte">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- comment -%}
+        G-41 (built): buyer-selectable OPTIONS, rendered at the BOTTOM by the buy box so the buyer
+        reads the whole build first, then makes their add-on picks right above the price + Add button.
+        When the quote curated add-ons (crm.editable_options) and a CRM pricing service
+        (settings.crm_api_url) are present, render the option controls + the signed-claim hidden
+        inputs. private-listing-options.js calls /v1/listing-price for a signed price on each change
+        and fills these inputs; the Cart Transform applies the signed unit price at checkout; order
+        ingest verifies + auto-promotes the picks. No metafield ⇒ block skipped ⇒ the locked PDP
+        renders exactly as before. The keys ride the native product form as line properties.
       {%- endcomment -%}
       {%- if product.metafields.crm.editable_options != blank and settings.crm_api_url != blank -%}
         <div id="pl-options" class="pl-options"
@@ -80,15 +91,6 @@
         <input type="hidden" name="properties[_meja_expires]" id="pl-expires">
         <input type="hidden" name="properties[_meja_options]" id="pl-options-keys">
         <script src="{{ 'private-listing-options.js' | asset_url }}" defer></script>
-      {%- endif -%}
-
-      {%- comment -%}
-        The quote's design details — door/drawer style, materials, panel grain orientation,
-        special notes — carried into the listing description by the publish pipeline. body_html
-        is CRM-built + escaped (listing-payload.ts descriptionHtml), safe to render as-is.
-      {%- endcomment -%}
-      {%- if product.description != blank -%}
-        <div class="spec-details rte">{{ product.description }}</div>
       {%- endif -%}
 
       <div class="hint">Every option here is set by your quote (&#128274;). Review the details and check out &mdash; your price is locked in.</div>
