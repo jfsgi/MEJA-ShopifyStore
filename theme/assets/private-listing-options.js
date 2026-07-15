@@ -17,6 +17,7 @@
   if (!CRM || !listingId || !options.length) return;
 
   var priceEl = document.getElementById('meja-price');
+  var topPriceEl = document.querySelector('[data-pl-price]'); // the price by the title — keep it in step
   var pmodeEl = document.getElementById('meja-pmode');
   var unitPriceEl = document.getElementById('pl-unit-price');
   var sigEl = document.getElementById('pl-sig');
@@ -26,15 +27,26 @@
 
   var money = function (cents) { return '$' + (cents / 100).toFixed(2); };
   var centsOf = function (o) { return Math.round(parseFloat(o.price) * 100) || 0; };
+  // Keep BOTH price displays in step — the one by the title and the one in the buy box.
+  var setPrice = function (text) {
+    if (priceEl) priceEl.textContent = text;
+    if (topPriceEl) topPriceEl.textContent = text;
+  };
   var selected = {}; // key -> option
 
-  // Render: one checkbox per option, grouped under its piece name (matches the CRM's per-piece offer).
-  var byPiece = {};
-  options.forEach(function (o) { (byPiece[o.pieceName || ''] = byPiece[o.pieceName || ''] || []).push(o); });
+  // Render: one checkbox per option, grouped by its piece + SIZE so two same-named pieces are
+  // distinguishable ("Drawer Box/Pullout Tray · 36 × 21 × 8 in" vs "· 22 × 21 × 3 in").
+  var groups = [];
+  var byGroup = {};
+  options.forEach(function (o) {
+    var g = (o.pieceName || '') + (o.pieceSize ? ' · ' + o.pieceSize : '');
+    if (!byGroup[g]) { byGroup[g] = []; groups.push(g); }
+    byGroup[g].push(o);
+  });
   var html = '<div class="pl-opts-title">Add options</div>';
-  Object.keys(byPiece).forEach(function (piece) {
-    if (piece) html += '<div class="pl-opts-piece">' + esc(piece) + '</div>';
-    byPiece[piece].forEach(function (o) {
+  groups.forEach(function (g) {
+    if (g) html += '<div class="pl-opts-piece">' + esc(g) + '</div>';
+    byGroup[g].forEach(function (o) {
       html += '<label class="pl-opt"><input type="checkbox" class="pl-opt-cb" value="' + esc(o.key) + '">' +
         '<span class="pl-opt-label">' + esc(o.label) + '</span>' +
         '<span class="pl-opt-price">+$' + (centsOf(o) / 100).toFixed(2) + '</span></label>';
@@ -63,7 +75,7 @@
     });
     keys.sort();
     // Immediate LOCAL estimate; the signed price replaces it below.
-    if (priceEl) priceEl.textContent = money(cents);
+    setPrice(money(cents));
     setMode(false);
     // No selection → no claim needed; the line stays at the locked base price.
     if (!keys.length) { clearClaim(); return; }
@@ -77,7 +89,7 @@
       }).then(function (r) { return r.ok ? r.json() : null; }).then(function (data) {
         if (mySeq !== seq) return; // superseded by a newer selection
         if (!data || !data.signature) { disableAll('Options are unavailable right now.'); return; }
-        if (priceEl) priceEl.textContent = data.displayPrice || money(data.amount);
+        setPrice(data.displayPrice || money(data.amount));
         if (unitPriceEl) unitPriceEl.value = data.unitPrice;
         if (sigEl) sigEl.value = data.signature;
         if (specHashEl) specHashEl.value = data.spec_hash;
@@ -93,7 +105,7 @@
     // locked base price and take the controls out of play.
     root.querySelectorAll('.pl-opt-cb').forEach(function (cb) { cb.checked = false; cb.disabled = true; });
     clearClaim();
-    if (priceEl) priceEl.textContent = money(baseCents);
+    setPrice(money(baseCents));
     if (pmodeEl) { pmodeEl.hidden = false; pmodeEl.textContent = msg || 'locked'; }
   }
 

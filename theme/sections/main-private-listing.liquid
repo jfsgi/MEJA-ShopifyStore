@@ -49,7 +49,7 @@
     <div class="details">
       <span class="eyebrow">Your custom quote</span>
       <h1>{{ product.title }}</h1>
-      <div class="price">{{ product.price | money }} &middot; made to order</div>
+      <div class="price"><span data-pl-price>{{ product.price | money }}</span> &middot; made to order</div>
 
       {%- comment -%}
         The "Set by your quote" chips (crm.locked_options) were RETIRED: they restated the build a
